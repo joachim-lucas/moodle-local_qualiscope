@@ -1,30 +1,65 @@
 {
   "name": "Qualiopi",
-  "version": "2026",
-  "description": "Référentiel National Qualité (RNQ) - Décret n°2026-728 du 1er août 2026 - 7 critères, 33 indicateurs (seuls les indicateurs vérifiables automatiquement via Moodle sont analysés).",
+  "version": "RNQ V9/V10 2026",
+  "description": "Référentiel National Qualité (RNQ) - Décret n°2026-728 du 1er août 2026 - 7 critères, 33 indicateurs. Analyse des éléments de démarche qualité présents dans Moodle et identification des preuves externes nécessaires.",
   "active": true,
   "criteria": [
     {
       "number": 1,
       "title": "Les conditions d'information du public sur les prestations proposées, les délais pour y accéder et les résultats obtenus",
-      "description": "Le prestataire diffuse une information accessible au public, détaillée et vérifiable sur chaque prestation : objectifs, durée, modalités et délais d'accès, tarifs, contacts, méthodes mobilisées et accessibilité aux personnes en situation de handicap.",
+      "description": "Le prestataire diffuse une information accessible au public, détaillée et vérifiable sur chaque prestation : objectifs, durée, modalités et délais d'accès, tarifs, contacts, méthodes mobilisées, accessibilité aux personnes en situation de handicap et indicateurs de résultats.",
       "indicators": [
         {
           "number": 1,
           "title": "Information du public sur les prestations proposées",
           "description": "Le prestataire diffuse une information accessible au public, détaillée et vérifiable sur chaque prestation proposée.",
           "scope": "course",
+          "moodle_level": "partial",
           "checks": [
             {
-              "name": "Description du cours renseignée",
+              "name": "Description du cours, objectifs et structure",
+              "description": "Vérification de la présence du résumé du cours, des objectifs et des sections pédagogiques structurées.",
               "type": "field_exists",
               "automatic": true,
               "weight": 2
             },
             {
-              "name": "Ressources pédagogiques présentes",
+              "name": "Ressources et informations pédagogiques",
+              "description": "Présence de ressources documentaires, programmes ou syllabus dans le cours.",
               "type": "resource_exists",
               "automatic": true,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 2,
+          "title": "Indicateurs de résultats et modalités de calcul",
+          "description": "Le prestataire diffuse des indicateurs de résultats adaptés à la nature des prestations et précise les modalités de calcul.",
+          "scope": "course",
+          "moodle_level": "partial",
+          "checks": [
+            {
+              "name": "Statistiques et indicateurs de résultats calculés",
+              "description": "Calcul automatique des taux d'inscription, complétion et notes du cours avec modalités de calcul traçables.",
+              "type": "stats_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "number": 3,
+          "title": "Résultats liés aux certifications professionnelles",
+          "description": "Pour les formations certifiantes, le prestataire informe sur les taux d'obtention des certifications, équivalences et passerelles.",
+          "scope": "course",
+          "moodle_level": "documentary",
+          "checks": [
+            {
+              "name": "Preuve de publication des taux de certification et passerelles",
+              "description": "Dépôt des éléments attestant la communication des taux de certification et débouchés.",
+              "type": "manual",
+              "automatic": false,
               "weight": 1
             }
           ]
@@ -34,17 +69,83 @@
     {
       "number": 2,
       "title": "L'identification précise des objectifs des prestations proposées et l'adaptation de ces prestations aux publics bénéficiaires, lors de la conception des prestations",
-      "description": "Le prestataire identifie les besoins du bénéficiaire, définit des objectifs opérationnels et évaluables, et adapte les contenus et modalités de mise en œuvre aux objectifs définis et aux publics bénéficiaires.",
+      "description": "Le prestataire identifie les besoins du bénéficiaire, définit des objectifs opérationnels et évaluables, adapte les contenus et modalités de mise en œuvre et positionne à l'entrée.",
       "indicators": [
+        {
+          "number": 4,
+          "title": "Analyse du besoin des bénéficiaires",
+          "description": "Le prestataire analyse le besoin du bénéficiaire en amont de la prestation.",
+          "scope": "course",
+          "moodle_level": "partial",
+          "checks": [
+            {
+              "name": "Questionnaire ou diagnostic de recueil des besoins",
+              "description": "Présence d'un questionnaire, test de besoin préalable ou formulaire d'accueil.",
+              "type": "positioning_exists",
+              "automatic": true,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 5,
+          "title": "Objectifs opérationnels et évaluables",
+          "description": "Le prestataire définit les objectifs opérationnels et évaluables de la prestation.",
+          "scope": "course",
+          "moodle_level": "strong",
+          "checks": [
+            {
+              "name": "Compétences et objectifs opérationnels configurés",
+              "description": "Vérification des compétences Moodle associées au cours ou définies dans le descriptif.",
+              "type": "competency_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        },
         {
           "number": 6,
           "title": "Contenus et modalités adaptés aux objectifs et aux publics",
           "description": "Le prestataire établit les contenus et les modalités de mise en œuvre de la prestation, adaptés aux objectifs définis et aux publics bénéficiaires.",
           "scope": "course",
+          "moodle_level": "strong",
           "checks": [
             {
-              "name": "Activités pédagogiques présentes",
+              "name": "Activités pédagogiques interactives présentes",
+              "description": "Activités d'apprentissage structurées et diversifiées dans le parcours.",
               "type": "activity_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "number": 7,
+          "title": "Adéquation des contenus aux exigences de certification",
+          "description": "Lorsque la prestation est certifiante, le prestataire s'assure de l'adéquation des contenus aux référentiels de certification.",
+          "scope": "course",
+          "moodle_level": "partial",
+          "checks": [
+            {
+              "name": "Mapping compétences / référentiel de certification",
+              "description": "Compétences Moodle alignées sur les activités d'évaluation ou document d'adéquation.",
+              "type": "competency_exists",
+              "automatic": true,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 8,
+          "title": "Positionnement et évaluation des acquis à l'entrée",
+          "description": "Le prestataire positionne les bénéficiaires à l'entrée de la prestation pour adapter le parcours.",
+          "scope": "course",
+          "moodle_level": "strong",
+          "checks": [
+            {
+              "name": "Dispositif de positionnement initial détecté",
+              "description": "Test d'entrée, quiz de positionnement ou auto-évaluation initiale.",
+              "type": "positioning_exists",
               "automatic": true,
               "weight": 2
             }
@@ -55,25 +156,133 @@
     {
       "number": 3,
       "title": "L'adaptation aux publics bénéficiaires des prestations et des modalités d'accueil, d'accompagnement, de suivi et d'évaluation mises en œuvre",
-      "description": "Le prestataire informe les publics sur les conditions de déroulement, met en œuvre et adapte la prestation, l'accompagnement et le suivi, et évalue l'atteinte des objectifs par les bénéficiaires.",
+      "description": "Le prestataire informe les publics sur les conditions de déroulement, adapte la prestation et le suivi, évalue les acquis, prévient les ruptures et accompagne les parcours.",
       "indicators": [
+        {
+          "number": 9,
+          "title": "Conditions de déroulement de la prestation",
+          "description": "Le prestataire informe les publics sur les conditions de déroulement de la prestation.",
+          "scope": "course",
+          "moodle_level": "strong",
+          "checks": [
+            {
+              "name": "Informations de déroulement et calendrier du cours",
+              "description": "Vérification des dates, consignes de déroulement et présentation.",
+              "type": "field_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "number": 10,
+          "title": "Adaptation de la prestation, accompagnement et suivi",
+          "description": "Le prestataire met en œuvre et adapte la prestation, l'accompagnement et le suivi aux bénéficiaires.",
+          "scope": "course",
+          "moodle_level": "strong",
+          "checks": [
+            {
+              "name": "Suivi individualisé et progression activée",
+              "description": "Achèvement des activités et suivi de parcours configurés.",
+              "type": "completion_enabled",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        },
         {
           "number": 11,
           "title": "Évaluation de l'atteinte des objectifs",
           "description": "Le prestataire évalue l'atteinte par les publics bénéficiaires des objectifs de la prestation.",
           "scope": "course",
+          "moodle_level": "strong",
           "checks": [
             {
-              "name": "Suivi de progression activé",
-              "type": "completion_enabled",
-              "automatic": true,
-              "weight": 1
-            },
-            {
-              "name": "Évaluations configurées dans le gradebook",
+              "name": "Évaluations configurées dans le carnet de notes",
+              "description": "Éléments d'évaluation sommative/formative présents dans le carnet de notes.",
               "type": "gradebook_exists",
               "automatic": true,
               "weight": 2
+            }
+          ]
+        },
+        {
+          "number": 12,
+          "title": "Engagement des bénéficiaires et prévention des ruptures",
+          "description": "Le prestataire favorise l'engagement des bénéficiaires et prévient les ruptures de parcours.",
+          "scope": "course",
+          "moodle_level": "strong",
+          "checks": [
+            {
+              "name": "Dispositif de suivi de l'activité et complétion",
+              "description": "Traces d'engagement et suivi régulier de la progression apprenants.",
+              "type": "completion_enabled",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "number": 13,
+          "title": "Coordination des apprentissages en entreprise (alternance)",
+          "description": "Pour les formations en alternance, le prestataire assure la coordination avec l'entreprise.",
+          "scope": "course",
+          "moodle_level": "partial",
+          "checks": [
+            {
+              "name": "Suivi de liaison alternance / tuteurs entreprise",
+              "description": "Livret de suivi, espace tuteur entreprise ou convention d'alternance.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 14,
+          "title": "Accompagnement socio-professionnel et citoyenneté",
+          "description": "Le prestataire met en œuvre un accompagnement socio-professionnel et à la citoyenneté.",
+          "scope": "course",
+          "moodle_level": "partial",
+          "checks": [
+            {
+              "name": "Ressources d'accompagnement socio-professionnel",
+              "description": "Espaces d'information, ateliers ou partenariats d'insertion.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 15,
+          "title": "Droits et devoirs de l'apprenti",
+          "description": "Le prestataire informe les apprentis de leurs droits et devoirs et s'assure de leur compréhension.",
+          "scope": "course",
+          "moodle_level": "strong",
+          "checks": [
+            {
+              "name": "Information et ressources pédagogiques sur les droits et devoirs",
+              "description": "Ressources documentaires, livret d'accueil ou charte des droits et devoirs.",
+              "type": "resource_exists",
+              "automatic": true,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 16,
+          "title": "Présentation des bénéficiaires à la certification",
+          "description": "Pour les formations certifiantes, le prestataire s'assure des conditions de présentation à la certification.",
+          "scope": "course",
+          "moodle_level": "partial",
+          "checks": [
+            {
+              "name": "Conditions de validation et épreuves de certification",
+              "description": "Carnet de notes ou attestation de conformité des inscriptions à la certification.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
             }
           ]
         }
@@ -85,15 +294,65 @@
       "description": "Le prestataire met à disposition les moyens humains et techniques adaptés, coordonne les intervenants et met des ressources pédagogiques à disposition des bénéficiaires.",
       "indicators": [
         {
-          "number": 19,
-          "title": "Ressources pédagogiques mises à disposition",
-          "description": "Le prestataire met à disposition ou s'assure de la mise à disposition des moyens humains et techniques adaptés et d'un environnement approprié.",
+          "number": 17,
+          "title": "Moyens humains et techniques adaptés",
+          "description": "Le prestataire met à disposition des moyens humains et techniques adaptés aux prestations.",
           "scope": "course",
+          "moodle_level": "partial",
           "checks": [
             {
-              "name": "Ressources pédagogiques mises à disposition",
+              "name": "Environnement numérique d'apprentissage opérationnel",
+              "description": "Présence de l'espace de formation Moodle avec ressources actives.",
               "type": "resource_exists",
               "automatic": true,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 18,
+          "title": "Coordination des intervenants",
+          "description": "Le prestataire mobilise et coordonne les différents intervenants internes et externes.",
+          "scope": "course",
+          "moodle_level": "partial",
+          "checks": [
+            {
+              "name": "Coordination pédagogique des enseignants et intervenants",
+              "description": "Affectation des enseignants et traçabilité des interventions.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 19,
+          "title": "Ressources pédagogiques mises à disposition",
+          "description": "Le prestataire met à disposition ou s'assure de la mise à disposition des ressources pédagogiques appropriées.",
+          "scope": "course",
+          "moodle_level": "strong",
+          "checks": [
+            {
+              "name": "Ressources documentaires et supports de cours",
+              "description": "Présence de fichiers, pages, livres ou supports multimédias récents.",
+              "type": "resource_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "number": 20,
+          "title": "Personnels dédiés : mobilité, handicap, conseil de perfectionnement",
+          "description": "Le prestataire dispose de personnels dédiés (référent mobilité, handicap, conseil de perfectionnement).",
+          "scope": "course",
+          "moodle_level": "documentary",
+          "checks": [
+            {
+              "name": "Désignation et informations sur les référents",
+              "description": "Justificatif de désignation des référents et contacts affichés.",
+              "type": "manual",
+              "automatic": false,
               "weight": 1
             }
           ]
@@ -103,28 +362,224 @@
     {
       "number": 5,
       "title": "La qualification et le développement des connaissances et compétences des personnels chargés de mettre en œuvre les prestations",
-      "description": "Le prestataire détermine, mobilise et évalue les compétences des intervenants, et entretient et développe les compétences de ses salariés. (Indicateurs manuels, non analysés automatiquement.)",
-      "indicators": []
+      "description": "Le prestataire détermine, mobilise et évalue les compétences des intervenants, et entretient et développe les compétences de ses salariés.",
+      "indicators": [
+        {
+          "number": 21,
+          "title": "Compétences des intervenants",
+          "description": "Le prestataire s'assure des compétences professionnelles des intervenants internes et externes.",
+          "scope": "global",
+          "moodle_level": "partial",
+          "checks": [
+            {
+              "name": "Dossiers de compétences et qualifications des intervenants",
+              "description": "CV, diplômes, titres ou grille de compétences des formateurs.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 22,
+          "title": "Développement des compétences des salariés",
+          "description": "Le prestataire entretient et développe les compétences de ses salariés adaptées aux prestations.",
+          "scope": "global",
+          "moodle_level": "partial",
+          "checks": [
+            {
+              "name": "Plan de formation et développement des compétences",
+              "description": "Attestations de formation, parcours de formation continue interne ou plan annuel.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 6,
       "title": "L'inscription et l'investissement du prestataire dans son environnement professionnel",
-      "description": "Le prestataire réalise des veilles (légale, métiers, innovations), mobilise les réseaux du handicap et respecte la conformité en cas de sous-traitance. (Indicateurs manuels, non analysés automatiquement.)",
-      "indicators": []
+      "description": "Le prestataire réalise des veilles (légale, métiers, innovations), mobilise les réseaux du handicap et respecte la conformité en cas de sous-traitance et alternance.",
+      "indicators": [
+        {
+          "number": 23,
+          "title": "Veille légale et réglementaire",
+          "description": "Le prestataire réalise une veille légale et réglementaire sur le champ de la formation professionnelle.",
+          "scope": "global",
+          "moodle_level": "documentary",
+          "checks": [
+            {
+              "name": "Traces et exploitation de la veille légale et réglementaire",
+              "description": "Fiches de veille, abonnements juridiques, compte-rendus d'impact.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 24,
+          "title": "Veille sur les métiers, emplois et compétences",
+          "description": "Le prestataire réalise une veille sur les évolutions des métiers, compétences et qualifications.",
+          "scope": "global",
+          "moodle_level": "documentary",
+          "checks": [
+            {
+              "name": "Traces de veille métiers et compétences",
+              "description": "Études de branches, bilans d'observatoire, revues spécialisées.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 25,
+          "title": "Veille pédagogique et technologique",
+          "description": "Le prestataire réalise une veille sur les innovations pédagogiques et technologies de formation.",
+          "scope": "global",
+          "moodle_level": "documentary",
+          "checks": [
+            {
+              "name": "Traces de veille pédagogique et technologique",
+              "description": "Participation à des webinaires, expérimentations EdTech, articles de veille.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 26,
+          "title": "Mobilisation des réseaux handicap et accessibilité",
+          "description": "Le prestataire mobilise les expertises et réseaux spécialisés pour l'accueil des personnes en situation de handicap.",
+          "scope": "course",
+          "moodle_level": "partial",
+          "checks": [
+            {
+              "name": "Réseaux handicap et accessibilité des supports",
+              "description": "Partenariats Agefiph/Cap Emploi et conformité d'accessibilité des contenus numériques.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 27,
+          "title": "Conformité en cas de sous-traitance ou portage",
+          "description": "Le prestataire s'assure du respect de la conformité au RNQ par ses sous-traitants et prestataires contractuels.",
+          "scope": "global",
+          "moodle_level": "documentary",
+          "checks": [
+            {
+              "name": "Contrats de sous-traitance et traçabilité Qualiopi",
+              "description": "Contrats, clauses qualité et vérification de la conformité des sous-traitants (V10).",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 28,
+          "title": "Formation en situation de travail (AFEST)",
+          "description": "Lorsque la prestation est réalisée en situation de travail, le prestataire organise les conditions de mise en œuvre.",
+          "scope": "course",
+          "moodle_level": "partial",
+          "checks": [
+            {
+              "name": "Protocole et livret AFEST",
+              "description": "Protocole individuel de formation en situation de travail et phases réflexives.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 29,
+          "title": "Insertion professionnelle et poursuite de parcours",
+          "description": "Le prestataire développe des actions favorisant l'insertion professionnelle et la poursuite d'études.",
+          "scope": "course",
+          "moodle_level": "partial",
+          "checks": [
+            {
+              "name": "Actions d'aide à l'insertion professionnelle",
+              "description": "Ateliers CV, réseau d'entreprises partenaires et suivi des débouchés.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 7,
       "title": "Le recueil et la prise en compte des appréciations et des réclamations formulées par les parties prenantes aux prestations délivrées",
-      "description": "Le prestataire recueille les appréciations des parties prenantes, traite les difficultés, réclamations et aléas, et met en œuvre une démarche d'amélioration continue.",
+      "description": "Le prestataire recueille les appréciations des parties prenantes, traite les difficultés, réclamations et aléas, met en œuvre une démarche d'amélioration continue et évalue spécifiquement les enseignements.",
       "indicators": [
         {
           "number": 30,
           "title": "Recueil des appréciations des parties prenantes",
-          "description": "Le prestataire recueille les appréciations des parties prenantes : bénéficiaires, financeurs, équipes pédagogiques et entreprises concernées.",
+          "description": "Le prestataire recueille les appréciations des bénéficiaires, financeurs, équipes pédagogiques et entreprises.",
           "scope": "course",
+          "moodle_level": "strong",
           "checks": [
             {
-              "name": "Questionnaire de satisfaction",
+              "name": "Questionnaire de satisfaction apprenants",
+              "description": "Questionnaire Feedback ou enquête de satisfaction présent avec recueil des réponses.",
+              "type": "feedback_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "number": 31,
+          "title": "Traitement des réclamations, difficultés et aléas",
+          "description": "Le prestataire met en œuvre des modalités de traitement des réclamations et difficultés formulées.",
+          "scope": "global",
+          "moodle_level": "partial",
+          "checks": [
+            {
+              "name": "Registre et procédure de traitement des réclamations",
+              "description": "Registre des réclamations formalisé, formulaire de signalement et suivi des actions correctives.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 32,
+          "title": "Démarche d'amélioration continue et analyse des risques",
+          "description": "Le prestataire met en œuvre des mesures d'amélioration continue basées sur l'analyse des appréciations, réclamations et risques qualité (V10).",
+          "scope": "global",
+          "moodle_level": "partial",
+          "checks": [
+            {
+              "name": "Plan d'actions d'amélioration et gestion des risques qualité",
+              "description": "Actions correctives créées suite aux évaluations et traçabilité des modifications apportées aux cours.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 33,
+          "title": "Évaluation des contenus et des enseignements par les apprenants (V10 - applicable 01/11/2026)",
+          "description": "Le prestataire met en place un dispositif d'évaluation des contenus et des enseignements par les apprenants, distinct du recueil général, partagé avec les équipes pédagogiques et mesuré périodiquement.",
+          "scope": "course",
+          "moodle_level": "strong",
+          "checks": [
+            {
+              "name": "Évaluation pédagogique des enseignements",
+              "description": "Questionnaire d'évaluation spécifique des contenus pédagogiques et enseignements par les apprenants.",
               "type": "feedback_exists",
               "automatic": true,
               "weight": 2

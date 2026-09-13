@@ -279,12 +279,15 @@ class course_analyser {
 
     private function get_check_analyser(string $type) {
         $map = [
-            'activity_exists'   => new \local_qualiscope\checks\activity_check(),
-            'resource_exists'   => new \local_qualiscope\checks\resource_check(),
+            'activity_exists'    => new \local_qualiscope\checks\activity_check(),
+            'resource_exists'    => new \local_qualiscope\checks\resource_check(),
             'completion_enabled' => new \local_qualiscope\checks\completion_check(),
-            'gradebook_exists'  => new \local_qualiscope\checks\gradebook_check(),
-            'feedback_exists'   => new \local_qualiscope\checks\feedback_check(),
-            'field_exists'      => new \local_qualiscope\checks\field_check(),
+            'gradebook_exists'   => new \local_qualiscope\checks\gradebook_check(),
+            'feedback_exists'    => new \local_qualiscope\checks\feedback_check(),
+            'field_exists'       => new \local_qualiscope\checks\field_check(),
+            'positioning_exists' => new \local_qualiscope\checks\positioning_check(),
+            'competency_exists'  => new \local_qualiscope\checks\competency_check(),
+            'stats_exists'       => new \local_qualiscope\checks\stats_check(),
         ];
         return $map[$type] ?? null;
     }
