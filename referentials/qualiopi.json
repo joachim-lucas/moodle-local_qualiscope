@@ -1,0 +1,137 @@
+{
+  "name": "Qualiopi",
+  "version": "2026",
+  "description": "Référentiel National Qualité (RNQ) - Décret n°2026-728 du 1er août 2026 - 7 critères, 33 indicateurs (seuls les indicateurs vérifiables automatiquement via Moodle sont analysés).",
+  "active": true,
+  "criteria": [
+    {
+      "number": 1,
+      "title": "Les conditions d'information du public sur les prestations proposées, les délais pour y accéder et les résultats obtenus",
+      "description": "Le prestataire diffuse une information accessible au public, détaillée et vérifiable sur chaque prestation : objectifs, durée, modalités et délais d'accès, tarifs, contacts, méthodes mobilisées et accessibilité aux personnes en situation de handicap.",
+      "indicators": [
+        {
+          "number": 1,
+          "title": "Information du public sur les prestations proposées",
+          "description": "Le prestataire diffuse une information accessible au public, détaillée et vérifiable sur chaque prestation proposée.",
+          "scope": "course",
+          "checks": [
+            {
+              "name": "Description du cours renseignée",
+              "type": "field_exists",
+              "automatic": true,
+              "weight": 2
+            },
+            {
+              "name": "Ressources pédagogiques présentes",
+              "type": "resource_exists",
+              "automatic": true,
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "L'identification précise des objectifs des prestations proposées et l'adaptation de ces prestations aux publics bénéficiaires, lors de la conception des prestations",
+      "description": "Le prestataire identifie les besoins du bénéficiaire, définit des objectifs opérationnels et évaluables, et adapte les contenus et modalités de mise en œuvre aux objectifs définis et aux publics bénéficiaires.",
+      "indicators": [
+        {
+          "number": 6,
+          "title": "Contenus et modalités adaptés aux objectifs et aux publics",
+          "description": "Le prestataire établit les contenus et les modalités de mise en œuvre de la prestation, adaptés aux objectifs définis et aux publics bénéficiaires.",
+          "scope": "course",
+          "checks": [
+            {
+              "name": "Activités pédagogiques présentes",
+              "type": "activity_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "L'adaptation aux publics bénéficiaires des prestations et des modalités d'accueil, d'accompagnement, de suivi et d'évaluation mises en œuvre",
+      "description": "Le prestataire informe les publics sur les conditions de déroulement, met en œuvre et adapte la prestation, l'accompagnement et le suivi, et évalue l'atteinte des objectifs par les bénéficiaires.",
+      "indicators": [
+        {
+          "number": 11,
+          "title": "Évaluation de l'atteinte des objectifs",
+          "description": "Le prestataire évalue l'atteinte par les publics bénéficiaires des objectifs de la prestation.",
+          "scope": "course",
+          "checks": [
+            {
+              "name": "Suivi de progression activé",
+              "type": "completion_enabled",
+              "automatic": true,
+              "weight": 1
+            },
+            {
+              "name": "Évaluations configurées dans le gradebook",
+              "type": "gradebook_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "L'adéquation des moyens pédagogiques, techniques et d'encadrement aux prestations mises en œuvre",
+      "description": "Le prestataire met à disposition les moyens humains et techniques adaptés, coordonne les intervenants et met des ressources pédagogiques à disposition des bénéficiaires.",
+      "indicators": [
+        {
+          "number": 19,
+          "title": "Ressources pédagogiques mises à disposition",
+          "description": "Le prestataire met à disposition ou s'assure de la mise à disposition des moyens humains et techniques adaptés et d'un environnement approprié.",
+          "scope": "course",
+          "checks": [
+            {
+              "name": "Ressources pédagogiques mises à disposition",
+              "type": "resource_exists",
+              "automatic": true,
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "La qualification et le développement des connaissances et compétences des personnels chargés de mettre en œuvre les prestations",
+      "description": "Le prestataire détermine, mobilise et évalue les compétences des intervenants, et entretient et développe les compétences de ses salariés. (Indicateurs manuels, non analysés automatiquement.)",
+      "indicators": []
+    },
+    {
+      "number": 6,
+      "title": "L'inscription et l'investissement du prestataire dans son environnement professionnel",
+      "description": "Le prestataire réalise des veilles (légale, métiers, innovations), mobilise les réseaux du handicap et respecte la conformité en cas de sous-traitance. (Indicateurs manuels, non analysés automatiquement.)",
+      "indicators": []
+    },
+    {
+      "number": 7,
+      "title": "Le recueil et la prise en compte des appréciations et des réclamations formulées par les parties prenantes aux prestations délivrées",
+      "description": "Le prestataire recueille les appréciations des parties prenantes, traite les difficultés, réclamations et aléas, et met en œuvre une démarche d'amélioration continue.",
+      "indicators": [
+        {
+          "number": 30,
+          "title": "Recueil des appréciations des parties prenantes",
+          "description": "Le prestataire recueille les appréciations des parties prenantes : bénéficiaires, financeurs, équipes pédagogiques et entreprises concernées.",
+          "scope": "course",
+          "checks": [
+            {
+              "name": "Questionnaire de satisfaction",
+              "type": "feedback_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

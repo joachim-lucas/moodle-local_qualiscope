@@ -1,0 +1,134 @@
+<div class="qualiscope-dashboard container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2>{{#str}} dashboard_title, local_qualiscope {{/str}}</h2>
+            <p class="text-muted">{{#str}} dashboard_course, local_qualiscope {{/str}} {{coursename}}</p>
+            <form class="d-flex align-items-center gap-2" method="get" action="{{{referentialurl}}}">
+                <input type="hidden" name="courseid" value="{{courseid}}">
+                <label for="referential-select" class="form-label mb-0 me-2">{{#str}} dashboard_referential, local_qualiscope {{/str}}</label>
+                <select name="referentialid" id="referential-select" class="form-select w-auto" onchange="this.form.submit()">
+                    {{#referentials}}
+                    <option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                    {{/referentials}}
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-5">
+            <div class="card h-100 shadow-none">
+                <div class="card-body">
+                    <h5 class="card-title">{{#str}} dashboard_score, local_qualiscope {{/str}}</h5>
+                    <div class="display-3 font-weight-bold
+                        {{#summary.percentagegt75}}text-success{{/summary.percentagegt75}}
+                        {{#summary.percentagebetween50and75}}text-warning{{/summary.percentagebetween50and75}}
+                        {{#summary.percentagelt50}}text-danger{{/summary.percentagelt50}}
+                    ">{{summary.percentage}}%</div>
+                    <div class="progress mt-2" style="height: 14px;">
+                        <div class="progress-bar
+                            {{#summary.percentagegt75}}bg-success{{/summary.percentagegt75}}
+                            {{#summary.percentagebetween50and75}}bg-warning{{/summary.percentagebetween50and75}}
+                            {{#summary.percentagelt50}}bg-danger{{/summary.percentagelt50}}
+                        " style="width: {{summary.percentage}}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="row g-3 h-100">
+                {{#summaryitems}}
+                <div class="col-6 col-lg-3 d-flex">
+                    <div class="card flex-fill w-100 text-center border-0 shadow-none {{bgclass}}">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center p-3">
+                            <div class="fs-2">
+                                {{#use_fontawesome}}{{{icon}}}{{/use_fontawesome}}
+                                {{^use_fontawesome}}{{{emoji}}}{{/use_fontawesome}}
+                            </div>
+                            <span class="fs-4 fw-bold">{{count}}</span>
+                            <span class="small text-muted">{{label}}</span>
+                        </div>
+                    </div>
+                </div>
+                {{/summaryitems}}
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col">
+            <h3 class="mb-0">{{#str}} criteria_title, local_qualiscope {{/str}}</h3>
+        </div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-outline-primary btn-sm"
+                data-qualiscope="criteria-toggleall"
+                data-label-open="{{#str}} criteria_open_all, local_qualiscope {{/str}}"
+                data-label-close="{{#str}} criteria_close_all, local_qualiscope {{/str}}">
+                {{#str}} criteria_open_all, local_qualiscope {{/str}}
+            </button>
+        </div>
+    </div>
+
+    <div class="alert alert-info" role="alert">
+        {{#str}} dashboard_scope_notice, local_qualiscope {{/str}}
+    </div>
+
+    <div data-qualiscope="criteria-accordion">
+    {{#criteria}}
+    <div class="card mb-3">
+        <div class="card-header d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#qualified-criteria-{{id}}" role="button">
+            <span>
+                <strong>C{{number}}</strong> &mdash; {{shorttitle}}
+            </span>
+            <span class="badge
+                {{#manualonly}}bg-secondary{{/manualonly}}
+                {{^manualonly}}
+                {{#percentagegt75}}bg-success{{/percentagegt75}}
+                {{#percentagebetween50and75}}bg-warning{{/percentagebetween50and75}}
+                {{#percentagelt50}}bg-danger{{/percentagelt50}}
+                {{/manualonly}}
+            ">
+                {{#manualonly}}
+                <span title="{{#str}} criteria_manual_only, local_qualiscope {{/str}}" data-toggle="tooltip">{{#str}} dashboard_manual_only, local_qualiscope {{/str}}</span>
+                {{/manualonly}}
+                {{^manualonly}}
+                {{percentage}}%
+                {{/manualonly}}
+            </span>
+        </div>
+        <div id="qualified-criteria-{{id}}" class="collapse">
+            <div class="card-body">
+                {{#results}}
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                    <span>
+                        <a href="{{{indicatorurl}}}">
+                            <strong>I{{indicator.number}}</strong> &mdash; {{checkname}}
+                        </a>
+                        {{#detail}}<br/><small class="text-muted">{{detail}}</small>{{/detail}}
+                    </span>
+                    <span class="badge
+                        {{#statusdetected}}bg-success{{/statusdetected}}
+                        {{#statusverify}}bg-warning{{/statusverify}}
+                        {{#statusmissing}}bg-danger{{/statusmissing}}
+                        {{#statusna}}bg-secondary{{/statusna}}
+                    ">{{statuslabel}}</span>
+                </div>
+                {{/results}}
+                {{^results}}
+                {{#manualonly}}
+                <div class="text-muted text-center py-3">{{#str}} criteria_manual_only, local_qualiscope {{/str}}</div>
+                {{/manualonly}}
+                {{^manualonly}}
+                <div class="text-muted text-center py-3">{{#str}} no_results, local_qualiscope {{/str}}</div>
+                {{/manualonly}}
+                {{/results}}
+            </div>
+        </div>
+    </div>
+    {{/criteria}}
+    </div>
+
+    {{^criteria}}
+    <div class="alert alert-info">{{#str}} no_results, local_qualiscope {{/str}}</div>
+    {{/criteria}}
+</div>

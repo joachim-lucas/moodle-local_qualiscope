@@ -1,0 +1,113 @@
+<div class="qualiscope-campaign container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <h3>{{#str}} campaign_title, local_qualiscope {{/str}}</h3>
+            <button class="btn btn-primary" data-toggle="qualiscope-campaign-form">{{#str}} campaign_create, local_qualiscope {{/str}}</button>
+        </div>
+    </div>
+
+    <div class="card mb-4" id="campaign-form" style="display:none;">
+        <div class="card-header"><h5 class="mb-0">{{#str}} campaign_create, local_qualiscope {{/str}}</h5></div>
+        <div class="card-body">
+            <form method="post" action="{{savecampaignurl}}">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+
+                <div class="mb-3">
+                    <label class="form-label">{{#str}} campaign_name, local_qualiscope {{/str}}</label>
+                    <input type="text" class="form-control" name="name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{{#str}} campaign_referential, local_qualiscope {{/str}}</label>
+                    <select class="form-select" name="referential_id">
+                        {{#referentials}}
+                        <option value="{{id}}">{{name}} {{version}}</option>
+                        {{/referentials}}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{{#str}} campaign_scope, local_qualiscope {{/str}}</label>
+                    <select class="form-select" name="scope" id="scope-select">
+                        <option value="all">{{#str}} campaign_scope_all, local_qualiscope {{/str}}</option>
+                        <option value="category">{{#str}} campaign_scope_category, local_qualiscope {{/str}}</option>
+                        <option value="selected">{{#str}} campaign_scope_selected, local_qualiscope {{/str}}</option>
+                    </select>
+                </div>
+
+                <div class="mb-3" id="scope-categories" style="display:none;">
+                    <label class="form-label">{{#str}} campaign_scope_category, local_qualiscope {{/str}}</label>
+                    <select class="form-select" name="scopeids[]" multiple size="5">
+                        {{#categories}}
+                        <option value="{{id}}">{{name}}</option>
+                        {{/categories}}
+                    </select>
+                </div>
+
+                <div class="mb-3" id="scope-courses" style="display:none;">
+                    <label class="form-label">{{#str}} campaign_scope_selected, local_qualiscope {{/str}}</label>
+                    <select class="form-select" name="scopeids[]" multiple size="5">
+                        {{#courses}}
+                        <option value="{{id}}">{{fullname}}</option>
+                        {{/courses}}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">{{#str}} campaign_submit, local_qualiscope {{/str}}</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>{{#str}} campaign_name, local_qualiscope {{/str}}</th>
+                        <th>{{#str}} campaign_referential, local_qualiscope {{/str}}</th>
+                        <th>{{#str}} campaign_scope, local_qualiscope {{/str}}</th>
+                        <th>{{#str}} campaign_courses_analysed, local_qualiscope {{/str}}</th>
+                        <th>{{#str}} campaign_date, local_qualiscope {{/str}}</th>
+                        <th>{{#str}} campaign_status, local_qualiscope {{/str}}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#campaigns}}
+                    <tr>
+                        <td><a href="{{{viewurl}}}">{{name}}</a></td>
+                        <td>{{referential}}</td>
+                        <td>{{scopelabel}}</td>
+                        <td>{{course_count}}</td>
+                        <td>{{dateformatted}}</td>
+                        <td>
+                            <span class="badge {{#timecompleted}}bg-success{{/timecompleted}}{{^timecompleted}}bg-primary{{/timecompleted}}">
+                                {{#timecompleted}}
+                                {{#str}} campaign_status_completed, local_qualiscope {{/str}}
+                                {{/timecompleted}}
+                                {{^timecompleted}}
+                                {{#str}} campaign_status_running, local_qualiscope {{/str}}
+                                {{/timecompleted}}
+                            </span>
+                        </td>
+                        <td>
+                            {{^timecompleted}}
+                            <a href="{{{runurl}}}" class="btn btn-sm btn-primary">{{#str}} campaign_run, local_qualiscope {{/str}}</a>
+                            {{/timecompleted}}
+                            {{#timecompleted}}
+                            <a href="{{{rerunurl}}}" class="btn btn-sm btn-outline-primary">{{#str}} campaign_rerun, local_qualiscope {{/str}}</a>
+                            {{/timecompleted}}
+                        </td>
+                    </tr>
+                    {{/campaigns}}
+
+                    {{^campaigns}}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">{{#str}} no_results, local_qualiscope {{/str}}</td>
+                    </tr>
+                    {{/campaigns}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

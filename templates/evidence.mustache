@@ -1,0 +1,77 @@
+<div class="qualiscope-evidence container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3>{{#str}} evidence_title, local_qualiscope {{/str}}</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            {{#evidences}}
+            <div class="card mb-3">
+                <div class="card-header d-flex justify-content-between">
+                    <span>
+                        {{#is_moodle}}
+                        <span class="badge bg-success">{{#str}} evidence_type_moodle, local_qualiscope {{/str}}</span>
+                        {{/is_moodle}}
+                        {{#is_external}}
+                        <span class="badge bg-info">{{#str}} evidence_type_external, local_qualiscope {{/str}}</span>
+                        {{/is_external}}
+                        <strong class="ms-2">{{title}}</strong>
+                    </span>
+                    <small class="text-muted">{{timecreated}}</small>
+                </div>
+                <div class="card-body">
+                    {{#description}}<p>{{description}}</p>{{/description}}
+                    {{#filepath}}<p class="small text-muted">📎 {{filepath}}</p>{{/filepath}}
+                    {{#externalurl}}<p><a href="{{externalurl}}" target="_blank">{{externalurl}}</a></p>{{/externalurl}}
+                    {{#annotation}}
+                    <div class="mt-2 p-3 bg-light rounded">
+                        <strong>{{#str}} indicator_annotation, local_qualiscope {{/str}}</strong>
+                        <p class="mb-0 mt-1">{{annotation}}</p>
+                    </div>
+                    {{/annotation}}
+                </div>
+            </div>
+            {{/evidences}}
+
+            {{^evidences}}
+            <div class="alert alert-info">{{#str}} no_results, local_qualiscope {{/str}}</div>
+            {{/evidences}}
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header"><h5 class="mb-0">{{#str}} upload_evidence, local_qualiscope {{/str}}</h5></div>
+                <div class="card-body">
+                    <form method="post" action="{{uploadurl}}" enctype="multipart/form-data">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <input type="hidden" name="resultid" value="{{resultid}}">
+
+                        <div class="mb-3">
+                            <label class="form-label">{{#str}} upload_title, local_qualiscope {{/str}}</label>
+                            <input type="text" class="form-control" name="title" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{#str}} upload_file, local_qualiscope {{/str}}</label>
+                            <input type="file" class="form-control" name="evidencefile">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{#str}} upload_external_url, local_qualiscope {{/str}}</label>
+                            <input type="url" class="form-control" name="externalurl" placeholder="https://...">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">{{#str}} upload_annotation, local_qualiscope {{/str}}</label>
+                            <textarea class="form-control" name="annotation" rows="3"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">{{#str}} upload_submit, local_qualiscope {{/str}}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

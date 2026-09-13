@@ -1,0 +1,132 @@
+<div class="qualiscope-indicator container-fluid py-4">
+    <div class="row mb-3">
+        <div class="col-12">
+            <a href="{{{backurl}}}" class="text-decoration-none">{{#str}} back_to_dashboard, local_qualiscope {{/str}}</a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2>{{#str}} indicator_title, local_qualiscope {{/str}} {{indicator.number}}</h2>
+            <h4 class="text-muted">{{indicator.title}}</h4>
+            {{#indicator.description}}
+            <p class="text-muted">{{indicator.description}}</p>
+            {{/indicator.description}}
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header"><h5 class="mb-0">{{#str}} indicator_checks, local_qualiscope {{/str}}</h5></div>
+        <div class="card-body p-0">
+            {{#checkresults}}
+            <div class="d-flex align-items-center justify-content-between py-2 px-3 border-bottom">
+                <span>
+                    <strong>{{checkname}}</strong>
+                    {{#detail}}<div class="text-muted small">{{detail}}</div>{{/detail}}
+                </span>
+                <span class="badge
+                    {{#statusdetected}}bg-success{{/statusdetected}}
+                    {{#statusverify}}bg-warning{{/statusverify}}
+                    {{#statusmissing}}bg-danger{{/statusmissing}}
+                    {{#statusna}}bg-secondary{{/statusna}}
+                ">{{statuslabel}}</span>
+            </div>
+            {{/checkresults}}
+            {{^checkresults}}
+            <div class="text-muted text-center py-3">{{#str}} no_results, local_qualiscope {{/str}}</div>
+            {{/checkresults}}
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header"><h5 class="mb-0">{{#str}} indicator_evidence_moodle, local_qualiscope {{/str}}</h5></div>
+                <div class="card-body">
+                    {{#moodleevidences}}
+                    <div class="d-flex align-items-start mb-3 p-3 {{#issue}}bg-warning-subtle rounded{{/issue}}{{^issue}}bg-light rounded{{/issue}}">
+                        {{#issue}}<span class="badge bg-warning me-3 fs-6">⚠</span>{{/issue}}
+                        {{^issue}}<span class="badge bg-success me-3 fs-6">✓</span>{{/issue}}
+                        <div>
+                            <strong>{{title}}</strong>
+                            <div class="text-muted small">{{source}}</div>
+                            {{#description}}<div class="small">{{description}}</div>{{/description}}
+                        </div>
+                    </div>
+                    {{/moodleevidences}}
+
+                    {{^moodleevidences}}
+                    <div class="text-muted text-center py-3">{{#str}} no_results, local_qualiscope {{/str}}</div>
+                    {{/moodleevidences}}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">{{#str}} indicator_evidence_external, local_qualiscope {{/str}}</h5>
+                    <button class="btn btn-sm btn-primary" data-toggle="qualiscope-evidence-form">{{#str}} indicator_add_evidence, local_qualiscope {{/str}}</button>
+                </div>
+                <div class="card-body">
+                    {{#externalevidences}}
+                    <div class="d-flex align-items-start mb-3 p-3 bg-light rounded">
+                        <span class="badge bg-info me-3 fs-6">📎</span>
+                        <div class="flex-grow-1">
+                            <strong>{{title}}</strong>
+                            {{#fileurl}}<div class="small"><a href="{{fileurl}}" target="_blank">{{filename}}</a></div>{{/fileurl}}
+                            {{^fileurl}}{{#filepath}}<div class="small text-muted">{{filepath}}</div>{{/filepath}}{{/fileurl}}
+                            {{#externalurl}}<div class="small"><a href="{{externalurl}}" target="_blank">{{externalurl}}</a></div>{{/externalurl}}
+                            {{#annotation}}<div class="small mt-1 p-2 bg-white rounded border">{{annotation}}</div>{{/annotation}}
+                        </div>
+                    </div>
+                    {{/externalevidences}}
+
+                    {{^externalevidences}}
+                    <div class="text-muted text-center py-3">{{#str}} no_results, local_qualiscope {{/str}}</div>
+                    {{/externalevidences}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4" id="evidence-form" style="display:none;">
+        <div class="card-header"><h5 class="mb-0">{{#str}} upload_evidence, local_qualiscope {{/str}}</h5></div>
+        <div class="card-body">
+            <form method="post" action="{{uploadurl}}" enctype="multipart/form-data">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="resultid" value="{{resultid}}">
+
+                <div class="mb-3">
+                    <label class="form-label">{{#str}} upload_title, local_qualiscope {{/str}}</label>
+                    <input type="text" class="form-control" name="title" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{{#str}} upload_file, local_qualiscope {{/str}}</label>
+                    <input type="file" class="form-control" name="evidencefile">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{{#str}} upload_external_url, local_qualiscope {{/str}}</label>
+                    <input type="url" class="form-control" name="externalurl" placeholder="https://...">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{{#str}} upload_annotation, local_qualiscope {{/str}}</label>
+                    <textarea class="form-control" name="annotation" rows="3"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">{{#str}} upload_submit, local_qualiscope {{/str}}</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <a href="{{{actionurl}}}" class="btn btn-outline-secondary">
+                {{#str}} action_create, local_qualiscope {{/str}}
+            </a>
+        </div>
+    </div>
+</div>
