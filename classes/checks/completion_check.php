@@ -17,20 +17,25 @@ class completion_check extends base_check {
         }
 
         if (!$course->enablecompletion) {
-            return $this->build_result('missing', get_string('check_completion_disabled', 'local_qualiscope'));
+            return $this->build_result('missing', get_string('check_completion_disabled', 'local_qualiscope'), 0.0);
         }
 
-        $count = $DB->get_field_sql(
+        $count = (int) $DB->get_field_sql(
             "SELECT COUNT(*)
              FROM {course_modules}
              WHERE course = :courseid AND completion > 0",
             ['courseid' => $courseid]
         );
 
-        if ($count > 0) {
-            return $this->build_result('detected', get_string('check_completion_count', 'local_qualiscope', $count));
+        if ($count >= 6) {
+            return $this->build_result('detected', get_string('check_completion_count', 'local_qualiscope', $count), 1.0);
+        } else if ($count >= 2) {
+            $ratio = round(0.5 + (($count - 2) / 8), 2);
+            return $this->build_result('detected', get_string('check_completion_count', 'local_qualiscope', $count), $ratio);
+        } else if ($count > 0) {
+            return $this->build_result('verify', get_string('check_completion_count', 'local_qualiscope', $count), 0.4);
         }
 
-        return $this->build_result('verify', get_string('check_completion_enabled_none', 'local_qualiscope'));
+        return $this->build_result('verify', get_string('check_completion_enabled_none', 'local_qualiscope'), 0.2);
     }
 }

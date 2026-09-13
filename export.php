@@ -5,6 +5,7 @@ require_once($CFG->dirroot . '/local/qualiscope/lib.php');
 
 $courseid = required_param('courseid', PARAM_INT);
 $referentialid = optional_param('referentialid', 0, PARAM_INT);
+$format = optional_param('format', 'xlsx', PARAM_ALPHA);
 $sesskey = optional_param('sesskey', '', PARAM_RAW);
 if ($sesskey !== '') {
     require_sesskey($sesskey);
@@ -27,7 +28,34 @@ if (!$referential) {
 $analyser = new \local_qualiscope\analyser\course_analyser($courseid, 0, $referentialid);
 $results = $analyser->run();
 $summary = $analyser->get_summary();
+$criteriasummary = $analyser->get_criteria_summary();
 
+$rawfilename = 'qualiscope_' . clean_filename($course->shortname) . '_' . date('Ymd');
+$rawfilename = preg_replace('/[\r\n\t]+/', '', $rawfilename);
+$basefilename = \core_text::substr($rawfilename, 0, 60);
+
+if ($format === 'pdf') {
+    $pdfgen = new \local_qualiscope\exporter\pdf_generator($course, $referential, $summary, $criteriasummary, $results);
+    $pdfbytes = $pdfgen->generate();
+    $filename = $basefilename . '.pdf';
+
+    send_headers('application/pdf', true);
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+    header('Content-Length: ' . strlen($pdfbytes));
+    echo $pdfbytes;
+    exit;
+}
+
+if ($format === 'zip') {
+    $zipgen = new \local_qualiscope\exporter\zip_generator($course, $referential, $summary, $criteriasummary, $results);
+    $zippath = $zipgen->generate();
+    $filename = $basefilename . '_dossier_preuves.zip';
+
+    send_temp_file($zippath, $filename);
+    exit;
+}
+
+// Default: XLSX export
 $resultmap = [];
 foreach ($results as $result) {
     $resultmap[$result['check']->id] = $result;

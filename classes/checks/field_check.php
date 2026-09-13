@@ -38,10 +38,18 @@ class field_check extends base_check {
             return $this->build_result('verify', get_string('check_field_dates_missing', 'local_qualiscope'));
         }
 
-        if (count($checks) >= 2) {
-            return $this->build_result('detected', implode(' | ', $checks));
+        $totalpossible = 3;
+        $foundcount = count($checks);
+        $ratio = round($foundcount / $totalpossible, 2);
+
+        if ($foundcount >= 3) {
+            return $this->build_result('detected', implode(' | ', $checks), 1.0);
+        } else if ($foundcount === 2) {
+            return $this->build_result('detected', implode(' | ', $checks), 0.75);
+        } else if ($foundcount === 1) {
+            return $this->build_result('verify', implode(' | ', $checks) . ' (' . get_string('check_field_partial', 'local_qualiscope') . ')', 0.40);
         }
 
-        return $this->build_result('verify', get_string('check_field_partial', 'local_qualiscope'));
+        return $this->build_result('missing', get_string('check_field_partial', 'local_qualiscope'), 0.0);
     }
 }

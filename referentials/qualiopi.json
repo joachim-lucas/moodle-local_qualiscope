@@ -100,6 +100,13 @@
               "type": "competency_exists",
               "automatic": true,
               "weight": 2
+            },
+            {
+              "name": "Alignement constructif : Objectifs et Compétences",
+              "description": "Traçabilité des compétences, structuration des modules et articulation pédagogique.",
+              "type": "alignment_exists",
+              "automatic": true,
+              "weight": 2
             }
           ]
         },
@@ -187,6 +194,13 @@
               "type": "completion_enabled",
               "automatic": true,
               "weight": 2
+            },
+            {
+              "name": "Dispositif d'accompagnement, forums et aménagements",
+              "description": "Canaux d'assistance, échanges pédagogiques et traçabilité des aménagements / dérogations.",
+              "type": "engagement_exists",
+              "automatic": true,
+              "weight": 2
             }
           ]
         },
@@ -203,6 +217,13 @@
               "type": "gradebook_exists",
               "automatic": true,
               "weight": 2
+            },
+            {
+              "name": "Matrice d'évaluation : Grilles critériées et feedback",
+              "description": "Qualité de l'évaluation avec rubriques, guides d'évaluation et feedback d'apprentissage.",
+              "type": "alignment_exists",
+              "automatic": true,
+              "weight": 2
             }
           ]
         },
@@ -217,6 +238,13 @@
               "name": "Dispositif de suivi de l'activité et complétion",
               "description": "Traces d'engagement et suivi régulier de la progression apprenants.",
               "type": "completion_enabled",
+              "automatic": true,
+              "weight": 2
+            },
+            {
+              "name": "Prévention des ruptures et suivi de l'assiduité",
+              "description": "Détection d'inactivité, analyse du taux d'assiduité et alertes de relance.",
+              "type": "engagement_exists",
               "automatic": true,
               "weight": 2
             }

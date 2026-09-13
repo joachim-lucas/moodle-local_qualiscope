@@ -6,9 +6,29 @@
                 <p class="text-muted mb-0">{{#str}} dashboard_course, local_qualiscope {{/str}} {{coursename}}</p>
             </div>
             <div class="d-flex align-items-center gap-2">
-                <a href="{{{exporturl}}}" class="btn btn-outline-secondary btn-sm">
-                    {{#str}} export_report, local_qualiscope {{/str}}
-                </a>
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{#str}} export_report, local_qualiscope {{/str}}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="exportDropdown">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2" href="{{{exportpdfurl}}}">
+                                <i class="fa fa-file-pdf-o text-danger" aria-hidden="true"></i> {{#str}} export_format_pdf, local_qualiscope {{/str}}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2" href="{{{exportzipurl}}}">
+                                <i class="fa fa-file-archive-o text-primary" aria-hidden="true"></i> {{#str}} export_format_zip, local_qualiscope {{/str}}
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2" href="{{{exporturl}}}">
+                                <i class="fa fa-file-excel-o text-success" aria-hidden="true"></i> {{#str}} export_format_xlsx, local_qualiscope {{/str}}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="col-12">

@@ -100,6 +100,19 @@ echo $output->render_dashboard([
     'exporturl' => new moodle_url('/local/qualiscope/export.php', [
         'courseid' => $courseid,
         'referentialid' => $referentialid,
+        'format' => 'xlsx',
+        'sesskey' => sesskey(),
+    ]),
+    'exportpdfurl' => new moodle_url('/local/qualiscope/export.php', [
+        'courseid' => $courseid,
+        'referentialid' => $referentialid,
+        'format' => 'pdf',
+        'sesskey' => sesskey(),
+    ]),
+    'exportzipurl' => new moodle_url('/local/qualiscope/export.php', [
+        'courseid' => $courseid,
+        'referentialid' => $referentialid,
+        'format' => 'zip',
         'sesskey' => sesskey(),
     ]),
     'coursename' => $course->fullname,

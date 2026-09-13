@@ -288,6 +288,8 @@ class course_analyser {
             'positioning_exists' => new \local_qualiscope\checks\positioning_check(),
             'competency_exists'  => new \local_qualiscope\checks\competency_check(),
             'stats_exists'       => new \local_qualiscope\checks\stats_check(),
+            'engagement_exists'  => new \local_qualiscope\checks\engagement_check(),
+            'alignment_exists'   => new \local_qualiscope\checks\alignment_check(),
         ];
         return $map[$type] ?? null;
     }
