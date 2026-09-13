@@ -97,6 +97,11 @@ echo $output->render_dashboard([
     'referentials' => array_values($referentialsdata),
     'selectedreferential' => $selectedreferential ? $selectedreferential->name . ' ' . $selectedreferential->version : '',
     'referentialurl' => new moodle_url('/local/qualiscope/dashboard.php', ['courseid' => $courseid]),
+    'exporturl' => new moodle_url('/local/qualiscope/export.php', [
+        'courseid' => $courseid,
+        'referentialid' => $referentialid,
+        'sesskey' => sesskey(),
+    ]),
     'coursename' => $course->fullname,
     'courseid' => $courseid,
 ]);
