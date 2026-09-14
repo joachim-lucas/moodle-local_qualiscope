@@ -290,6 +290,11 @@ class course_analyser {
             'stats_exists'       => new \local_qualiscope\checks\stats_check(),
             'engagement_exists'  => new \local_qualiscope\checks\engagement_check(),
             'alignment_exists'   => new \local_qualiscope\checks\alignment_check(),
+            'accessibility_exists' => new \local_qualiscope\checks\accessibility_check(),
+            'wcag_images_exists'   => new \local_qualiscope\checks\wcag_images_check(),
+            'wcag_media_exists'    => new \local_qualiscope\checks\wcag_media_check(),
+            'wcag_headings_exists' => new \local_qualiscope\checks\wcag_headings_check(),
+            'wcag_contrast_exists' => new \local_qualiscope\checks\wcag_contrast_check(),
         ];
         return $map[$type] ?? null;
     }

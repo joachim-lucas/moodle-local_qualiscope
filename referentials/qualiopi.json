@@ -29,6 +29,13 @@
               "type": "resource_exists",
               "automatic": true,
               "weight": 1
+            },
+            {
+              "name": "Accessibilité et lisibilité des informations publiques (WCAG / RGAA)",
+              "description": "Structure des titres (h1-h6), attributs alt pertinents sur les images et contrastes de couleurs dans les descriptions publiques.",
+              "type": "accessibility_exists",
+              "automatic": true,
+              "weight": 2
             }
           ]
         },
@@ -482,13 +489,20 @@
         {
           "number": 26,
           "title": "Mobilisation des réseaux handicap et accessibilité",
-          "description": "Le prestataire mobilise les expertises et réseaux spécialisés pour l'accueil des personnes en situation de handicap.",
+          "description": "Le prestataire mobilise les expertises et réseaux spécialisés pour l'accueil des personnes en situation de handicap et veille à l'accessibilité des supports.",
           "scope": "course",
-          "moodle_level": "partial",
+          "moodle_level": "strong",
           "checks": [
             {
-              "name": "Réseaux handicap et accessibilité des supports",
-              "description": "Partenariats Agefiph/Cap Emploi et conformité d'accessibilité des contenus numériques.",
+              "name": "Audit d'accessibilité numérique des contenus (WCAG 2.1 / RGAA)",
+              "description": "Contrôles automatisés : attributs alt des images, sous-titrage des vidéos (.vtt), structure des titres HTML (h1-h6) et ratio de contraste des couleurs.",
+              "type": "accessibility_exists",
+              "automatic": true,
+              "weight": 2
+            },
+            {
+              "name": "Réseaux handicap et accompagnement spécialisé",
+              "description": "Partenariats Agefiph/Cap Emploi, protocole d'accueil et d'adaptation des parcours handicap.",
               "type": "manual",
               "automatic": false,
               "weight": 1
