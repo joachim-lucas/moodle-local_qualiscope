@@ -6,12 +6,19 @@
     </div>
 
     <div class="row mb-4">
-        <div class="col-12">
-            <h2>{{#str}} indicator_title, local_qualiscope {{/str}} {{indicator.number}}</h2>
-            <h4 class="text-muted">{{indicator.title}}</h4>
-            {{#indicator.description}}
-            <p class="text-muted">{{indicator.description}}</p>
-            {{/indicator.description}}
+        <div class="col-12 d-flex flex-wrap justify-content-between align-items-start gap-2">
+            <div>
+                <h2>{{#str}} indicator_title, local_qualiscope {{/str}} {{indicator.number}}</h2>
+                <h4 class="text-muted">{{indicator.title}}</h4>
+                {{#indicator.description}}
+                <p class="text-muted mb-0">{{indicator.description}}</p>
+                {{/indicator.description}}
+            </div>
+            <div>
+                <a href="{{{helpurl}}}" class="btn btn-outline-info btn-sm d-flex align-items-center gap-1">
+                    <i class="fa fa-question-circle" aria-hidden="true"></i> {{#str}} help_indicator_link, local_qualiscope {{/str}}
+                </a>
+            </div>
         </div>
     </div>
 

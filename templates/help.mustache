@@ -1,0 +1,199 @@
+<div class="qualiscope-help container-fluid py-4">
+    {{#hasbackurl}}
+    <div class="row mb-3">
+        <div class="col-12">
+            <a href="{{{backurl}}}" class="btn btn-outline-secondary btn-sm">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i> {{#str}} back_to_dashboard, local_qualiscope {{/str}}
+            </a>
+        </div>
+    </div>
+    {{/hasbackurl}}
+
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-8">
+            <h2 class="mb-1">
+                <i class="fa fa-book text-primary" aria-hidden="true"></i> {{#str}} help_guide_heading, local_qualiscope {{/str}}
+            </h2>
+            <p class="text-muted mb-0">
+                {{#str}} help_guide_subheading, local_qualiscope {{/str}}
+            </p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <form class="d-inline-flex align-items-center gap-2" method="get" action="{{{helpurl}}}">
+                {{#courseid}}
+                <input type="hidden" name="courseid" value="{{courseid}}">
+                {{/courseid}}
+                <label for="help-referential-select" class="form-label mb-0 small text-muted">{{#str}} dashboard_referential, local_qualiscope {{/str}}:</label>
+                <select name="referentialid" id="help-referential-select" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
+                    {{#referentials}}
+                    <option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                    {{/referentials}}
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <!-- Présentation globale du Référentiel -->
+    <div class="card mb-4 border-0 shadow-sm bg-light">
+        <div class="card-body">
+            <h4 class="card-title text-primary mb-2">
+                {{referential.name}} &mdash; <small class="text-muted">{{referential.version}}</small>
+            </h4>
+            <p class="card-text mb-0">{{referential.description}}</p>
+        </div>
+    </div>
+
+    <!-- Méthodologie et Calcul des pourcentages -->
+    <div class="card mb-4 shadow-sm border-primary">
+        <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+            <h5 class="mb-0">
+                <i class="fa fa-calculator me-2" aria-hidden="true"></i> {{#str}} help_calc_methodology_title, local_qualiscope {{/str}}
+            </h5>
+            <span class="badge bg-white text-primary">{{#str}} help_methodology_badge, local_qualiscope {{/str}}</span>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <h6 class="fw-bold text-dark"><i class="fa fa-cogs text-primary me-1"></i> {{#str}} help_calc_how_it_works_title, local_qualiscope {{/str}}</h6>
+                    <p class="small text-muted mb-2">
+                        {{#str}} help_calc_how_it_works_desc, local_qualiscope {{/str}}
+                    </p>
+                    <ul class="small mb-0 ps-3">
+                        <li class="mb-1"><strong>{{#str}} status_detected, local_qualiscope {{/str}} (100% ou ratio &ge; 0.75) :</strong> {{#str}} help_status_detected_desc, local_qualiscope {{/str}}</li>
+                        <li class="mb-1"><strong>{{#str}} status_verify, local_qualiscope {{/str}} (ratio partiel) :</strong> {{#str}} help_status_verify_desc, local_qualiscope {{/str}}</li>
+                        <li class="mb-1"><strong>{{#str}} status_missing, local_qualiscope {{/str}} (ratio 0%) :</strong> {{#str}} help_status_missing_desc, local_qualiscope {{/str}}</li>
+                        <li><strong>{{#str}} status_na, local_qualiscope {{/str}} :</strong> {{#str}} help_status_na_desc, local_qualiscope {{/str}}</li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-6">
+                    <h6 class="fw-bold text-dark"><i class="fa fa-percent text-success me-1"></i> {{#str}} help_calc_formula_title, local_qualiscope {{/str}}</h6>
+                    <p class="small text-muted mb-2">
+                        {{#str}} help_calc_formula_desc, local_qualiscope {{/str}}
+                    </p>
+                    <div class="p-3 bg-light rounded border border-light font-monospace small mb-2">
+                        <strong>{{#str}} help_formula_criterion, local_qualiscope {{/str}} :</strong><br>
+                        &nbsp;&nbsp;Score(C) = (&sum; [Ratio_i &times; Poids_i] / &sum; Poids_i) &times; 100%<br><br>
+                        <strong>{{#str}} help_formula_global, local_qualiscope {{/str}} :</strong><br>
+                        &nbsp;&nbsp;Score Global = Moyenne des scores des critères audités
+                    </div>
+                    <p class="small text-muted mb-0">
+                        <i class="fa fa-info-circle text-info"></i> {{#str}} help_manual_only_note, local_qualiscope {{/str}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sommaire et Navigation rapide des critères -->
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        {{#criteria}}
+        <a href="#criterion-{{id}}" class="btn btn-outline-secondary btn-sm">
+            <strong>C{{number}}</strong>
+        </a>
+        {{/criteria}}
+    </div>
+
+    <!-- Liste détaillée des Critères et Indicateurs -->
+    <h3 class="mb-3 text-dark">{{#str}} help_criteria_detail_title, local_qualiscope {{/str}}</h3>
+
+    {{#criteria}}
+    <div class="card mb-4 shadow-sm" id="criterion-{{id}}">
+        <div class="card-header bg-light d-flex flex-wrap justify-content-between align-items-center py-3">
+            <div>
+                <h5 class="mb-1 text-primary">
+                    <span class="badge bg-primary me-2">Critère {{number}}</span> {{title}}
+                </h5>
+                {{#description}}
+                <p class="text-muted small mb-0">{{description}}</p>
+                {{/description}}
+            </div>
+            <div class="mt-2 mt-md-0">
+                <span class="badge bg-secondary">{{indicatorscount}} {{#str}} help_indicators_count, local_qualiscope {{/str}}</span>
+                {{#has_auto_checks}}
+                <span class="badge bg-info text-dark">{{autocheckcount}} {{#str}} help_auto_checks_count, local_qualiscope {{/str}}</span>
+                {{/has_auto_checks}}
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            {{#indicators}}
+            <div class="p-3 border-bottom {{#is_manual_only}}bg-light-subtle{{/is_manual_only}}" id="indicator-{{id}}">
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
+                    <div>
+                        <h6 class="mb-1 fw-bold">
+                            <span class="badge bg-dark me-1">Indicateur {{number}}</span> {{title}}
+                        </h6>
+                        {{#description}}
+                        <p class="text-muted small mb-1">{{description}}</p>
+                        {{/description}}
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                        <span class="badge bg-{{moodlelevelbadge}}">{{moodlelevellabel}}</span>
+                        <span class="badge bg-outline-secondary border text-muted">{{scopelabel}}</span>
+                    </div>
+                </div>
+
+                <!-- Points de contrôle pour cet indicateur -->
+                <div class="mt-3">
+                    <h6 class="small fw-bold text-uppercase text-muted mb-2">
+                        <i class="fa fa-list-check me-1"></i> {{#str}} help_audited_items_title, local_qualiscope {{/str}} ({{checkscount}}) :
+                    </h6>
+
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover table-bordered mb-0 align-middle">
+                            <thead class="table-light small">
+                                <tr>
+                                    <th style="width: 25%;">{{#str}} help_col_check_name, local_qualiscope {{/str}}</th>
+                                    <th style="width: 35%;">{{#str}} help_col_moodle_audited, local_qualiscope {{/str}}</th>
+                                    <th style="width: 30%;">{{#str}} help_col_calculation, local_qualiscope {{/str}}</th>
+                                    <th style="width: 10%;" class="text-center">{{#str}} help_col_weight, local_qualiscope {{/str}}</th>
+                                </tr>
+                            </thead>
+                            <tbody class="small">
+                                {{#checks}}
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold">{{name}}</div>
+                                        <div class="text-muted x-small">{{description}}</div>
+                                        <div class="mt-1">
+                                            <span class="badge bg-{{doc_badge}}">{{doc_name}}</span>
+                                            {{#isautomatic}}
+                                            <span class="badge bg-success-subtle text-success">{{#str}} check_automatic, local_qualiscope {{/str}}</span>
+                                            {{/isautomatic}}
+                                            {{#ismanual}}
+                                            <span class="badge bg-secondary-subtle text-secondary">{{#str}} check_manual, local_qualiscope {{/str}}</span>
+                                            {{/ismanual}}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="text-dark">{{doc_target}}</div>
+                                    </td>
+                                    <td>
+                                        <div class="text-muted">{{doc_calc}}</div>
+                                    </td>
+                                    <td class="text-center">
+                                        {{#isautomatic}}
+                                        <span class="badge bg-primary">Poids {{weight}}</span>
+                                        {{/isautomatic}}
+                                        {{#ismanual}}
+                                        <span class="text-muted">&mdash;</span>
+                                        {{/ismanual}}
+                                    </td>
+                                </tr>
+                                {{/checks}}
+                                {{^checks}}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-2">{{#str}} no_results, local_qualiscope {{/str}}</td>
+                                </tr>
+                                {{/checks}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {{/indicators}}
+        </div>
+    </div>
+    {{/criteria}}
+</div>

@@ -219,3 +219,111 @@ $string['wcag_heading_skip_item'] = 'Saut hiérarchique ({$a->prev} vers {$a->cu
 $string['wcag_contrast_default_theme'] = 'Contrastes : 100 % conforme (styles standard respectés)';
 $string['wcag_contrast_summary'] = 'Contrastes : {$a->compliant}/{$a->total} conforme(s) WCAG AA ({$a->failed} insuffisant(s))';
 $string['wcag_contrast_failed_item'] = 'Contraste insuffisant ({$a->ratio}:1 pour texte {$a->fg} sur fond {$a->bg}) dans "{$a->source}"';
+
+// Page d'aide et de méthodologie.
+$string['help_page_title'] = 'QualiScope — Guide d\'audit & Méthodologie du référentiel';
+$string['help_button_label'] = 'Guide & Méthodologie';
+$string['check_automatic'] = 'Automatisé';
+$string['check_manual'] = 'Preuve externe / Manuel';
+$string['help_indicator_link'] = 'Méthodologie de cet indicateur';
+$string['help_guide_heading'] = 'Guide d\'audit & Méthodologie';
+$string['help_guide_subheading'] = 'Présentation détaillée des critères, des indicateurs, des éléments audités dans Moodle et du mode de calcul des scores.';
+$string['help_calc_methodology_title'] = 'Méthode de calcul & Barème de conformité';
+$string['help_methodology_badge'] = 'Formules & Pondérations';
+$string['help_calc_how_it_works_title'] = 'Fonctionnement de l\'évaluation automatisée';
+$string['help_calc_how_it_works_desc'] = 'Chaque point de contrôle automatisé analyse les données réelles du cours Moodle et calcule un ratio d\'accomplissement de 0 à 100 % (0.0 à 1.0) selon des règles précises :';
+$string['help_status_detected_desc'] = 'Le contrôle est pleinement satisfait (100 %) ou atteint le seuil d\'exigence de conformité (&ge; 75 %).';
+$string['help_status_verify_desc'] = 'Des éléments sont détectés mais incomplets, ou nécessitent un complément d\'attention.';
+$string['help_status_missing_desc'] = 'Aucun élément attendu n\'a été trouvé dans le cours (0 %).';
+$string['help_status_na_desc'] = 'Le point de contrôle n\'est pas applicable pour la typologie de ce cours.';
+$string['help_calc_formula_title'] = 'Formules de calcul des scores';
+$string['help_calc_formula_desc'] = 'Le score de chaque critère est calculé en pondérant chaque point de contrôle automatique par son poids (weight).';
+$string['help_formula_criterion'] = 'Score d\'un Critère';
+$string['help_formula_global'] = 'Score Global du Cours';
+$string['help_manual_only_note'] = 'Les indicateurs purement documentaires (marqués "Preuve documentaire") n\'impactent pas négativement le calcul automatique et attendent le dépôt d\'une pièce justificative externe.';
+$string['help_criteria_detail_title'] = 'Détail des critères, indicateurs et éléments audités dans Moodle';
+$string['help_indicators_count'] = 'indicateur(s)';
+$string['help_auto_checks_count'] = 'contrôle(s) automatisé(s)';
+$string['help_audited_items_title'] = 'Ce qui est audité côté Moodle & Mode de calcul';
+$string['help_col_check_name'] = 'Point de contrôle';
+$string['help_col_moodle_audited'] = 'Ce qui est audité côté Moodle';
+$string['help_col_calculation'] = 'Calcul & Validation';
+$string['help_col_weight'] = 'Pondération';
+$string['scope_course'] = 'Périmètre : Cours';
+$string['scope_organisation'] = 'Périmètre : Organisme';
+$string['moodle_level_strong'] = 'Audit Moodle fort';
+$string['moodle_level_partial'] = 'Audit Moodle partiel';
+$string['moodle_level_documentary'] = 'Preuve documentaire requise';
+$string['moodle_level_manual'] = 'Vérification manuelle';
+
+// Documentation des types de contrôles.
+$string['check_doc_field_name'] = 'Structure & Métadonnées du cours';
+$string['check_doc_field_target'] = 'Vérifie la présence du résumé du cours (course->summary), la structure des sections avec contenu (course_sections), et la définition des dates de début et de fin.';
+$string['check_doc_field_calc'] = 'Score de 0.0 à 1.0 (3 éléments testés : résumé, sections actives, dates complètes). Statut "detected" si &ge; 2 éléments présents.';
+
+$string['check_doc_resource_name'] = 'Ressources & Documents pédagogiques';
+$string['check_doc_resource_target'] = 'Recherche les modules de type ressource documentaire : fichiers PDF/Word (resource), pages HTML intégrées (page), URLs de référence, dossiers (folder) et livres (book).';
+$string['check_doc_resource_calc'] = 'Ratio basé sur le nombre de ressources disponibles (1.0 si &ge; 2 ressources, 0.5 si 1 ressource, 0.0 si aucune).';
+
+$string['check_doc_activity_name'] = 'Activités pédagogiques & Évaluations';
+$string['check_doc_activity_target'] = 'Scanne toutes les activités d\'apprentissage et d\'évaluation : devoirs (assign), quiz, forums, ateliers (workshop), glossaires, leçons, h5p, scorm, etc.';
+$string['check_doc_activity_calc'] = 'Ratio calculé selon la richesse pédagogique du cours (1.0 si &ge; 3 activités, 0.67 si 2, 0.33 si 1, 0.0 si 0).';
+
+$string['check_doc_gradebook_name'] = 'Carnet de notes & Évaluations sommatives';
+$string['check_doc_gradebook_target'] = 'Vérifie la configuration du carnet de notes Moodle (grade_items) : devoirs et tests notés, grilles critériées / rubrics, barèmes et notes minimales de validation.';
+$string['check_doc_gradebook_calc'] = '1.0 si plusieurs éléments d\'évaluation notés configurés dans le gradebook, 0.5 si 1 élément, 0.0 si le carnet de notes est vide.';
+
+$string['check_doc_feedback_name'] = 'Questionnaires d\'évaluation & Satisfaction';
+$string['check_doc_feedback_target'] = 'Détecte les activités de recueil d\'avis : Feedback (questionnaire de satisfaction), Questionnaire, Choix ou Sondage. Analyse également le taux de réponse réel des apprenants inscrits.';
+$string['check_doc_feedback_calc'] = '1.0 si questionnaire actif avec questions et taux de réponse &ge; 33 %, 0.75 si questionnaire configuré prêt à collecter, 0.0 si absent.';
+
+$string['check_doc_completion_name'] = 'Suivi de complétion & Progression';
+$string['check_doc_completion_target'] = 'Vérifie si le suivi d\'achèvement est activé sur le cours (enablecompletion) et compte les activités possédant des critères d\'achèvement automatique (completion).';
+$string['check_doc_completion_calc'] = '1.0 si le suivi de complétion est activé et que &ge; 3 modules possèdent des règles d\'achèvement configurées.';
+
+$string['check_doc_competency_name'] = 'Cadre de compétences & Objectifs';
+$string['check_doc_competency_target'] = 'Vérifie la liaison du cours à des référentiels de compétences Moodle (competency), l\'association de compétences directes aux activités, ou la mention d\'objectifs formels dans le descriptif.';
+$string['check_doc_competency_calc'] = '1.0 si des compétences Moodle sont associées et liées aux activités, 0.75 si compétences associées au cours, 0.5 si objectifs décrits textuellement.';
+
+$string['check_doc_positioning_name'] = 'Test de positionnement & Diagnostic amont';
+$string['check_doc_positioning_target'] = 'Identifie les quiz, devoirs ou questionnaires de positionnement placés en début de parcours (mots-clés : positionnement, diagnostic, évaluation initiale, pré-requis, pré-test).';
+$string['check_doc_positioning_calc'] = '1.0 si un module de positionnement est identifié en amont, 0.0 si aucun test ou questionnaire amont n\'est détecté.';
+
+$string['check_doc_stats_name'] = 'Indicateurs de résultats & Métriques';
+$string['check_doc_stats_target'] = 'Calcule les données d\'usage réelles : nombre d\'apprenants inscrits (enrolments), taux d\'achèvement global du cours, et nombre de notes enregistrées.';
+$string['check_doc_stats_calc'] = '1.0 si le cours contient des inscrits avec suivi traçable des résultats, 0.5 si la structure est prête en attente d\'inscrits.';
+
+$string['check_doc_engagement_name'] = 'Accompagnement & Suivi de l\'assiduité';
+$string['check_doc_engagement_target'] = 'Analyse multi-facteurs : taux d\'apprenants actifs sur les 14 derniers jours, dynamisme des forums de discussion, dérogations / aménagements de délais individuels, et badges de jalon.';
+$string['check_doc_engagement_calc'] = 'Score composé sur 100 % cumulant la complétion (20%), l\'activité récente des apprenants (40%), l\'animation des forums (25%) et les aménagements/badges (15%).';
+
+$string['check_doc_alignment_name'] = 'Alignement pédagogique constructif';
+$string['check_doc_alignment_target'] = 'Évalue la cohérence systémique globale du cours : Objectifs/compétences &harr; Activités d\'apprentissage &harr; Modalités d\'évaluation &harr; Feedbacks pédagogiques.';
+$string['check_doc_alignment_calc'] = 'Score combiné sur 100 % basé sur la complétude des 3 piliers pédagogiques fondamentaux et leurs liaisons directes.';
+
+$string['check_doc_accessibility_name'] = 'Audit global d\'accessibilité numérique (WCAG / RGAA)';
+$string['check_doc_accessibility_target'] = 'Audit combiné des contenus numériques : présence et pertinence des attributs alt sur images, sous-titres des vidéos, hiérarchie des titres (h1-h6) et ratio de contraste des couleurs.';
+$string['check_doc_accessibility_calc'] = 'Moyenne des 4 sous-scores d\'accessibilité (Images + Vidéos + Titres + Contrastes). Statut "detected" si score &ge; 75 %.';
+
+$string['check_doc_wcag_images_name'] = 'Accessibilité : Attributs alt des images';
+$string['check_doc_wcag_images_target'] = 'Examine toutes les balises <img> dans les résumés de cours, sections, pages et activités HTML. Détecte les images sans alt, les alts purement décoratifs (alt=""), et sanctionne les noms de fichiers ou textes génériques (ex: image.png, photo).';
+$string['check_doc_wcag_images_calc'] = 'Ratio = (images avec alt pertinent + images décoratives conformes) / nombre total d\'images.';
+
+$string['check_doc_wcag_media_name'] = 'Accessibilité : Sous-titrage des vidéos (.vtt)';
+$string['check_doc_wcag_media_target'] = 'Vérifie la présence de pistes de sous-titres <track kind="subtitles|captions" src="*.vtt"> sur les vidéos HTML5 et la présence de sous-titres / transcriptions sur les vidéos intégrées (YouTube, Vimeo).';
+$string['check_doc_wcag_media_calc'] = 'Ratio = vidéos sous-titrées / nombre total de vidéos insérées dans le cours.';
+
+$string['check_doc_wcag_headings_name'] = 'Accessibilité : Structure des titres HTML (h1-h6)';
+$string['check_doc_wcag_headings_target'] = 'Vérifie l\'ordre logique et hiérarchique des titres <h1> à <h6> dans les pages et résumés. Identifie les sauts de niveau non conformes (ex: <h1> suivi directement de <h3> ou <h4>) et les titres vides.';
+$string['check_doc_wcag_headings_calc'] = '1.0 si aucun saut hiérarchique, 0.75 si 1 saut mineur, &le; 0.50 si multiples sauts ou titres vides détectés.';
+
+$string['check_doc_wcag_contrast_name'] = 'Accessibilité : Ratio de contraste des couleurs (WCAG AA)';
+$string['check_doc_wcag_contrast_target'] = 'Calcule la luminance relative et le ratio de contraste entre la couleur du texte (color) et celle de l\'arrière-plan (background-color) pour tous les styles personnalisés en rich-text. Exigence : ratio &ge; 4.5:1 (norme WCAG 2.1 niveau AA).';
+$string['check_doc_wcag_contrast_calc'] = 'Ratio = styles conformes (&ge; 4.5:1) / nombre total d\'éléments stylisés en couleur.';
+
+$string['check_doc_manual_name'] = 'Preuve documentaire / Processus qualité externe';
+$string['check_doc_manual_target'] = 'Indicateur relevant de la gouvernance, des processus administratifs ou des partenariats de l\'organisme (hors périmètre direct des cours Moodle).';
+$string['check_doc_manual_calc'] = 'Nécessite le dépôt d\'une pièce justificative (PDF, contrat, charte, lien externe) pour valider l\'indicateur lors de l\'audit.';
+
+$string['check_doc_default_target'] = 'Analyse des données et configurations associées au cours Moodle.';
+$string['check_doc_default_calc'] = 'Vérification de la présence et de la conformité des éléments requis.';

@@ -6,6 +6,9 @@
                 <p class="text-muted mb-0">{{#str}} dashboard_course, local_qualiscope {{/str}} {{coursename}}</p>
             </div>
             <div class="d-flex align-items-center gap-2">
+                <a href="{{{helpurl}}}" class="btn btn-outline-info btn-sm d-flex align-items-center gap-1">
+                    <i class="fa fa-question-circle" aria-hidden="true"></i> {{#str}} help_button_label, local_qualiscope {{/str}}
+                </a>
                 <div class="dropdown">
                     <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         {{#str}} export_report, local_qualiscope {{/str}}

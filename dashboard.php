@@ -115,6 +115,10 @@ echo $output->render_dashboard([
         'format' => 'zip',
         'sesskey' => sesskey(),
     ]),
+    'helpurl' => new moodle_url('/local/qualiscope/help.php', [
+        'courseid' => $courseid,
+        'referentialid' => $referentialid,
+    ]),
     'coursename' => $course->fullname,
     'courseid' => $courseid,
 ]);
