@@ -30,6 +30,10 @@ class renderer extends \plugin_renderer_base {
         return $this->render_from_template('local_qualiscope/campaign_dashboard', $data);
     }
 
+    public function render_compare_campaigns(array $data): string {
+        return $this->render_from_template('local_qualiscope/compare_campaigns', $data);
+    }
+
     public function render_help(array $data): string {
         return $this->render_from_template('local_qualiscope/help', $data);
     }

@@ -92,5 +92,6 @@ echo $output->render_campaign_list([
     'courses' => array_values($courses),
     'sesskey' => sesskey(),
     'savecampaignurl' => new moodle_url('/local/qualiscope/save_campaign.php'),
+    'compareurl' => new moodle_url('/local/qualiscope/compare_campaigns.php'),
 ]);
 echo $output->footer();

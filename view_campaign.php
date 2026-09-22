@@ -344,6 +344,7 @@ echo $output->render_campaign_dashboard([
     'exportxlsxurl' => new moodle_url('/local/qualiscope/export.php', ['campaignid' => $campaignid, 'format' => 'xlsx', 'sesskey' => sesskey()]),
     'exportpdfurl' => new moodle_url('/local/qualiscope/export.php', ['campaignid' => $campaignid, 'format' => 'pdf', 'sesskey' => sesskey()]),
     'printreporturl' => new moodle_url('/local/qualiscope/print_campaign.php', ['id' => $campaignid]),
+    'compareurl' => new moodle_url('/local/qualiscope/compare_campaigns.php', ['id_a' => $campaignid]),
     'backurl' => new moodle_url('/local/qualiscope/campaigns.php'),
     'summaryitems' => $summaryitems,
     'hasresults' => !empty($coursesdata),

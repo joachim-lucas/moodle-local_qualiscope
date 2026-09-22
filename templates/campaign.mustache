@@ -2,7 +2,12 @@
     <div class="row mb-4">
         <div class="col-12 d-flex justify-content-between align-items-center">
             <h3>{{#str}} campaign_title, local_qualiscope {{/str}}</h3>
-            <button class="btn btn-primary" data-toggle="qualiscope-campaign-form">{{#str}} campaign_create, local_qualiscope {{/str}}</button>
+            <div>
+                <a href="{{{compareurl}}}" class="btn btn-outline-primary me-2">
+                    <i class="fa fa-exchange me-1" aria-hidden="true"></i> {{#str}} campaign_compare, local_qualiscope {{/str}}
+                </a>
+                <button class="btn btn-primary" data-toggle="qualiscope-campaign-form">{{#str}} campaign_create, local_qualiscope {{/str}}</button>
+            </div>
         </div>
     </div>
 

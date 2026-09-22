@@ -368,3 +368,19 @@ $string['campaign_no_actions'] = 'Aucune action corrective enregistrée pour cet
 $string['campaign_action_todo_count'] = 'À faire';
 $string['campaign_action_inprogress_count'] = 'En cours';
 $string['campaign_action_closed_count'] = 'Terminées';
+
+// Point 4 : Comparateur et suivi temporel de campagnes.
+$string['campaign_compare'] = 'Comparer des campagnes';
+$string['campaign_compare_title'] = 'Comparateur de campagnes d\'audit';
+$string['campaign_compare_desc'] = 'Mesurez la progression de la conformité et l\'impact des actions correctives entre deux campagnes.';
+$string['campaign_base'] = 'Campagne A (Référence / Avant)';
+$string['campaign_target'] = 'Campagne B (Cible / Après)';
+$string['campaign_compare_btn'] = 'Lancer la comparaison';
+$string['campaign_progression'] = 'Progression';
+$string['campaign_progression_positive'] = 'Amélioration';
+$string['campaign_progression_negative'] = 'Régression';
+$string['campaign_compare_courses'] = 'Comparaison par cours';
+$string['campaign_compare_criteria'] = 'Comparaison par critère';
+$string['campaign_compare_indicators'] = 'Comparaison par indicateur';
+$string['campaign_select_to_compare'] = 'Sélectionnez deux campagnes pour comparer leur niveau de conformité.';
+$string['campaign_same_campaign_warning'] = 'Veuillez sélectionner deux campagnes différentes pour effectuer la comparaison.';

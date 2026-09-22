@@ -368,3 +368,19 @@ $string['campaign_no_actions'] = 'No corrective actions recorded for this campai
 $string['campaign_action_todo_count'] = 'To do';
 $string['campaign_action_inprogress_count'] = 'In progress';
 $string['campaign_action_closed_count'] = 'Completed';
+
+// Point 4: Campaign comparison and historical tracking.
+$string['campaign_compare'] = 'Compare campaigns';
+$string['campaign_compare_title'] = 'Audit Campaigns Comparator';
+$string['campaign_compare_desc'] = 'Measure compliance progression and corrective action impact between two audit campaigns.';
+$string['campaign_base'] = 'Campaign A (Baseline / Before)';
+$string['campaign_target'] = 'Campaign B (Target / After)';
+$string['campaign_compare_btn'] = 'Run comparison';
+$string['campaign_progression'] = 'Progression';
+$string['campaign_progression_positive'] = 'Improvement';
+$string['campaign_progression_negative'] = 'Regression';
+$string['campaign_compare_courses'] = 'Course-by-course comparison';
+$string['campaign_compare_criteria'] = 'Criterion-by-criterion comparison';
+$string['campaign_compare_indicators'] = 'Indicator-by-indicator comparison';
+$string['campaign_select_to_compare'] = 'Select two campaigns to compare their compliance levels.';
+$string['campaign_same_campaign_warning'] = 'Please select two different campaigns to perform the comparison.';
