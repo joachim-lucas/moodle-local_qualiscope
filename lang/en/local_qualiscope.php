@@ -343,3 +343,13 @@ $string['campaign_courses_failing'] = '{$a} non-compliant or to verify course(s)
 $string['campaign_all_compliant'] = 'All audited indicators show optimal compliance (100%)!';
 $string['campaign_criterion'] = 'Criterion';
 $string['campaign_indicator'] = 'Indicator';
+
+// Point 2: Campaign exports and reports.
+$string['campaign_export_report'] = 'Export campaign';
+$string['campaign_export_csv'] = 'CSV Summary (.csv)';
+$string['campaign_export_xlsx'] = 'Excel Workbook (.xlsx)';
+$string['campaign_export_pdf'] = 'PDF Audit Report (.pdf)';
+$string['campaign_print_report'] = 'Printable Report (HTML)';
+$string['campaign_report_subtitle'] = 'QualiScope campaign audit summary report';
+$string['campaign_non_compliant_count'] = 'Non-compliant courses count';
+$string['campaign_print_btn'] = 'Print report';

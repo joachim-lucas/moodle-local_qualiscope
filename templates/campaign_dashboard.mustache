@@ -12,7 +12,37 @@
                     {{/completed}}
                 </span>
             </div>
-            <div>
+            <div class="d-flex align-items-center gap-2">
+                {{#hasresults}}
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="campaignExportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-download me-1" aria-hidden="true"></i> {{#str}} campaign_export_report, local_qualiscope {{/str}}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="campaignExportDropdown">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2" href="{{{exportpdfurl}}}">
+                                <i class="fa fa-file-pdf-o text-danger" aria-hidden="true"></i> {{#str}} campaign_export_pdf, local_qualiscope {{/str}}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2" href="{{{exportxlsxurl}}}">
+                                <i class="fa fa-file-excel-o text-success" aria-hidden="true"></i> {{#str}} campaign_export_xlsx, local_qualiscope {{/str}}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2" href="{{{exportcsvurl}}}">
+                                <i class="fa fa-file-text-o text-info" aria-hidden="true"></i> {{#str}} campaign_export_csv, local_qualiscope {{/str}}
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2" href="{{{printreporturl}}}" target="_blank">
+                                <i class="fa fa-print text-secondary" aria-hidden="true"></i> {{#str}} campaign_print_report, local_qualiscope {{/str}}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                {{/hasresults}}
                 {{^completed}}
                 <a href="{{{runurl}}}" class="btn btn-primary">{{#str}} campaign_run, local_qualiscope {{/str}}</a>
                 {{/completed}}
