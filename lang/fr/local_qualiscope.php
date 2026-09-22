@@ -328,3 +328,18 @@ $string['check_doc_manual_calc'] = 'Nécessite le dépôt d\'une pièce justific
 
 $string['check_doc_default_target'] = 'Analyse des données et configurations associées au cours Moodle.';
 $string['check_doc_default_calc'] = 'Vérification de la présence et de la conformité des éléments requis.';
+
+// Point 1 : Analyse macro et points faibles des campagnes.
+$string['campaign_tab_courses'] = 'Synthèse par cours';
+$string['campaign_tab_macro'] = 'Analyse macro par Critère & Indicateur';
+$string['campaign_tab_weakpoints'] = 'Points faibles prioritaires';
+$string['campaign_macro_title'] = 'Analyse transversale de la conformité';
+$string['campaign_macro_desc'] = 'Taux de conformité agrégés sur l\'ensemble des cours audités pour chaque critère et indicateur du référentiel.';
+$string['campaign_weakpoints_title'] = 'Points faibles & Priorités d\'action';
+$string['campaign_weakpoints_desc'] = 'Indicateurs présentant les taux de conformité les plus bas sur l\'ensemble des cours audités.';
+$string['campaign_compliance_rate'] = 'Taux de conformité';
+$string['campaign_non_compliance_rate'] = 'Taux de non-conformité';
+$string['campaign_courses_failing'] = '{$a} cours non conformes ou à vérifier';
+$string['campaign_all_compliant'] = 'Tous les indicateurs audités présentent un taux de conformité optimal (100 %) !';
+$string['campaign_criterion'] = 'Critère';
+$string['campaign_indicator'] = 'Indicateur';

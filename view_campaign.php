@@ -98,6 +98,132 @@ $globalpercentage = $applicable > 0 ? (int) round(($totals['weighted'] * 100) / 
 $scopecourses = count(\local_qualiscope\analyser\course_analyser::get_campaign_course_ids($campaign));
 $coursesanalysed = count($coursesdata);
 
+// Macro analysis by criteria & indicators.
+$criteria_records = $DB->get_records('local_qualiopi_criteria', ['referential_id' => $campaign->referential_id], 'number ASC');
+$indicators_records = $DB->get_records_sql(
+    "SELECT i.* FROM {local_qualiopi_indicators} i
+     JOIN {local_qualiopi_criteria} c ON c.id = i.criterion_id
+     WHERE c.referential_id = :refid
+     ORDER BY c.number ASC, i.number ASC",
+    ['refid' => $campaign->referential_id]
+);
+
+$results_by_indicator = [];
+foreach ($results as $r) {
+    $results_by_indicator[$r->indicator_id][] = $r;
+}
+
+$criteriadata = [];
+$weakpoints = [];
+
+foreach ($criteria_records as $crit) {
+    $criteriadata[$crit->id] = [
+        'id' => $crit->id,
+        'number' => $crit->number,
+        'title' => $crit->title,
+        'shorttitle' => core_text::strlen($crit->title) > 60 ? core_text::substr($crit->title, 0, 60) . '…' : $crit->title,
+        'indicators' => [],
+        'total' => 0,
+        'detected' => 0,
+        'verify' => 0,
+        'missing' => 0,
+        'na' => 0,
+        'weighted' => 0.0,
+        'percentage' => null,
+        'percentageclass' => 'bg-secondary',
+        'manualonly' => true,
+    ];
+}
+
+foreach ($indicators_records as $ind) {
+    $ind_results = $results_by_indicator[$ind->id] ?? [];
+    $total = count($ind_results);
+    $detected = 0;
+    $verify = 0;
+    $missing = 0;
+    $na = 0;
+    $weighted = 0.0;
+
+    foreach ($ind_results as $r) {
+        switch ($r->status) {
+            case 'detected': $detected++; break;
+            case 'verify':   $verify++; break;
+            case 'missing':  $missing++; break;
+            case 'na':       $na++; break;
+        }
+        if ($r->status !== 'na') {
+            $weighted += (float) $r->ratio > 0 ? (float) $r->ratio : ($r->status === 'detected' ? 1.0 : 0.0);
+        }
+    }
+
+    $app = $total - $na;
+    $percentage = $app > 0 ? (int) round(($weighted * 100) / $app) : null;
+    $non_compliance = $percentage !== null ? (100 - $percentage) : 0;
+    $failing_courses = $missing + $verify;
+
+    $class = 'bg-secondary';
+    if ($percentage !== null) {
+        $class = $percentage >= 75 ? 'bg-success' : ($percentage >= 50 ? 'bg-warning' : 'bg-danger');
+    }
+
+    $ind_item = [
+        'id' => $ind->id,
+        'number' => $ind->number,
+        'title' => $ind->title,
+        'total' => $total,
+        'detected' => $detected,
+        'verify' => $verify,
+        'missing' => $missing,
+        'na' => $na,
+        'applicable' => $app,
+        'percentage' => $percentage !== null ? $percentage : 0,
+        'haspercentage' => $percentage !== null,
+        'percentageclass' => $class,
+        'noncompliance' => $non_compliance,
+        'failingcourses' => $failing_courses,
+        'failingmessage' => get_string('campaign_courses_failing', 'local_qualiscope', $failing_courses),
+        'criterion_number' => $criteria_records[$ind->criterion_id]->number ?? '',
+        'criterion_title' => $criteria_records[$ind->criterion_id]->title ?? '',
+    ];
+
+    if (isset($criteriadata[$ind->criterion_id])) {
+        $criteriadata[$ind->criterion_id]['indicators'][] = $ind_item;
+        if ($total > 0) {
+            $criteriadata[$ind->criterion_id]['manualonly'] = false;
+        }
+        $criteriadata[$ind->criterion_id]['total'] += $total;
+        $criteriadata[$ind->criterion_id]['detected'] += $detected;
+        $criteriadata[$ind->criterion_id]['verify'] += $verify;
+        $criteriadata[$ind->criterion_id]['missing'] += $missing;
+        $criteriadata[$ind->criterion_id]['na'] += $na;
+        $criteriadata[$ind->criterion_id]['weighted'] += $weighted;
+    }
+
+    if ($app > 0) {
+        $weakpoints[] = $ind_item;
+    }
+}
+
+foreach ($criteriadata as &$cdata) {
+    $capp = $cdata['total'] - $cdata['na'];
+    if ($capp > 0) {
+        $cdata['percentage'] = (int) round(($cdata['weighted'] * 100) / $capp);
+        $cdata['percentageclass'] = $cdata['percentage'] >= 75 ? 'bg-success' : ($cdata['percentage'] >= 50 ? 'bg-warning' : 'bg-danger');
+    }
+}
+unset($cdata);
+
+usort($weakpoints, function($a, $b) {
+    if ($a['percentage'] === $b['percentage']) {
+        return $b['failingcourses'] <=> $a['failingcourses'];
+    }
+    return $a['percentage'] <=> $b['percentage'];
+});
+
+$weakpoints_filtered = array_values(array_filter($weakpoints, function($item) {
+    return $item['percentage'] < 100;
+}));
+
 $summaryitems = [
     [
         'key' => 'courses',
@@ -150,5 +276,8 @@ echo $output->render_campaign_dashboard([
     'summaryitems' => $summaryitems,
     'hasresults' => !empty($coursesdata),
     'courses' => $coursesdata,
+    'criteria' => array_values($criteriadata),
+    'weakpoints' => $weakpoints_filtered,
+    'hasweakpoints' => !empty($weakpoints_filtered),
 ]);
 echo $output->footer();

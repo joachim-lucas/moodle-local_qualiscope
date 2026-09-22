@@ -328,3 +328,18 @@ $string['check_doc_manual_calc'] = 'Requires uploading supporting evidence (PDF,
 
 $string['check_doc_default_target'] = 'Analysis of course-related data and configuration in Moodle.';
 $string['check_doc_default_calc'] = 'Verification of presence and compliance of required elements.';
+
+// Point 1: Macro analysis and weak points for campaigns.
+$string['campaign_tab_courses'] = 'Courses summary';
+$string['campaign_tab_macro'] = 'Macro analysis by Criteria & Indicators';
+$string['campaign_tab_weakpoints'] = 'Priority weak points';
+$string['campaign_macro_title'] = 'Cross-course compliance analysis';
+$string['campaign_macro_desc'] = 'Aggregated compliance rates across all audited courses for each referential criterion and indicator.';
+$string['campaign_weakpoints_title'] = 'Weak points & Action priorities';
+$string['campaign_weakpoints_desc'] = 'Indicators with the lowest compliance rates across all audited courses.';
+$string['campaign_compliance_rate'] = 'Compliance rate';
+$string['campaign_non_compliance_rate'] = 'Non-compliance rate';
+$string['campaign_courses_failing'] = '{$a} non-compliant or to verify course(s)';
+$string['campaign_all_compliant'] = 'All audited indicators show optimal compliance (100%)!';
+$string['campaign_criterion'] = 'Criterion';
+$string['campaign_indicator'] = 'Indicator';

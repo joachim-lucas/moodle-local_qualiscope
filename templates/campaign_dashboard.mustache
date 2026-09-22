@@ -45,34 +45,166 @@
     </div>
 
     {{#hasresults}}
-    <div class="row">
-        <div class="col-12">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>{{#str}} campaign_course, local_qualiscope {{/str}}</th>
-                        <th>{{#str}} dashboard_score, local_qualiscope {{/str}}</th>
-                        <th class="text-center">✓</th>
-                        <th class="text-center">⚠</th>
-                        <th class="text-center">✗</th>
-                        <th class="text-center">—</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#courses}}
-                    <tr>
-                        <td>{{coursename}}</td>
-                        <td><span class="badge {{percentageclass}}">{{percentage}}%</span></td>
-                        <td class="text-center">{{detected}}</td>
-                        <td class="text-center">{{verify}}</td>
-                        <td class="text-center">{{missing}}</td>
-                        <td class="text-center">{{na}}</td>
-                        <td class="text-end"><a href="{{{viewurl}}}" class="btn btn-sm btn-outline-primary">{{#str}} view, core {{/str}}</a></td>
-                    </tr>
-                    {{/courses}}
-                </tbody>
-            </table>
+    <ul class="nav nav-tabs mb-4" id="campaignTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="courses-tab" data-bs-toggle="tab" data-bs-target="#courses-content" type="button" role="tab" aria-controls="courses-content" aria-selected="true">
+                <i class="fa fa-graduation-cap me-1" aria-hidden="true"></i> {{#str}} campaign_tab_courses, local_qualiscope {{/str}}
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="macro-tab" data-bs-toggle="tab" data-bs-target="#macro-content" type="button" role="tab" aria-controls="macro-content" aria-selected="false">
+                <i class="fa fa-bar-chart me-1" aria-hidden="true"></i> {{#str}} campaign_tab_macro, local_qualiscope {{/str}}
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="weakpoints-tab" data-bs-toggle="tab" data-bs-target="#weakpoints-content" type="button" role="tab" aria-controls="weakpoints-content" aria-selected="false">
+                <i class="fa fa-exclamation-triangle me-1" aria-hidden="true"></i> {{#str}} campaign_tab_weakpoints, local_qualiscope {{/str}}
+                {{#hasweakpoints}}<span class="badge bg-danger ms-1">{{weakpoints.length}}</span>{{/hasweakpoints}}
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="campaignTabContent">
+        <div class="tab-pane fade show active" id="courses-content" role="tabpanel" aria-labelledby="courses-tab">
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>{{#str}} campaign_course, local_qualiscope {{/str}}</th>
+                                <th>{{#str}} dashboard_score, local_qualiscope {{/str}}</th>
+                                <th class="text-center">✓</th>
+                                <th class="text-center">⚠</th>
+                                <th class="text-center">✗</th>
+                                <th class="text-center">—</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#courses}}
+                            <tr>
+                                <td>{{coursename}}</td>
+                                <td><span class="badge {{percentageclass}}">{{percentage}}%</span></td>
+                                <td class="text-center">{{detected}}</td>
+                                <td class="text-center">{{verify}}</td>
+                                <td class="text-center">{{missing}}</td>
+                                <td class="text-center">{{na}}</td>
+                                <td class="text-end"><a href="{{{viewurl}}}" class="btn btn-sm btn-outline-primary">{{#str}} view, core {{/str}}</a></td>
+                            </tr>
+                            {{/courses}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="macro-content" role="tabpanel" aria-labelledby="macro-tab">
+            <div class="mb-3">
+                <h5 class="mb-1">{{#str}} campaign_macro_title, local_qualiscope {{/str}}</h5>
+                <p class="text-muted small mb-0">{{#str}} campaign_macro_desc, local_qualiscope {{/str}}</p>
+            </div>
+            {{#criteria}}
+            <div class="card mb-3 shadow-none border">
+                <div class="card-header d-flex justify-content-between align-items-center bg-light">
+                    <div>
+                        <span class="badge bg-dark me-2">C{{number}}</span>
+                        <strong>{{title}}</strong>
+                    </div>
+                    <div>
+                        {{#manualonly}}
+                        <span class="badge bg-secondary">{{#str}} dashboard_manual_only, local_qualiscope {{/str}}</span>
+                        {{/manualonly}}
+                        {{^manualonly}}
+                        <span class="badge {{percentageclass}}">{{percentage}}% {{#str}} campaign_compliance_rate, local_qualiscope {{/str}}</span>
+                        {{/manualonly}}
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover mb-0 align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 10%;">{{#str}} campaign_indicator, local_qualiscope {{/str}}</th>
+                                    <th style="width: 45%;">{{#str}} description, core {{/str}}</th>
+                                    <th style="width: 25%;">{{#str}} campaign_compliance_rate, local_qualiscope {{/str}}</th>
+                                    <th class="text-center" style="width: 5%;">✓</th>
+                                    <th class="text-center" style="width: 5%;">⚠</th>
+                                    <th class="text-center" style="width: 5%;">✗</th>
+                                    <th class="text-center" style="width: 5%;">—</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#indicators}}
+                                <tr>
+                                    <td><span class="badge bg-secondary">I{{number}}</span></td>
+                                    <td>{{title}}</td>
+                                    <td>
+                                        {{#haspercentage}}
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="progress flex-grow-1" style="height: 10px;">
+                                                <div class="progress-bar {{percentageclass}}" style="width: {{percentage}}%;"></div>
+                                            </div>
+                                            <span class="fw-bold small">{{percentage}}%</span>
+                                        </div>
+                                        {{/haspercentage}}
+                                        {{^haspercentage}}
+                                        <span class="badge bg-secondary">{{#str}} dashboard_manual_only, local_qualiscope {{/str}}</span>
+                                        {{/haspercentage}}
+                                    </td>
+                                    <td class="text-center">{{detected}}</td>
+                                    <td class="text-center">{{verify}}</td>
+                                    <td class="text-center">{{missing}}</td>
+                                    <td class="text-center">{{na}}</td>
+                                </tr>
+                                {{/indicators}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {{/criteria}}
+        </div>
+
+        <div class="tab-pane fade" id="weakpoints-content" role="tabpanel" aria-labelledby="weakpoints-tab">
+            <div class="mb-3">
+                <h5 class="mb-1">{{#str}} campaign_weakpoints_title, local_qualiscope {{/str}}</h5>
+                <p class="text-muted small mb-0">{{#str}} campaign_weakpoints_desc, local_qualiscope {{/str}}</p>
+            </div>
+            {{#hasweakpoints}}
+            <div class="row g-3">
+                {{#weakpoints}}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-start border-4 {{percentageclass}} shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-dark">I{{number}} (C{{criterion_number}})</span>
+                                <span class="badge {{percentageclass}}">{{percentage}}%</span>
+                            </div>
+                            <h6 class="card-title">{{title}}</h6>
+                            <div class="progress mb-2" style="height: 8px;">
+                                <div class="progress-bar {{percentageclass}}" style="width: {{percentage}}%;"></div>
+                            </div>
+                            <div class="small text-danger fw-semibold mb-2">
+                                <i class="fa fa-exclamation-circle me-1" aria-hidden="true"></i> {{failingmessage}}
+                            </div>
+                            <div class="d-flex justify-content-between text-muted small border-top pt-2">
+                                <span>✓ {{detected}}</span>
+                                <span>⚠ {{verify}}</span>
+                                <span>✗ {{missing}}</span>
+                                <span>— {{na}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/weakpoints}}
+            </div>
+            {{/hasweakpoints}}
+            {{^hasweakpoints}}
+            <div class="alert alert-success d-flex align-items-center">
+                <i class="fa fa-check-circle fs-4 me-2" aria-hidden="true"></i>
+                <span>{{#str}} campaign_all_compliant, local_qualiscope {{/str}}</span>
+            </div>
+            {{/hasweakpoints}}
         </div>
     </div>
     {{/hasresults}}
