@@ -163,8 +163,10 @@ foreach ($indicators_records as $ind) {
     $failing_courses = $missing + $verify;
 
     $class = 'bg-secondary';
+    $borderclass = 'border-secondary';
     if ($percentage !== null) {
-        $class = $percentage >= 75 ? 'bg-success' : ($percentage >= 50 ? 'bg-warning' : 'bg-danger');
+        $class = $percentage >= 75 ? 'bg-success' : ($percentage >= 50 ? 'bg-warning text-dark' : 'bg-danger text-white');
+        $borderclass = $percentage >= 75 ? 'border-success' : ($percentage >= 50 ? 'border-warning' : 'border-danger');
     }
 
     $ind_item = [
@@ -180,6 +182,7 @@ foreach ($indicators_records as $ind) {
         'percentage' => $percentage !== null ? $percentage : 0,
         'haspercentage' => $percentage !== null,
         'percentageclass' => $class,
+        'borderclass' => $borderclass,
         'noncompliance' => $non_compliance,
         'failingcourses' => $failing_courses,
         'failingmessage' => get_string('campaign_courses_failing', 'local_qualiscope', $failing_courses),
