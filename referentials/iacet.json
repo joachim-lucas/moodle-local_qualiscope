@@ -1,0 +1,371 @@
+{
+  "name": "IACET",
+  "version": "ANSI/IACET Standard 2023",
+  "description": "Standard ANSI/IACET pour la formation continue et le développement des compétences (Continuing Education and Training). 9 catégories standards pour l'accréditation des prestataires et la délivrance des unités CEU (Continuing Education Units).",
+  "active": true,
+  "criteria": [
+    {
+      "number": 1,
+      "title": "Catégorie 1 : Organisation, gouvernance et intégrité",
+      "description": "L'organisme prestataire dispose d'une gouvernance structurée, de processus administratifs transparents, d'une politique de gestion des conflits d'intérêts et d'une information publique claire sur ses programmes de formation.",
+      "indicators": [
+        {
+          "number": 1,
+          "title": "Information institutionnelle et descriptif des formations",
+          "description": "Publication transparente des informations relatives aux formations : intitulé, résumé, structure pédagogique et conditions d'accès.",
+          "scope": "course",
+          "moodle_level": "partial",
+          "checks": [
+            {
+              "name": "Description et structure du cours Moodle",
+              "description": "Présence du résumé de cours, des informations institutionnelles et d'une organisation modulaire claire.",
+              "type": "field_exists",
+              "automatic": true,
+              "weight": 2
+            },
+            {
+              "name": "Documentation institutionnelle et règlement intérieur",
+              "description": "Présence de ressources documentaires (guide de l'apprenant, politique de formation).",
+              "type": "resource_exists",
+              "automatic": true,
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "number": 2,
+          "title": "Intégrité académique, confidentialité et politique de propriété intellectuelle",
+          "description": "L'organisme met en œuvre des politiques de respect des droits d'auteur, de protection des données (RGPD/confidentialité) et d'intégrité.",
+          "scope": "course",
+          "moodle_level": "documentary",
+          "checks": [
+            {
+              "name": "Politique d'intégrité académique et protection des données",
+              "description": "Preuve documentaire de la charte d'utilisation des données et d'intégrité.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Catégorie 2 : Analyse des besoins et conception pédagogique",
+      "description": "Les programmes de formation sont élaborés sur la base d'une analyse documentée des besoins des apprenants et de leur organisation de rattachement.",
+      "indicators": [
+        {
+          "number": 3,
+          "title": "Identification et recueil des besoins préalables des apprenants",
+          "description": "Mise en place d'outils de positionnement initial ou de recueil des attentes avant ou au début de l'apprentissage.",
+          "scope": "course",
+          "moodle_level": "partial",
+          "checks": [
+            {
+              "name": "Test de positionnement ou questionnaire d'évaluation des besoins",
+              "description": "Présence d'un questionnaire, test initial ou devoir de diagnostic des prérequis.",
+              "type": "positioning_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "number": 4,
+          "title": "Dossier d'ingénierie et conception pédagogique",
+          "description": "Dossier formalisant le processus de conception, la justification des modalités pédagogiques et les besoins cibles.",
+          "scope": "course",
+          "moodle_level": "documentary",
+          "checks": [
+            {
+              "name": "Cahier des charges et ingénierie de formation",
+              "description": "Preuve externe attestant de l'analyse préalable des besoins du public cible.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Catégorie 3 : Objectifs et acquis d'apprentissage mesurables (Learning Outcomes)",
+      "description": "Chaque formation définit des acquis d'apprentissage (Learning Outcomes - LOs) clairs, précis, observables et mesurables, basés sur des taxonomies pédagogiques reconnues.",
+      "indicators": [
+        {
+          "number": 5,
+          "title": "Définition des objectifs d'apprentissage et compétences",
+          "description": "Intégration d'objectifs de compétences opérationnels et mesurables dans le parcours.",
+          "scope": "course",
+          "moodle_level": "strong",
+          "checks": [
+            {
+              "name": "Compétences et référentiel d'objectifs Moodle",
+              "description": "Configuration des compétences Moodle associées au cours ou définies explicitement.",
+              "type": "competency_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "number": 6,
+          "title": "Alignement pédagogique (Alignement Objectifs - Activités - Évaluations)",
+          "description": "Cohérence entre les objectifs d'apprentissage annoncés, les activités pédagogiques proposées et les évaluations certificatives.",
+          "scope": "course",
+          "moodle_level": "strong",
+          "checks": [
+            {
+              "name": "Alignement constructif du cours",
+              "description": "Vérification de la présence coordonnée d'objectifs de compétences, d'activités interactives et d'évaluations.",
+              "type": "alignment_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Catégorie 4 : Qualification des intervenants et encadrement pédagogique",
+      "description": "Les formateurs, concepteurs et tuteurs possèdent les compétences disciplinaires, pédagogiques et techniques requises pour délivrer les événements d'apprentissage.",
+      "indicators": [
+        {
+          "number": 7,
+          "title": "Identification et qualification du personnel enseignant et support",
+          "description": "Attribution des rôles enseignants dans le cours et présentation des intervenants aux apprenants.",
+          "scope": "course",
+          "moodle_level": "documentary",
+          "checks": [
+            {
+              "name": "CV et justificatifs de compétences des formateurs/tuteurs",
+              "description": "Dépôt des preuves de qualification et de maintien des compétences des intervenants.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "Catégorie 5 : Contenus et méthodes pédagogiques",
+      "description": "Les contenus d'apprentissage sont rigoureux, à jour et engageants. Les méthodes pédagogiques favorisent l'interaction, la pratique et la progression active des participants.",
+      "indicators": [
+        {
+          "number": 8,
+          "title": "Richesse et variété des ressources et supports pédagogiques",
+          "description": "Mise à disposition d'une diversité de ressources documentaires, multimédias ou textuelles adaptées.",
+          "scope": "course",
+          "moodle_level": "strong",
+          "checks": [
+            {
+              "name": "Ressources pédagogiques Moodle diversifiées",
+              "description": "Présence de fichiers, pages, livres, liens web ou dossiers dans le cours.",
+              "type": "resource_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "number": 9,
+          "title": "Activités pédagogiques interactives et engagement apprenant",
+          "description": "Intégration d'activités pratiques, travaux collaboratifs, quiz ou simulations favorisant l'apprentissage actif.",
+          "scope": "course",
+          "moodle_level": "strong",
+          "checks": [
+            {
+              "name": "Activités interactives et collaboratives",
+              "description": "Présence d'activités (quiz, devoirs, forums, leçons, ateliers, H5P).",
+              "type": "activity_exists",
+              "automatic": true,
+              "weight": 2
+            },
+            {
+              "name": "Engagement et dynamisme pédagogique",
+              "description": "Mesure des interactions, discussions et participation active dans le cours.",
+              "type": "engagement_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "title": "Catégorie 6 : Évaluation des acquis d'apprentissage (Learning Assessment)",
+      "description": "Chaque événement de formation intègre des mécanismes d'évaluation formative et sommative permettant de mesurer directement l'atteinte des acquis d'apprentissage définis.",
+      "indicators": [
+        {
+          "number": 10,
+          "title": "Système d'évaluation des acquis et carnet de notes",
+          "description": "Configuration d'un carnet de notes structuré avec barèmes d'évaluation clairs et transparents.",
+          "scope": "course",
+          "moodle_level": "strong",
+          "checks": [
+            {
+              "name": "Carnet de notes (Gradebook) structuré",
+              "description": "Configuration des éléments d'évaluation et barèmes dans le carnet de notes Moodle.",
+              "type": "gradebook_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "number": 11,
+          "title": "Suivi individuel de l'avancement et critères de complétion",
+          "description": "Mise en place du suivi de complétion des activités et conditions de validation du cours.",
+          "scope": "course",
+          "moodle_level": "strong",
+          "checks": [
+            {
+              "name": "Suivi de complétion des activités et critères d'achèvement",
+              "description": "Activation du suivi d'achèvement et configuration des critères de complétion sur les modules.",
+              "type": "completion_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "title": "Catégorie 7 : Attribution des unités CEU et traçabilité des crédits (IACET CEUs)",
+      "description": "L'organisme applique une méthode rigoureuse de calcul des IACET CEUs (1 CEU = 10 heures d'apprentissage effectif) et garantit la traçabilité complète des attestations délivrées.",
+      "indicators": [
+        {
+          "number": 12,
+          "title": "Critères d'attribution des CEUs et traçabilité des validations",
+          "description": "Traçabilité des données d'assiduité, de complétion et des résultats statistiques du cours.",
+          "scope": "course",
+          "moodle_level": "partial",
+          "checks": [
+            {
+              "name": "Statistiques de complétion et données de suivi",
+              "description": "Indicateurs statistiques d'inscriptions, de taux de réussite et de complétion du cours.",
+              "type": "stats_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "number": 13,
+          "title": "Registre d'émission des certificats et conservation des enregistrements",
+          "description": "Système de conservation permanente et sécurisée des enregistrements d'apprenants (transcripts, badges, certificats).",
+          "scope": "course",
+          "moodle_level": "documentary",
+          "checks": [
+            {
+              "name": "Procédure d'émission des attestations CEU et politique d'archivage",
+              "description": "Preuve de conformité du processus de délivrance et d'archivage des attestations de CEU.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "title": "Catégorie 8 : Environnement d'apprentissage, support et accessibilité",
+      "description": "L'environnement d'apprentissage offre les ressources d'assistance technique, pédagogique et respecte les normes d'accessibilité numérique pour tous les apprenants.",
+      "indicators": [
+        {
+          "number": 14,
+          "title": "Accessibilité numérique et conformité WCAG / RGAA",
+          "description": "Conformité de l'environnement et des contenus pédagogiques aux critères d'accessibilité numérique.",
+          "scope": "course",
+          "moodle_level": "strong",
+          "checks": [
+            {
+              "name": "Accessibilité générale et contrastes de couleurs",
+              "description": "Analyse de la structure des textes et des contrastes de couleurs dans les descriptions.",
+              "type": "accessibility_exists",
+              "automatic": true,
+              "weight": 2
+            },
+            {
+              "name": "Accessibilité des images et médias (textes alternatifs)",
+              "description": "Vérification des attributs alt sur les images présentes dans le cours.",
+              "type": "wcag_images_exists",
+              "automatic": true,
+              "weight": 2
+            },
+            {
+              "name": "Structure sémantique des titres (h1-h6)",
+              "description": "Vérification de la hiérarchie logique des titres dans les contenus HTML.",
+              "type": "wcag_headings_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "number": 15,
+          "title": "Support technique et assistance aux apprenants",
+          "description": "Dispositif d'assistance et canaux de contact mis à la disposition des apprenants.",
+          "scope": "course",
+          "moodle_level": "documentary",
+          "checks": [
+            {
+              "name": "Modalités d'assistance technique et pédagogique",
+              "description": "Preuve de la mise à disposition d'un helpdesk ou guide de support.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "title": "Catégorie 9 : Évaluation de la formation et amélioration continue",
+      "description": "L'organisme collecte systématiquement les retours d'évaluation à chaud et à froid des apprenants et parties prenantes, et pilote un plan d'amélioration continue.",
+      "indicators": [
+        {
+          "number": 16,
+          "title": "Questionnaires d'évaluation de la satisfaction et retours apprenants",
+          "description": "Mise en œuvre d'enquêtes d'évaluation auprès des participants pour mesurer l'efficacité de la formation.",
+          "scope": "course",
+          "moodle_level": "strong",
+          "checks": [
+            {
+              "name": "Questionnaires de feedback et taux de réponse",
+              "description": "Vérification de la présence d'activités feedback/questionnaire et du taux de réponse obtenu.",
+              "type": "feedback_exists",
+              "automatic": true,
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "number": 17,
+          "title": "Revue périodique des programmes et actions d'amélioration continue",
+          "description": "Exploitation documentée des résultats d'évaluation pour actualiser et perfectionner les événements d'apprentissage.",
+          "scope": "course",
+          "moodle_level": "documentary",
+          "checks": [
+            {
+              "name": "Rapport annuel de revue qualité et plan d'actions correctives",
+              "description": "Preuve documentaire de l'analyse des évaluations et des plans d'amélioration continue.",
+              "type": "manual",
+              "automatic": false,
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

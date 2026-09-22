@@ -26,5 +26,10 @@ function xmldb_local_qualiscope_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2026091401, 'local', 'qualiscope');
     }
 
+    if ($oldversion < 2026092201) {
+        \local_qualiscope\referential_seeder::seed_all_from_files();
+        upgrade_plugin_savepoint(true, 2026092201, 'local', 'qualiscope');
+    }
+
     return true;
 }

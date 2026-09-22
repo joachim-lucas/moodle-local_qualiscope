@@ -67,6 +67,7 @@
                         <th>{{#str}} campaign_referential, local_qualiscope {{/str}}</th>
                         <th>{{#str}} campaign_scope, local_qualiscope {{/str}}</th>
                         <th>{{#str}} campaign_courses_analysed, local_qualiscope {{/str}}</th>
+                        <th>{{#str}} campaign_avg_coverage, local_qualiscope {{/str}}</th>
                         <th>{{#str}} campaign_date, local_qualiscope {{/str}}</th>
                         <th>{{#str}} campaign_status, local_qualiscope {{/str}}</th>
                         <th></th>
@@ -79,6 +80,14 @@
                         <td>{{referential}}</td>
                         <td>{{scopelabel}}</td>
                         <td>{{course_count}}</td>
+                        <td>
+                            {{#has_coverage}}
+                            <span class="badge {{coverage_class}}">{{avg_coverage}}</span>
+                            {{/has_coverage}}
+                            {{^has_coverage}}
+                            <span class="text-muted">—</span>
+                            {{/has_coverage}}
+                        </td>
                         <td>{{dateformatted}}</td>
                         <td>
                             <span class="badge {{#timecompleted}}bg-success{{/timecompleted}}{{^timecompleted}}bg-primary{{/timecompleted}}">
@@ -103,7 +112,7 @@
 
                     {{^campaigns}}
                     <tr>
-                        <td colspan="6" class="text-center text-muted">{{#str}} no_results, local_qualiscope {{/str}}</td>
+                        <td colspan="8" class="text-center text-muted">{{#str}} no_results, local_qualiscope {{/str}}</td>
                     </tr>
                     {{/campaigns}}
                 </tbody>
