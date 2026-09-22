@@ -353,3 +353,18 @@ $string['campaign_print_report'] = 'Rapport imprimable (HTML)';
 $string['campaign_report_subtitle'] = 'Rapport de synthèse d\'audit de campagne QualiScope';
 $string['campaign_non_compliant_count'] = 'Nombre de cours non conformes';
 $string['campaign_print_btn'] = 'Imprimer le rapport';
+
+// Point 3 : Plan d'actions correctives (CAPA) consolidé.
+$string['campaign_tab_actions'] = 'Plan d\'actions CAPA';
+$string['campaign_actions_title'] = 'Plan d\'actions correctives de la campagne';
+$string['campaign_actions_desc'] = 'Suivi consolidé de toutes les actions d\'amélioration continue associées aux cours de cette campagne.';
+$string['campaign_bulk_action_create'] = '+ Créer une action en masse';
+$string['campaign_bulk_action_target_indicator'] = 'Indicateur cible';
+$string['campaign_bulk_action_target_all'] = 'Tous les cours de la campagne';
+$string['campaign_bulk_action_help'] = 'Une action sera automatiquement générée pour chaque cours ayant un statut non conforme (manquant) ou à vérifier pour l\'indicateur sélectionné.';
+$string['campaign_bulk_action_submit'] = 'Générer les actions en masse';
+$string['campaign_bulk_action_success'] = '{$a} action(s) corrective(s) créée(s) avec succès !';
+$string['campaign_no_actions'] = 'Aucune action corrective enregistrée pour cette campagne.';
+$string['campaign_action_todo_count'] = 'À faire';
+$string['campaign_action_inprogress_count'] = 'En cours';
+$string['campaign_action_closed_count'] = 'Terminées';

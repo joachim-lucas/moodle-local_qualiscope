@@ -353,3 +353,18 @@ $string['campaign_print_report'] = 'Printable Report (HTML)';
 $string['campaign_report_subtitle'] = 'QualiScope campaign audit summary report';
 $string['campaign_non_compliant_count'] = 'Non-compliant courses count';
 $string['campaign_print_btn'] = 'Print report';
+
+// Point 3: Consolidated CAPA action plan.
+$string['campaign_tab_actions'] = 'CAPA Action Plan';
+$string['campaign_actions_title'] = 'Campaign Corrective Action Plan';
+$string['campaign_actions_desc'] = 'Consolidated tracking of all continuous improvement actions assigned to courses in this campaign.';
+$string['campaign_bulk_action_create'] = '+ Bulk create actions';
+$string['campaign_bulk_action_target_indicator'] = 'Target indicator';
+$string['campaign_bulk_action_target_all'] = 'All campaign courses';
+$string['campaign_bulk_action_help'] = 'An action will be automatically generated for each course that has a non-compliant (missing) or to-verify status for the selected indicator.';
+$string['campaign_bulk_action_submit'] = 'Generate bulk actions';
+$string['campaign_bulk_action_success'] = '{$a} corrective action(s) created successfully!';
+$string['campaign_no_actions'] = 'No corrective actions recorded for this campaign.';
+$string['campaign_action_todo_count'] = 'To do';
+$string['campaign_action_inprogress_count'] = 'In progress';
+$string['campaign_action_closed_count'] = 'Completed';

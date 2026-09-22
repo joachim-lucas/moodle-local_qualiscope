@@ -224,6 +224,74 @@ $weakpoints_filtered = array_values(array_filter($weakpoints, function($item) {
     return $item['percentage'] < 100;
 }));
 
+// Consolidated CAPA Actions for Campaign.
+$actions = $DB->get_records_sql(
+    "SELECT a.*, c.fullname AS coursename
+     FROM {local_qualiopi_actions} a
+     JOIN {course} c ON c.id = a.courseid
+     WHERE a.campaign_id = :campaignid
+     ORDER BY a.duedate ASC, a.id DESC",
+    ['campaignid' => $campaignid]
+);
+
+$actionstodo = 0;
+$actionsinprogress = 0;
+$actionsclosed = 0;
+$actionsdata = [];
+
+$prioritylabels = [
+    'high' => get_string('action_priority_high', 'local_qualiscope'),
+    'medium' => get_string('action_priority_medium', 'local_qualiscope'),
+    'low' => get_string('action_priority_low', 'local_qualiscope'),
+];
+
+$statuslabels = [
+    'todo' => get_string('action_status_todo', 'local_qualiscope'),
+    'inprogress' => get_string('action_status_inprogress', 'local_qualiscope'),
+    'proved' => get_string('action_status_proved', 'local_qualiscope'),
+    'verified' => get_string('action_status_verified', 'local_qualiscope'),
+    'closed' => get_string('action_status_closed', 'local_qualiscope'),
+];
+
+foreach ($actions as $action) {
+    if ($action->status === 'todo') {
+        $actionstodo++;
+    } else if ($action->status === 'inprogress') {
+        $actionsinprogress++;
+    } else {
+        $actionsclosed++;
+    }
+
+    $actionsdata[] = [
+        'id' => $action->id,
+        'title' => $action->title,
+        'coursename' => $action->coursename,
+        'responsible' => $action->responsible ?: '—',
+        'duedateformatted' => $action->duedate ? userdate($action->duedate, get_string('strftimedateshort', 'langconfig')) : '—',
+        'priority' => $action->priority,
+        'prioritylabel' => $prioritylabels[$action->priority] ?? $action->priority,
+        'priorityhigh' => $action->priority === 'high',
+        'prioritymedium' => $action->priority === 'medium',
+        'prioritylow' => $action->priority === 'low',
+        'status' => $action->status,
+        'statuslabel' => $statuslabels[$action->status] ?? $action->status,
+        'statustodo' => $action->status === 'todo',
+        'statusinprogress' => $action->status === 'inprogress',
+        'statusclosed' => in_array($action->status, ['proved', 'verified', 'closed']),
+        'editurl' => new moodle_url('/local/qualiscope/edit_action.php', ['id' => $action->id, 'return' => 'campaign']),
+    ];
+}
+
+$indicators_dropdown = [];
+foreach ($criteriadata as $crit) {
+    foreach ($crit['indicators'] as $ind) {
+        $indicators_dropdown[] = [
+            'id' => $ind['id'],
+            'label' => 'C' . $crit['number'] . ' - I' . $ind['number'] . ' : ' . core_text::substr($ind['title'], 0, 60),
+        ];
+    }
+}
+
 $summaryitems = [
     [
         'key' => 'courses',
@@ -283,5 +351,15 @@ echo $output->render_campaign_dashboard([
     'criteria' => array_values($criteriadata),
     'weakpoints' => $weakpoints_filtered,
     'hasweakpoints' => !empty($weakpoints_filtered),
+    'actions' => $actionsdata,
+    'hasactions' => !empty($actionsdata),
+    'actionstotal' => count($actionsdata),
+    'actionstodo' => $actionstodo,
+    'actionsinprogress' => $actionsinprogress,
+    'actionsclosed' => $actionsclosed,
+    'indicatorslist' => $indicators_dropdown,
+    'bulkactionurl' => new moodle_url('/local/qualiscope/bulk_create_action.php'),
+    'sesskey' => sesskey(),
+    'campaignid' => $campaignid,
 ]);
 echo $output->footer();

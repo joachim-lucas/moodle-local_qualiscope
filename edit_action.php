@@ -4,6 +4,7 @@ require_once('../../config.php');
 require_once($CFG->dirroot . '/local/qualiscope/lib.php');
 
 $id = required_param('id', PARAM_INT);
+$return = optional_param('return', '', PARAM_ALPHA);
 
 $action = $DB->get_record('local_qualiopi_actions', ['id' => $id], '*', MUST_EXIST);
 
@@ -11,7 +12,7 @@ require_login($action->courseid);
 $context = context_course::instance($action->courseid);
 require_capability('local/qualiscope:manageactions', $context);
 
-$PAGE->set_url(new moodle_url('/local/qualiscope/edit_action.php', ['id' => $id]));
+$PAGE->set_url(new moodle_url('/local/qualiscope/edit_action.php', ['id' => $id, 'return' => $return]));
 $PAGE->set_title(get_string('action_title', 'local_qualiscope'));
 $PAGE->set_heading(get_string('action_title', 'local_qualiscope'));
 $PAGE->set_context($context);
@@ -31,6 +32,10 @@ if (data_submitted() && confirm_sesskey()) {
 
     $DB->update_record('local_qualiopi_actions', $action);
 
+    if ($return === 'campaign' && $action->campaign_id) {
+        redirect(new moodle_url('/local/qualiscope/view_campaign.php', ['id' => $action->campaign_id]));
+    }
+
     redirect(new moodle_url('/local/qualiscope/actions.php', [
         'courseid' => $action->courseid,
         'campaignid' => $action->campaign_id,
@@ -42,6 +47,7 @@ echo $OUTPUT->heading(get_string('action_title', 'local_qualiscope'));
 
 $formhtml = '<form method="post">';
 $formhtml .= '<input type="hidden" name="sesskey" value="' . sesskey() . '">';
+$formhtml .= '<input type="hidden" name="return" value="' . s($return) . '">';
 
 $formhtml .= '<div class="mb-3"><label class="form-label">' . get_string('action_name', 'local_qualiscope') . '</label>';
 $formhtml .= '<input type="text" class="form-control" name="title" value="' . s($action->title) . '" required></div>';
