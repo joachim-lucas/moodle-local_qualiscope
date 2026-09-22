@@ -384,3 +384,18 @@ $string['campaign_compare_criteria'] = 'Criterion-by-criterion comparison';
 $string['campaign_compare_indicators'] = 'Indicator-by-indicator comparison';
 $string['campaign_select_to_compare'] = 'Select two campaigns to compare their compliance levels.';
 $string['campaign_same_campaign_warning'] = 'Please select two different campaigns to perform the comparison.';
+
+// Point 5: Usability, filters, and real-time progress indicator.
+$string['campaign_search_courses'] = 'Search courses...';
+$string['campaign_filter_all_scores'] = 'All score ranges';
+$string['campaign_filter_gte75'] = '≥ 75% (Compliant / High)';
+$string['campaign_filter_50to75'] = '50% – 74% (Partial)';
+$string['campaign_filter_lt50'] = '< 50% (Non-compliant / Low)';
+$string['campaign_filter_all_status'] = 'All anomaly statuses';
+$string['campaign_filter_has_missing'] = 'With missing items (✗)';
+$string['campaign_filter_has_verify'] = 'With items to verify (⚠)';
+$string['campaign_filter_perfect'] = '100% compliant (No issues)';
+$string['campaign_no_matching_courses'] = 'No courses match the selected search criteria.';
+$string['campaign_running_progress_title'] = 'Campaign analysis in progress';
+$string['campaign_running_course_progress'] = 'Processing: {$a->current} / {$a->total} courses ({$a->percentage}%)';
+$string['campaign_running_wait'] = 'Please wait while audited courses are being processed...';

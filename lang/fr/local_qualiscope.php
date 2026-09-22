@@ -384,3 +384,18 @@ $string['campaign_compare_criteria'] = 'Comparaison par critère';
 $string['campaign_compare_indicators'] = 'Comparaison par indicateur';
 $string['campaign_select_to_compare'] = 'Sélectionnez deux campagnes pour comparer leur niveau de conformité.';
 $string['campaign_same_campaign_warning'] = 'Veuillez sélectionner deux campagnes différentes pour effectuer la comparaison.';
+
+// Point 5 : Ergonomie, filtres et suivi de progression en temps réel.
+$string['campaign_search_courses'] = 'Rechercher un cours...';
+$string['campaign_filter_all_scores'] = 'Toutes les tranches de score';
+$string['campaign_filter_gte75'] = '≥ 75 % (Conforme / Bon)';
+$string['campaign_filter_50to75'] = '50 % – 74 % (Partiel)';
+$string['campaign_filter_lt50'] = '< 50 % (Non conforme / Faible)';
+$string['campaign_filter_all_status'] = 'Tous les statuts d\'anomalie';
+$string['campaign_filter_has_missing'] = 'Avec éléments manquants (✗)';
+$string['campaign_filter_has_verify'] = 'Avec éléments à vérifier (⚠)';
+$string['campaign_filter_perfect'] = '100 % conformes (Sans anomalie)';
+$string['campaign_no_matching_courses'] = 'Aucun cours ne correspond aux critères de recherche.';
+$string['campaign_running_progress_title'] = 'Analyse de la campagne en cours';
+$string['campaign_running_course_progress'] = 'Traitement : {$a->current} / {$a->total} cours ({$a->percentage} %)';
+$string['campaign_running_wait'] = 'Veuillez patienter pendant le traitement des cours audités...';

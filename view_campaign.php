@@ -15,6 +15,7 @@ $PAGE->set_url(new moodle_url('/local/qualiscope/view_campaign.php', ['id' => $c
 $PAGE->set_title($campaign->name);
 $PAGE->set_heading($campaign->name);
 $PAGE->set_context($context);
+$PAGE->requires->js_call_amd('local_qualiscope/forms', 'init');
 
 $output = $PAGE->get_renderer('local_qualiscope');
 

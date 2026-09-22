@@ -105,10 +105,39 @@
 
     <div class="tab-content" id="campaignTabContent">
         <div class="tab-pane fade show active" id="courses-content" role="tabpanel" aria-labelledby="courses-tab">
+            <!-- Filter & Search Toolbar -->
+            <div class="row g-2 mb-3 align-items-center bg-light p-2 rounded border">
+                <div class="col-md-4">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text"><i class="fa fa-search"></i></span>
+                        <input type="text" id="courseFilterSearch" class="form-control" placeholder="{{#str}} campaign_search_courses, local_qualiscope {{/str}}">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select id="courseFilterCoverage" class="form-select form-select-sm">
+                        <option value="all">{{#str}} campaign_filter_all_scores, local_qualiscope {{/str}}</option>
+                        <option value="gte75">{{#str}} campaign_filter_gte75, local_qualiscope {{/str}}</option>
+                        <option value="50to75">{{#str}} campaign_filter_50to75, local_qualiscope {{/str}}</option>
+                        <option value="lt50">{{#str}} campaign_filter_lt50, local_qualiscope {{/str}}</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select id="courseFilterStatus" class="form-select form-select-sm">
+                        <option value="all">{{#str}} campaign_filter_all_status, local_qualiscope {{/str}}</option>
+                        <option value="missing">{{#str}} campaign_filter_has_missing, local_qualiscope {{/str}}</option>
+                        <option value="verify">{{#str}} campaign_filter_has_verify, local_qualiscope {{/str}}</option>
+                        <option value="perfect">{{#str}} campaign_filter_perfect, local_qualiscope {{/str}}</option>
+                    </select>
+                </div>
+                <div class="col-md-2 text-md-end text-muted small">
+                    <span id="courseFilterCount" class="fw-bold text-dark">{{courses.length}}</span> / {{courses.length}} {{#str}} courses, core {{/str}}
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-12">
-                    <table class="table table-hover">
-                        <thead>
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
                             <tr>
                                 <th>{{#str}} campaign_course, local_qualiscope {{/str}}</th>
                                 <th>{{#str}} dashboard_score, local_qualiscope {{/str}}</th>
@@ -121,8 +150,13 @@
                         </thead>
                         <tbody>
                             {{#courses}}
-                            <tr>
-                                <td>{{coursename}}</td>
+                            <tr class="qualiscope-course-row"
+                                data-coursename="{{coursename}}"
+                                data-percentage="{{percentage}}"
+                                data-missing="{{missing}}"
+                                data-verify="{{verify}}"
+                                data-detected="{{detected}}">
+                                <td><strong>{{coursename}}</strong></td>
                                 <td><span class="badge {{percentageclass}}">{{percentage}}%</span></td>
                                 <td class="text-center">{{detected}}</td>
                                 <td class="text-center">{{verify}}</td>
@@ -133,6 +167,9 @@
                             {{/courses}}
                         </tbody>
                     </table>
+                    <div id="courseFilterNoResults" class="alert alert-warning text-center" style="display:none;">
+                        {{#str}} campaign_no_matching_courses, local_qualiscope {{/str}}
+                    </div>
                 </div>
             </div>
         </div>
