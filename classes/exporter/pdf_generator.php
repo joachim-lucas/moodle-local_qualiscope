@@ -9,6 +9,8 @@ require_once($CFG->libdir . '/pdflib.php');
 
 /**
  * High-definition PDF report generator for QualiScope course audits (Moodle / Qualiopi).
+ *
+ * @package local_qualiscope
  */
 class pdf_generator {
 
@@ -30,6 +32,15 @@ class pdf_generator {
     /** @var array Results list */
     private $results;
 
+    /**
+     * Constructor.
+     *
+     * @param object $course The course record.
+     * @param object $referential The referential record.
+     * @param array $summary Global summary statistics.
+     * @param array $criteriasummary Per-criterion summary data.
+     * @param array $results List of check results.
+     */
     public function __construct(object $course, object $referential, array $summary, array $criteriasummary, array $results) {
         $this->course = $course;
         $this->referential = $referential;

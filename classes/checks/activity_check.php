@@ -4,8 +4,20 @@ namespace local_qualiscope\checks;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Checks the richness of learning and assessment activities in the course.
+ *
+ * @package local_qualiscope
+ */
 class activity_check extends base_check {
 
+    /**
+     * Executes the activities check on the course.
+     *
+     * @param int $courseid The course id to audit.
+     * @param object $check The check record.
+     * @return array Result with status, detail and optional ratio keys.
+     */
     public function execute(int $courseid, object $check): array {
         global $DB;
 

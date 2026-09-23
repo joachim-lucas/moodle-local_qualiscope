@@ -4,8 +4,20 @@ namespace local_qualiscope\checks;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Checks real usage metrics: enrolments, completion rate and recorded grades.
+ *
+ * @package local_qualiscope
+ */
 class stats_check extends base_check {
 
+    /**
+     * Executes the usage statistics check on the course.
+     *
+     * @param int $courseid The course id to audit.
+     * @param object $check The check record.
+     * @return array Result with status, detail and optional ratio keys.
+     */
     public function execute(int $courseid, object $check): array {
         global $DB;
 

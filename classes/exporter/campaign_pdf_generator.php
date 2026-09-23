@@ -9,6 +9,8 @@ require_once($CFG->libdir . '/pdflib.php');
 
 /**
  * High-definition PDF audit report generator for QualiScope campaigns.
+ *
+ * @package local_qualiscope
  */
 class campaign_pdf_generator {
 
@@ -33,6 +35,16 @@ class campaign_pdf_generator {
     /** @var array Weak points data */
     private $weakpoints;
 
+    /**
+     * Constructor.
+     *
+     * @param object $campaign The campaign record.
+     * @param object $referential The referential record.
+     * @param array $summary Global campaign summary statistics.
+     * @param array $courses Per-course compliance data.
+     * @param array $criteria Per-criterion/indicator compliance data.
+     * @param array $weakpoints Weak points priority list.
+     */
     public function __construct(
         object $campaign,
         object $referential,

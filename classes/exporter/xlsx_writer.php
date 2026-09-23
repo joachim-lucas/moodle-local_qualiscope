@@ -9,6 +9,8 @@ defined('MOODLE_INTERNAL') || die();
  *
  * Generates a valid .xlsx file without any third-party dependency.
  * Strings are written as inline strings, numbers as numeric cells.
+ *
+ * @package local_qualiscope
  */
 class xlsx_writer {
 
@@ -67,6 +69,11 @@ class xlsx_writer {
         return $bytes;
     }
 
+    /**
+     * Builds the [Content_Types].xml part.
+     *
+     * @return string
+     */
     private function content_types_xml(): string {
         return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
             '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' .
@@ -78,6 +85,11 @@ class xlsx_writer {
             '</Types>';
     }
 
+    /**
+     * Builds the package root relationships part.
+     *
+     * @return string
+     */
     private function rels_xml(): string {
         return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
             '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' .
@@ -85,6 +97,11 @@ class xlsx_writer {
             '</Relationships>';
     }
 
+    /**
+     * Builds the workbook.xml part.
+     *
+     * @return string
+     */
     private function workbook_xml(): string {
         return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
             '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ' .
@@ -93,6 +110,11 @@ class xlsx_writer {
             '</workbook>';
     }
 
+    /**
+     * Builds the workbook relationships part.
+     *
+     * @return string
+     */
     private function workbook_rels_xml(): string {
         return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
             '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' .
@@ -101,6 +123,11 @@ class xlsx_writer {
             '</Relationships>';
     }
 
+    /**
+     * Builds the styles.xml part (normal and bold header styles).
+     *
+     * @return string
+     */
     private function styles_xml(): string {
         return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
             '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' .
@@ -119,6 +146,11 @@ class xlsx_writer {
             '</styleSheet>';
     }
 
+    /**
+     * Builds the worksheet part with all collected rows.
+     *
+     * @return string
+     */
     private function sheet_xml(): string {
         $xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
             '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' .
@@ -163,6 +195,12 @@ class xlsx_writer {
         return $xml;
     }
 
+    /**
+     * Cleans a sheet title for XLSX constraints (max 31 chars, no forbidden characters).
+     *
+     * @param string $title Raw title.
+     * @return string
+     */
     private static function clean_sheet_title(string $title): string {
         $title = preg_replace('/[\[\]:*?\/\\\\]/', ' ', $title);
         $title = preg_replace('/\s+/', ' ', $title);
@@ -170,6 +208,12 @@ class xlsx_writer {
         return $title === '' ? 'Rapport' : $title;
     }
 
+    /**
+     * Converts a 1-based column index to its Excel letter label (A, B, ..., Z, AA, ...).
+     *
+     * @param int $index 1-based column index.
+     * @return string
+     */
     private static function col_letter(int $index): string {
         $result = '';
         while ($index > 0) {
@@ -180,6 +224,12 @@ class xlsx_writer {
         return $result;
     }
 
+    /**
+     * Escapes a string for XML, stripping invalid XML characters.
+     *
+     * @param string $value Raw string.
+     * @return string
+     */
     private static function xml_escape(string $value): string {
         $value = preg_replace('/[^\x09\x0A\x0D\x20-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', '', $value);
         return htmlspecialchars($value, ENT_XML1 | ENT_QUOTES, 'UTF-8');

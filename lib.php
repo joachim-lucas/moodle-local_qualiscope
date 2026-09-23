@@ -2,6 +2,14 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Adds the QualiScope entry to the course navigation "More" menu for users with the audit capability.
+ *
+ * @param navigation_node $coursenode The course navigation node.
+ * @param stdClass $course The course record.
+ * @param context $coursecontext The course context.
+ * @return void
+ */
 function local_qualiscope_extend_navigation_course(navigation_node $coursenode, stdClass $course, context $coursecontext) {
     if (!isloggedin() || isguestuser()) {
         return;
@@ -21,6 +29,18 @@ function local_qualiscope_extend_navigation_course(navigation_node $coursenode, 
     );
 }
 
+/**
+ * Serves evidence files stored in the course context by QualiScope.
+ *
+ * @param \stdClass $course Course record.
+ * @param \stdClass $cm Course module record.
+ * @param \context $context Activity context.
+ * @param string $filearea File area, must be 'evidence'.
+ * @param array $args Remaining path arguments.
+ * @param bool $forcedownload Whether to force the browser to download the file.
+ * @param array $options Additional download options.
+ * @return void
+ */
 function local_qualiscope_pluginfile($course, $cm, $context, string $filearea, array $args, bool $forcedownload, array $options = []): void {
     if ($context->contextlevel != CONTEXT_COURSE) {
         send_file_not_found();

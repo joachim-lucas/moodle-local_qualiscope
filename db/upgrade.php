@@ -2,6 +2,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Upgrade hook: applies schema changes and reseeds the referentials.
+ *
+ * @param int $oldversion The previous plugin version.
+ * @return bool Always true.
+ */
 function xmldb_local_qualiscope_upgrade($oldversion) {
     global $DB;
 

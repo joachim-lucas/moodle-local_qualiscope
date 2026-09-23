@@ -10,6 +10,8 @@ require_once($CFG->libdir . '/filestorage/zip_packer.php');
 /**
  * Auditor Evidence Dossier ZIP archive generator.
  * Creates an organized folder structure: Critere_01/.../Indicateur_01/... with evidence summaries and PDF report.
+ *
+ * @package local_qualiscope
  */
 class zip_generator {
 
@@ -28,6 +30,15 @@ class zip_generator {
     /** @var array Results list */
     private $results;
 
+    /**
+     * Constructor.
+     *
+     * @param object $course The course record.
+     * @param object $referential The referential record.
+     * @param array $summary Global summary statistics.
+     * @param array $criteriasummary Per-criterion summary data.
+     * @param array $results List of check results.
+     */
     public function __construct(object $course, object $referential, array $summary, array $criteriasummary, array $results) {
         $this->course = $course;
         $this->referential = $referential;

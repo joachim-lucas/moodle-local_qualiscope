@@ -4,8 +4,20 @@ namespace local_qualiscope\analyser;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Collects evidence items for an indicator from Moodle course data.
+ *
+ * @package local_qualiscope
+ */
 class evidence_analyser {
 
+    /**
+     * Gathers automatic evidence from the course for every check of an indicator.
+     *
+     * @param int $courseid The course id.
+     * @param int $indicatorid The indicator id.
+     * @return array List of evidence arrays.
+     */
     public static function get_moodle_evidences(int $courseid, int $indicatorid): array {
         global $DB;
 
@@ -20,6 +32,12 @@ class evidence_analyser {
         return $evidences;
     }
 
+    /**
+     * Lists the manual (external) evidences attached to an analysis result.
+     *
+     * @param int $resultid The result record id.
+     * @return array Records from local_qualiscope_evidences.
+     */
     public static function get_external_evidences(int $resultid): array {
         global $DB;
 
@@ -29,6 +47,13 @@ class evidence_analyser {
         ], 'timecreated DESC');
     }
 
+    /**
+     * Collects evidence rows matching a single automatic check type.
+     *
+     * @param int $courseid The course id.
+     * @param object $check The check record.
+     * @return array List of evidence arrays.
+     */
     private static function collect_moodle_evidence(int $courseid, object $check): array {
         global $DB;
 
@@ -225,6 +250,12 @@ class evidence_analyser {
         return $evidences;
     }
 
+    /**
+     * Returns the module instance record for a course module, or null for unsupported modules.
+     *
+     * @param object $cm A course_modules record with the modname property.
+     * @return object|null
+     */
     private static function get_activity_instance(object $cm) {
         global $DB;
 

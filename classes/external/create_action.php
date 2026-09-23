@@ -4,8 +4,18 @@ namespace local_qualiscope\external;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * External service to create a corrective action (CAPA).
+ *
+ * @package local_qualiscope
+ */
 class create_action extends \external_api {
 
+    /**
+     * Declares the function parameters.
+     *
+     * @return \external_function_parameters
+     */
     public static function execute_parameters() {
         return new \external_function_parameters([
             'resultid' => new \external_value(PARAM_INT, 'Result ID', VALUE_DEFAULT, 0),
@@ -18,6 +28,11 @@ class create_action extends \external_api {
         ]);
     }
 
+    /**
+     * Declares the function return values.
+     *
+     * @return \external_single_structure
+     */
     public static function execute_returns() {
         return new \external_single_structure([
             'success' => new \external_value(PARAM_BOOL, 'Success status'),
@@ -25,6 +40,18 @@ class create_action extends \external_api {
         ]);
     }
 
+    /**
+     * Creates the corrective action record.
+     *
+     * @param int $campaignid The campaign id.
+     * @param int $courseid The course id.
+     * @param string $title Title of the action.
+     * @param string $responsible Responsible person (free text).
+     * @param string $duedate Due date as timestamp string.
+     * @param string $priority Priority (low, medium, high).
+     * @param int $resultid Optional linked analysis result id.
+     * @return array Success status and created action id.
+     */
     public static function execute(
         int $campaignid,
         int $courseid,

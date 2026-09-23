@@ -4,12 +4,19 @@ namespace local_qualiscope;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Handles idempotent seeding of referential definitions from JSON files.
+ *
+ * @package local_qualiscope
+ */
 class referential_seeder {
 
     /**
      * Scan the referentials/ directory and seed every JSON file
      * whose referential name does not already exist in the DB.
      * Guard: name-only — if (name) exists, the file is skipped.
+     *
+     * @return void
      */
     public static function seed_all_from_files(): void {
         global $CFG;
@@ -30,6 +37,9 @@ class referential_seeder {
 
     /**
      * Read a single referential definition from a JSON file.
+     *
+     * @param string $filepath Absolute path to the JSON file.
+     * @return array|null The decoded definition, or null when invalid.
      */
     public static function read_referential_file(string $filepath): ?array {
         if (!is_readable($filepath)) {
@@ -56,6 +66,9 @@ class referential_seeder {
     /**
      * Seed a referential from an array definition.
      * Skips if a referential with the same name already exists (idempotent by name).
+     *
+     * @param array $def Referential definition with name, version and criteria.
+     * @return void
      */
     public static function seed_referential(array $def): void {
         global $DB;

@@ -6,9 +6,18 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Check for learner engagement, activity tracking, and dropout prevention (Qualiopi Indicators 10 & 12).
+ *
+ * @package local_qualiscope
  */
 class engagement_check extends base_check {
 
+    /**
+     * Executes the learner engagement check on the course.
+     *
+     * @param int $courseid The course id to audit.
+     * @param object $check The check record.
+     * @return array Result with status, detail and optional ratio keys.
+     */
     public function execute(int $courseid, object $check): array {
         global $DB;
 

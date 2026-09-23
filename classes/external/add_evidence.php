@@ -4,8 +4,18 @@ namespace local_qualiscope\external;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * External service to attach a manual evidence to an analysis result.
+ *
+ * @package local_qualiscope
+ */
 class add_evidence extends \external_api {
 
+    /**
+     * Declares the function parameters.
+     *
+     * @return \external_function_parameters
+     */
     public static function execute_parameters() {
         return new \external_function_parameters([
             'resultid' => new \external_value(PARAM_INT, 'Result ID'),
@@ -15,6 +25,11 @@ class add_evidence extends \external_api {
         ]);
     }
 
+    /**
+     * Declares the function return values.
+     *
+     * @return \external_single_structure
+     */
     public static function execute_returns() {
         return new \external_single_structure([
             'success' => new \external_value(PARAM_BOOL, 'Success status'),
@@ -22,6 +37,15 @@ class add_evidence extends \external_api {
         ]);
     }
 
+    /**
+     * Stores the evidence for the result and refreshes its evidence count.
+     *
+     * @param int $resultid The analysis result id.
+     * @param string $title Title of the evidence.
+     * @param string $annotation Optional annotation.
+     * @param string $externalurl Optional external URL.
+     * @return array Success status and created evidence id.
+     */
     public static function execute(int $resultid, string $title, string $annotation = '', string $externalurl = ''): array {
         global $DB, $USER;
 

@@ -219,7 +219,7 @@ $string['wcag_contrast_default_theme'] = 'Contrastes : 100 % conforme (styles st
 $string['wcag_contrast_summary'] = 'Contrastes : {$a->compliant}/{$a->total} conforme(s) WCAG AA ({$a->failed} insuffisant(s))';
 $string['wcag_contrast_failed_item'] = 'Contraste insuffisant ({$a->ratio}:1 pour texte {$a->fg} sur fond {$a->bg}) dans "{$a->source}"';
 
-// Page d'aide et de méthodologie.
+// Help and methodology page.
 $string['help_page_title'] = 'QualiScope — Guide d\'audit & Méthodologie du référentiel';
 $string['help_button_label'] = 'Guide & Méthodologie';
 $string['check_automatic'] = 'Automatisé';
@@ -255,7 +255,7 @@ $string['moodle_level_partial'] = 'Audit Moodle partiel';
 $string['moodle_level_documentary'] = 'Preuve documentaire requise';
 $string['moodle_level_manual'] = 'Vérification manuelle';
 
-// Documentation des types de contrôles.
+// Documentation for check types.
 $string['check_doc_field_name'] = 'Structure & Métadonnées du cours';
 $string['check_doc_field_target'] = 'Vérifie la présence du résumé du cours (course->summary), la structure des sections avec contenu (course_sections), et la définition des dates de début et de fin.';
 $string['check_doc_field_calc'] = 'Score de 0.0 à 1.0 (3 éléments testés : résumé, sections actives, dates complètes). Statut "detected" si &ge; 2 éléments présents.';
@@ -327,7 +327,7 @@ $string['check_doc_manual_calc'] = 'Nécessite le dépôt d\'une pièce justific
 $string['check_doc_default_target'] = 'Analyse des données et configurations associées au cours Moodle.';
 $string['check_doc_default_calc'] = 'Vérification de la présence et de la conformité des éléments requis.';
 
-// Point 1 : Analyse macro et points faibles des campagnes.
+// Point 1: Macro analysis and campaign weak points.
 $string['campaign_tab_courses'] = 'Synthèse par cours';
 $string['campaign_tab_macro'] = 'Analyse macro par Critère & Indicateur';
 $string['campaign_tab_weakpoints'] = 'Points faibles prioritaires';
@@ -342,7 +342,7 @@ $string['campaign_all_compliant'] = 'Tous les indicateurs audités présentent u
 $string['campaign_criterion'] = 'Critère';
 $string['campaign_indicator'] = 'Indicateur';
 
-// Point 2 : Exports et rapports de campagne.
+// Point 2: Campaign exports and reports.
 $string['campaign_export_report'] = 'Exporter la campagne';
 $string['campaign_export_csv'] = 'Synthèse CSV (.csv)';
 $string['campaign_export_xlsx'] = 'Classeur Excel (.xlsx)';
@@ -352,7 +352,7 @@ $string['campaign_report_subtitle'] = 'Rapport de synthèse d\'audit de campagne
 $string['campaign_non_compliant_count'] = 'Nombre de cours non conformes';
 $string['campaign_print_btn'] = 'Imprimer le rapport';
 
-// Point 3 : Plan d'actions correctives (CAPA) consolidé.
+// Point 3: Consolidated CAPA corrective action plan.
 $string['campaign_tab_actions'] = 'Plan d\'actions CAPA';
 $string['campaign_actions_title'] = 'Plan d\'actions correctives de la campagne';
 $string['campaign_actions_desc'] = 'Suivi consolidé de toutes les actions d\'amélioration continue associées aux cours de cette campagne.';
@@ -367,7 +367,7 @@ $string['campaign_action_todo_count'] = 'À faire';
 $string['campaign_action_inprogress_count'] = 'En cours';
 $string['campaign_action_closed_count'] = 'Terminées';
 
-// Point 4 : Comparateur et suivi temporel de campagnes.
+// Point 4: Campaign comparison and historical tracking.
 $string['campaign_compare'] = 'Comparer des campagnes';
 $string['campaign_compare_title'] = 'Comparateur de campagnes d\'audit';
 $string['campaign_compare_desc'] = 'Mesurez la progression de la conformité et l\'impact des actions correctives entre deux campagnes.';
@@ -383,7 +383,7 @@ $string['campaign_compare_indicators'] = 'Comparaison par indicateur';
 $string['campaign_select_to_compare'] = 'Sélectionnez deux campagnes pour comparer leur niveau de conformité.';
 $string['campaign_same_campaign_warning'] = 'Veuillez sélectionner deux campagnes différentes pour effectuer la comparaison.';
 
-// Point 5 : Ergonomie, filtres et suivi de progression en temps réel.
+// Point 5: Usability, filters, and real-time progress indicator.
 $string['campaign_search_courses'] = 'Rechercher un cours...';
 $string['campaign_filter_all_scores'] = 'Toutes les tranches de score';
 $string['campaign_filter_gte75'] = '≥ 75 % (Conforme / Bon)';

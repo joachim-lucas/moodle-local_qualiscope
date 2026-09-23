@@ -309,7 +309,7 @@ class accessibility_analyser {
                             $hascaption = true;
                         }
 
-                        // Check if surrounding content in the same block mentions transcripts / sous-titres
+                        // Check if surrounding content in the same block mentions transcripts / subtitles
                         if (!$hascaption && preg_match('/(sous-titre|transcription|transcript|vtt|audiodescription)/i', $html)) {
                             $hascaption = true;
                         }

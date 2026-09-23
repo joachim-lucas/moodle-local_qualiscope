@@ -4,14 +4,35 @@ namespace local_qualiscope\analyser;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Orchestrates the audit of a single Moodle course against an active referential.
+ *
+ * @package local_qualiscope
+ */
 class course_analyser {
 
+    /** @var int The course id being analysed. */
     private $courseid;
+
+    /** @var \stdClass The course record. */
     private $course;
+
+    /** @var array The latest analysis results for each automatic check. */
     private $results = [];
+
+    /** @var int Campaign id used when saving results, 0 for a standalone audit. */
     private $campaignid;
+
+    /** @var int|null Referential id driving the list of checks to run. */
     private $referentialid;
 
+    /**
+     * Constructor.
+     *
+     * @param int $courseid The course id to audit.
+     * @param int $campaignid Optional campaign id the audit belongs to.
+     * @param int|null $referentialid Optional referential id, defaults to the first active referential.
+     */
     public function __construct(int $courseid, int $campaignid = 0, ?int $referentialid = null) {
         global $DB;
         $this->courseid = $courseid;
@@ -39,6 +60,11 @@ class course_analyser {
         return null;
     }
 
+    /**
+     * Returns the id of the referential used for the audit, or null if none.
+     *
+     * @return int|null
+     */
     public function get_referentialid(): ?int {
         return $this->referentialid;
     }
@@ -86,6 +112,11 @@ class course_analyser {
         }
     }
 
+    /**
+     * Runs every automatic check of the referential against the course.
+     *
+     * @return array List of results, each containing the check and indicator records.
+     */
     public function run(): array {
         global $DB;
 
@@ -117,6 +148,11 @@ class course_analyser {
         return $results;
     }
 
+    /**
+     * Aggregates the latest results into a global compliance summary.
+     *
+     * @return array Summary with total/detected/verify/missing/na counts and a percentage.
+     */
     public function get_summary(): array {
         $summary = [
             'total' => 0,
@@ -159,6 +195,11 @@ class course_analyser {
         return $summary;
     }
 
+    /**
+     * Builds a per-criterion summary of the latest results.
+     *
+     * @return array Keyed by criterion id, each entry holding counts, weighted score and results.
+     */
     public function get_criteria_summary(): array {
         global $DB;
 
@@ -239,6 +280,12 @@ class course_analyser {
         return $criteriasummary;
     }
 
+    /**
+     * Persists a single result for the current course, updating it if it already exists.
+     *
+     * @param array $result Result array produced by a check analyser.
+     * @return int The id of the saved or updated result record.
+     */
     public function save_result(array $result): int {
         global $DB;
 
@@ -270,6 +317,11 @@ class course_analyser {
         return (int) $DB->insert_record('local_qualiscope_results', $record);
     }
 
+    /**
+     * Saves all collected results under the given campaign id.
+     *
+     * @param int $campaignid The campaign id the results belong to.
+     */
     public function save_results(int $campaignid): void {
         $this->campaignid = $campaignid;
         foreach ($this->results as $result) {
@@ -277,6 +329,12 @@ class course_analyser {
         }
     }
 
+    /**
+     * Instantiates the check analyser matching a check type, or null when unknown.
+     *
+     * @param string $type The check type identifier.
+     * @return \local_qualiscope\checks\base_check|null
+     */
     private function get_check_analyser(string $type) {
         $map = [
             'activity_exists'    => new \local_qualiscope\checks\activity_check(),

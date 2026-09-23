@@ -8,6 +8,14 @@ if (!defined('MOODLE_INTERNAL')) {
 
 // Mock get_string and s functions if not in full moodle runtime
 if (!function_exists('get_string')) {
+    /**
+     * Minimal get_string mock for standalone execution.
+     *
+     * @param string $identifier The string identifier.
+     * @param string $component The component.
+     * @param mixed $a Optional placeholder value.
+     * @return string
+     */
     function get_string($identifier, $component = '', $a = null) {
         if (is_array($a) || is_object($a)) {
             $a = (array) $a;
@@ -24,6 +32,12 @@ if (!function_exists('get_string')) {
 }
 
 if (!function_exists('s')) {
+    /**
+     * Minimal output escaping mock for standalone execution.
+     *
+     * @param mixed $var Value to escape.
+     * @return string
+     */
     function s($var) {
         return htmlspecialchars((string)$var, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
@@ -33,6 +47,13 @@ require_once __DIR__ . '/../classes/analyser/accessibility_analyser.php';
 
 use local_qualiscope\analyser\accessibility_analyser;
 
+/**
+ * Asserts a condition and exits with an error when it fails.
+ *
+ * @param bool $cond The condition to check.
+ * @param string $msg The message to display.
+ * @return void
+ */
 function assert_true($cond, $msg) {
     if (!$cond) {
         echo "FAIL: $msg\n";

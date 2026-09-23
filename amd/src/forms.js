@@ -51,6 +51,11 @@ define([], function() {
             var noResultsMsg = document.getElementById('courseFilterNoResults');
             var courseRows = document.querySelectorAll('.qualiscope-course-row');
 
+            /**
+             * Applies the search, score and status filters to the campaign course table.
+             *
+             * @return {void}
+             */
             function applyCourseFilters() {
                 if (!courseRows.length) {
                     return;

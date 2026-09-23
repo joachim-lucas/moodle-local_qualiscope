@@ -6,9 +6,18 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Check for constructive alignment: Objectives/Competencies <-> Activities <-> Graded Assessments & Rubrics (Qualiopi Indicators 5, 6 & 11).
+ *
+ * @package local_qualiscope
  */
 class alignment_check extends base_check {
 
+    /**
+     * Executes the constructive alignment check on the course.
+     *
+     * @param int $courseid The course id to audit.
+     * @param object $check The check record.
+     * @return array Result with status, detail and optional ratio keys.
+     */
     public function execute(int $courseid, object $check): array {
         global $DB;
 

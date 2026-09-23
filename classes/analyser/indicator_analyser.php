@@ -4,8 +4,19 @@ namespace local_qualiscope\analyser;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Helper providing human-facing representation and scoring of indicator statuses.
+ *
+ * @package local_qualiscope
+ */
 class indicator_analyser {
 
+    /**
+     * Maps a status code to its localised label.
+     *
+     * @param string $status Status code (detected, verify, missing, na).
+     * @return string
+     */
     public static function get_status_label(string $status): string {
         $labels = [
             'detected' => get_string('status_detected', 'local_qualiscope'),
@@ -16,6 +27,12 @@ class indicator_analyser {
         return $labels[$status] ?? $status;
     }
 
+    /**
+     * Maps a status code to its display icon.
+     *
+     * @param string $status Status code (detected, verify, missing, na).
+     * @return string
+     */
     public static function get_status_icon(string $status): string {
         $icons = [
             'detected' => '✓',
@@ -26,6 +43,12 @@ class indicator_analyser {
         return $icons[$status] ?? '?';
     }
 
+    /**
+     * Maps a status code to a CSS class used for badges and tables.
+     *
+     * @param string $status Status code (detected, verify, missing, na).
+     * @return string
+     */
     public static function get_status_class(string $status): string {
         $classes = [
             'detected' => 'success',
@@ -36,6 +59,12 @@ class indicator_analyser {
         return $classes[$status] ?? 'secondary';
     }
 
+    /**
+     * Computes the weighted compliance score for a set of check results.
+     *
+     * @param array $results Results arrays containing check and status keys.
+     * @return array Associative array with total, applicable, weighted and percentage.
+     */
     public static function compute_indicator_score(array $results): array {
         $total = 0;
         $weighted = 0;

@@ -4,10 +4,23 @@ namespace local_qualiscope\checks;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Checks feedback activities and the real response rate of enrolled learners.
+ *
+ * @package local_qualiscope
+ */
 class feedback_check extends base_check {
 
+    /** @var float Minimum response coverage ratio required to consider the check detected. */
     private const COVERAGE_TARGET = 0.33;
 
+    /**
+     * Executes the feedback/satisfaction check on the course.
+     *
+     * @param int $courseid The course id to audit.
+     * @param object $check The check record.
+     * @return array Result with status, detail and optional ratio keys.
+     */
     public function execute(int $courseid, object $check): array {
         global $DB;
 
