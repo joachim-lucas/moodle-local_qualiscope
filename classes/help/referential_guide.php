@@ -145,13 +145,13 @@ class referential_guide {
     public static function get_referential_guide_data(int $referentialid): array {
         global $DB;
 
-        $referential = $DB->get_record('local_qualiopi_referentials', ['id' => $referentialid], '*', MUST_EXIST);
-        $criteria = $DB->get_records('local_qualiopi_criteria', ['referential_id' => $referentialid], 'number ASC');
+        $referential = $DB->get_record('local_qualiscope_referentials', ['id' => $referentialid], '*', MUST_EXIST);
+        $criteria = $DB->get_records('local_qualiscope_criteria', ['referential_id' => $referentialid], 'number ASC');
 
         $criteriadata = [];
 
         foreach ($criteria as $criterion) {
-            $indicators = $DB->get_records('local_qualiopi_indicators', ['criterion_id' => $criterion->id], 'number ASC');
+            $indicators = $DB->get_records('local_qualiscope_indicators', ['criterion_id' => $criterion->id], 'number ASC');
             $indicatorsdata = [];
 
             $criteriontotalweight = 0;
@@ -159,7 +159,7 @@ class referential_guide {
             $criterionmanualcount = 0;
 
             foreach ($indicators as $indicator) {
-                $checks = $DB->get_records('local_qualiopi_checks', ['indicator_id' => $indicator->id], 'id ASC');
+                $checks = $DB->get_records('local_qualiscope_checks', ['indicator_id' => $indicator->id], 'id ASC');
                 $checksdata = [];
 
                 $indicatortotalweight = 0;

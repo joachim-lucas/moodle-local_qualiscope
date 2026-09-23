@@ -26,7 +26,7 @@ $PAGE->requires->js_call_amd('local_qualiscope/forms', 'init');
 
 $output = $PAGE->get_renderer('local_qualiscope');
 
-$indicator = $DB->get_record('local_qualiopi_indicators', ['id' => $indicatorid], '*', MUST_EXIST);
+$indicator = $DB->get_record('local_qualiscope_indicators', ['id' => $indicatorid], '*', MUST_EXIST);
 
 $analyser = new \local_qualiscope\analyser\course_analyser($courseid, $campaignid, $referentialid ?: null);
 $results = $analyser->run();

@@ -14,7 +14,7 @@ if ($sesskey = optional_param('sesskey', '', PARAM_RAW)) {
 require_login();
 
 if ($campaignid) {
-    $campaign = $DB->get_record('local_qualiopi_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
+    $campaign = $DB->get_record('local_qualiscope_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
     $context = context_system::instance();
     require_capability('local/qualiscope:managecampaigns', $context);
 
@@ -32,7 +32,7 @@ if ($campaignid) {
         if ($finish) {
             $campaign->timecompleted = time();
             $campaign->timemodified = time();
-            $DB->update_record('local_qualiopi_campaigns', $campaign);
+            $DB->update_record('local_qualiscope_campaigns', $campaign);
         }
 
         header('Content-Type: application/json; charset=utf-8');
@@ -49,7 +49,7 @@ if ($campaignid) {
         }
         $campaign->timecompleted = time();
         $campaign->timemodified = time();
-        $DB->update_record('local_qualiopi_campaigns', $campaign);
+        $DB->update_record('local_qualiscope_campaigns', $campaign);
         redirect(new moodle_url('/local/qualiscope/view_campaign.php', ['id' => $campaignid]));
     }
 

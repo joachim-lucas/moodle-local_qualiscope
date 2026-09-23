@@ -20,11 +20,11 @@ $PAGE->requires->js_call_amd('local_qualiscope/criteria', 'init');
 
 $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 
-$referentials = $DB->get_records('local_qualiopi_referentials', ['active' => 1], 'id ASC');
+$referentials = $DB->get_records('local_qualiscope_referentials', ['active' => 1], 'id ASC');
 if (!$referentialid) {
     $referentialid = \local_qualiscope\analyser\course_analyser::get_default_referential_id() ?? 0;
 }
-$selectedreferential = $referentialid ? $DB->get_record('local_qualiopi_referentials', ['id' => $referentialid]) : null;
+$selectedreferential = $referentialid ? $DB->get_record('local_qualiscope_referentials', ['id' => $referentialid]) : null;
 
 $analyser = new \local_qualiscope\analyser\course_analyser($courseid, 0, $referentialid ?: null);
 $analyser->run();

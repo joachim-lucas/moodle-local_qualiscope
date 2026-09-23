@@ -13,7 +13,7 @@ class audit_task extends \core\task\scheduled_task {
     public function execute(): void {
         global $DB;
 
-        $campaigns = $DB->get_records('local_qualiopi_campaigns', ['timecompleted' => 0], 'id ASC');
+        $campaigns = $DB->get_records('local_qualiscope_campaigns', ['timecompleted' => 0], 'id ASC');
 
         foreach ($campaigns as $campaign) {
             $this->process_campaign($campaign);
@@ -31,7 +31,7 @@ class audit_task extends \core\task\scheduled_task {
             $analyser->save_results($campaign->id);
         }
 
-        $DB->update_record('local_qualiopi_campaigns', [
+        $DB->update_record('local_qualiscope_campaigns', [
             'id' => $campaign->id,
             'timecompleted' => time(),
             'timemodified' => time(),

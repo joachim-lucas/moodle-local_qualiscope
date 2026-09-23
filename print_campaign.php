@@ -9,8 +9,8 @@ require_login();
 $context = context_system::instance();
 require_capability('local/qualiscope:managecampaigns', $context);
 
-$campaign = $DB->get_record('local_qualiopi_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
-$referential = $DB->get_record('local_qualiopi_referentials', ['id' => $campaign->referential_id], '*', MUST_EXIST);
+$campaign = $DB->get_record('local_qualiscope_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
+$referential = $DB->get_record('local_qualiscope_referentials', ['id' => $campaign->referential_id], '*', MUST_EXIST);
 
 $scopelabels = [
     'all' => get_string('campaign_scope_all', 'local_qualiscope'),
@@ -18,7 +18,7 @@ $scopelabels = [
     'selected' => get_string('campaign_scope_selected', 'local_qualiscope'),
 ];
 
-$results = $DB->get_records('local_qualiopi_results', ['campaign_id' => $campaignid], 'courseid ASC');
+$results = $DB->get_records('local_qualiscope_results', ['campaign_id' => $campaignid], 'courseid ASC');
 
 $bycourse = [];
 foreach ($results as $r) {
@@ -78,10 +78,10 @@ unset($entry);
 $applicable = $totals['total'] - $totals['na'];
 $globalpercentage = $applicable > 0 ? (int) round(($totals['weighted'] * 100) / $applicable) : 0;
 
-$criteria_records = $DB->get_records('local_qualiopi_criteria', ['referential_id' => $campaign->referential_id], 'number ASC');
+$criteria_records = $DB->get_records('local_qualiscope_criteria', ['referential_id' => $campaign->referential_id], 'number ASC');
 $indicators_records = $DB->get_records_sql(
-    "SELECT i.* FROM {local_qualiopi_indicators} i
-     JOIN {local_qualiopi_criteria} c ON c.id = i.criterion_id
+    "SELECT i.* FROM {local_qualiscope_indicators} i
+     JOIN {local_qualiscope_criteria} c ON c.id = i.criterion_id
      WHERE c.referential_id = :refid
      ORDER BY c.number ASC, i.number ASC",
     ['refid' => $campaign->referential_id]

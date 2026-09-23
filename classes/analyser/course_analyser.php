@@ -27,11 +27,11 @@ class course_analyser {
         global $DB;
 
         $cfg = (int) get_config('local_qualiscope', 'defaultreferential');
-        if ($cfg && $DB->record_exists('local_qualiopi_referentials', ['id' => $cfg, 'active' => 1])) {
+        if ($cfg && $DB->record_exists('local_qualiscope_referentials', ['id' => $cfg, 'active' => 1])) {
             return $cfg;
         }
 
-        $ref = $DB->get_records('local_qualiopi_referentials', ['active' => 1], 'id ASC', 'id', 0, 1);
+        $ref = $DB->get_records('local_qualiscope_referentials', ['active' => 1], 'id ASC', 'id', 0, 1);
         if ($ref) {
             $first = reset($ref);
             return (int) $first->id;
@@ -94,16 +94,16 @@ class course_analyser {
         }
 
         $checks = $DB->get_records_sql(
-            "SELECT c.* FROM {local_qualiopi_checks} c
-             JOIN {local_qualiopi_indicators} i ON i.id = c.indicator_id
-             JOIN {local_qualiopi_criteria} cr ON cr.id = i.criterion_id
+            "SELECT c.* FROM {local_qualiscope_checks} c
+             JOIN {local_qualiscope_indicators} i ON i.id = c.indicator_id
+             JOIN {local_qualiscope_criteria} cr ON cr.id = i.criterion_id
              WHERE c.automatic = 1 AND cr.referential_id = :refid",
             ['refid' => $this->referentialid]
         );
         $results = [];
 
         foreach ($checks as $check) {
-            $indicator = $DB->get_record('local_qualiopi_indicators', ['id' => $check->indicator_id]);
+            $indicator = $DB->get_record('local_qualiscope_indicators', ['id' => $check->indicator_id]);
             $analyser = $this->get_check_analyser($check->type);
             if ($analyser) {
                 $result = $analyser->execute($this->courseid, $check);
@@ -166,7 +166,7 @@ class course_analyser {
             return [];
         }
 
-        $criteria = $DB->get_records('local_qualiopi_criteria', ['referential_id' => $this->referentialid], 'number ASC');
+        $criteria = $DB->get_records('local_qualiscope_criteria', ['referential_id' => $this->referentialid], 'number ASC');
         $criteriasummary = [];
         foreach ($criteria as $c) {
             $criteriasummary[$c->id] = [
@@ -187,7 +187,7 @@ class course_analyser {
         foreach ($this->results as $result) {
             $cid = $result['indicator']->criterion_id;
             if (!isset($criteriasummary[$cid])) {
-                $criteria = $DB->get_record('local_qualiopi_criteria', ['id' => $cid]);
+                $criteria = $DB->get_record('local_qualiscope_criteria', ['id' => $cid]);
                 $criteriasummary[$cid] = [
                     'criteria' => $criteria,
                     'id' => $cid,
@@ -242,7 +242,7 @@ class course_analyser {
     public function save_result(array $result): int {
         global $DB;
 
-        $existing = $DB->get_record('local_qualiopi_results', [
+        $existing = $DB->get_record('local_qualiscope_results', [
             'campaign_id' => $this->campaignid,
             'courseid' => $this->courseid,
             'check_id' => $result['check']->id,
@@ -252,7 +252,7 @@ class course_analyser {
             $existing->detail = $result['detail'] ?? '';
             $existing->ratio = $result['ratio'] ?? ($result['status'] === 'detected' ? 1.0 : 0.0);
             $existing->timemodified = time();
-            $DB->update_record('local_qualiopi_results', $existing);
+            $DB->update_record('local_qualiscope_results', $existing);
             return (int) $existing->id;
         }
 
@@ -267,7 +267,7 @@ class course_analyser {
         $record->evidence_count = 0;
         $record->timecreated = time();
         $record->timemodified = time();
-        return (int) $DB->insert_record('local_qualiopi_results', $record);
+        return (int) $DB->insert_record('local_qualiscope_results', $record);
     }
 
     public function save_results(int $campaignid): void {

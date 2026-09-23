@@ -27,7 +27,7 @@ $action->userid = $USER->id;
 $action->timecreated = time();
 $action->timemodified = time();
 
-$DB->insert_record('local_qualiopi_actions', $action);
+$DB->insert_record('local_qualiscope_actions', $action);
 
 $redirecturl = new moodle_url('/local/qualiscope/actions.php', [
     'courseid' => $courseid,

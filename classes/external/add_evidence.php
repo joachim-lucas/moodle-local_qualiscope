@@ -25,7 +25,7 @@ class add_evidence extends \external_api {
     public static function execute(int $resultid, string $title, string $annotation = '', string $externalurl = ''): array {
         global $DB, $USER;
 
-        $result = $DB->get_record('local_qualiopi_results', ['id' => $resultid], '*', MUST_EXIST);
+        $result = $DB->get_record('local_qualiscope_results', ['id' => $resultid], '*', MUST_EXIST);
         $context = \context_course::instance($result->courseid);
         require_capability('local/qualiscope:editproofs', $context);
 
@@ -39,11 +39,11 @@ class add_evidence extends \external_api {
         $record->timecreated = time();
         $record->timemodified = time();
 
-        $evidenceid = $DB->insert_record('local_qualiopi_evidences', $record);
+        $evidenceid = $DB->insert_record('local_qualiscope_evidences', $record);
 
-        $result->evidence_count = $DB->count_records('local_qualiopi_evidences', ['result_id' => $resultid]);
+        $result->evidence_count = $DB->count_records('local_qualiscope_evidences', ['result_id' => $resultid]);
         $result->timemodified = time();
-        $DB->update_record('local_qualiopi_results', $result);
+        $DB->update_record('local_qualiscope_results', $result);
 
         return [
             'success' => true,

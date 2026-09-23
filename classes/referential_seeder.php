@@ -60,15 +60,15 @@ class referential_seeder {
     public static function seed_referential(array $def): void {
         global $DB;
 
-        $existing = $DB->get_record('local_qualiopi_referentials', ['name' => $def['name']]);
+        $existing = $DB->get_record('local_qualiscope_referentials', ['name' => $def['name']]);
         if ($existing) {
             $refid = $existing->id;
             $existing->version = $def['version'] ?? $existing->version;
             $existing->description = $def['description'] ?? $existing->description;
             $existing->timemodified = time();
-            $DB->update_record('local_qualiopi_referentials', $existing);
+            $DB->update_record('local_qualiscope_referentials', $existing);
         } else {
-            $refid = $DB->insert_record('local_qualiopi_referentials', [
+            $refid = $DB->insert_record('local_qualiscope_referentials', [
                 'name'         => $def['name'],
                 'version'      => $def['version'] ?? '',
                 'description'  => $def['description'] ?? '',
@@ -79,7 +79,7 @@ class referential_seeder {
         }
 
         foreach ($def['criteria'] as $c) {
-            $existingcrit = $DB->get_record('local_qualiopi_criteria', [
+            $existingcrit = $DB->get_record('local_qualiscope_criteria', [
                 'referential_id' => $refid,
                 'number'         => $c['number'],
             ]);
@@ -89,9 +89,9 @@ class referential_seeder {
                 $existingcrit->title = $c['title'];
                 $existingcrit->description = $c['description'] ?? '';
                 $existingcrit->timemodified = time();
-                $DB->update_record('local_qualiopi_criteria', $existingcrit);
+                $DB->update_record('local_qualiscope_criteria', $existingcrit);
             } else {
-                $cid = $DB->insert_record('local_qualiopi_criteria', [
+                $cid = $DB->insert_record('local_qualiscope_criteria', [
                     'referential_id' => $refid,
                     'number'         => $c['number'],
                     'title'          => $c['title'],
@@ -102,7 +102,7 @@ class referential_seeder {
             }
 
             foreach ($c['indicators'] ?? [] as $ind) {
-                $existingind = $DB->get_record('local_qualiopi_indicators', [
+                $existingind = $DB->get_record('local_qualiscope_indicators', [
                     'criterion_id' => $cid,
                     'number'       => $ind['number'],
                 ]);
@@ -113,9 +113,9 @@ class referential_seeder {
                     $existingind->description = $ind['description'] ?? '';
                     $existingind->scope = $ind['scope'] ?? 'course';
                     $existingind->timemodified = time();
-                    $DB->update_record('local_qualiopi_indicators', $existingind);
+                    $DB->update_record('local_qualiscope_indicators', $existingind);
                 } else {
-                    $indid = $DB->insert_record('local_qualiopi_indicators', [
+                    $indid = $DB->insert_record('local_qualiscope_indicators', [
                         'criterion_id'  => $cid,
                         'number'        => $ind['number'],
                         'title'         => $ind['title'],
@@ -127,7 +127,7 @@ class referential_seeder {
                 }
 
                 foreach ($ind['checks'] ?? [] as $chk) {
-                    $existingchk = $DB->get_record('local_qualiopi_checks', [
+                    $existingchk = $DB->get_record('local_qualiscope_checks', [
                         'indicator_id' => $indid,
                         'name'         => $chk['name'],
                     ]);
@@ -138,9 +138,9 @@ class referential_seeder {
                         $existingchk->automatic = !empty($chk['automatic']) ? 1 : 0;
                         $existingchk->weight = $chk['weight'] ?? 1;
                         $existingchk->timemodified = time();
-                        $DB->update_record('local_qualiopi_checks', $existingchk);
+                        $DB->update_record('local_qualiscope_checks', $existingchk);
                     } else {
-                        $DB->insert_record('local_qualiopi_checks', [
+                        $DB->insert_record('local_qualiscope_checks', [
                             'indicator_id' => $indid,
                             'name'         => $chk['name'],
                             'description'  => $chk['description'] ?? '',

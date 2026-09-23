@@ -17,12 +17,12 @@ $PAGE->set_context($context);
 
 $output = $PAGE->get_renderer('local_qualiscope');
 
-$allcampaigns = $DB->get_records('local_qualiopi_campaigns', [], 'timecreated DESC');
+$allcampaigns = $DB->get_records('local_qualiscope_campaigns', [], 'timecreated DESC');
 
 $campaignsoptionsa = [];
 $campaignsoptionsb = [];
 foreach ($allcampaigns as $c) {
-    $ref = $DB->get_record('local_qualiopi_referentials', ['id' => $c->referential_id]);
+    $ref = $DB->get_record('local_qualiscope_referentials', ['id' => $c->referential_id]);
     $label = $c->name . ' (' . ($ref ? $ref->name . ' ' . $ref->version : '') . ' - ' . userdate($c->timecreated, get_string('strftimedateshort', 'langconfig')) . ')';
     $campaignsoptionsa[] = [
         'id' => $c->id,
@@ -51,15 +51,15 @@ if ($ida && $idb) {
     if ($ida == $idb) {
         $comparisonerror = get_string('campaign_same_campaign_warning', 'local_qualiscope');
     } else {
-        $campaigna = $DB->get_record('local_qualiopi_campaigns', ['id' => $ida]);
-        $campaignb = $DB->get_record('local_qualiopi_campaigns', ['id' => $idb]);
+        $campaigna = $DB->get_record('local_qualiscope_campaigns', ['id' => $ida]);
+        $campaignb = $DB->get_record('local_qualiscope_campaigns', ['id' => $idb]);
 
         if ($campaigna && $campaignb) {
             $hascomparison = true;
 
             $process_campaign_stats = function($campaign) use ($DB) {
-                $ref = $DB->get_record('local_qualiopi_referentials', ['id' => $campaign->referential_id]);
-                $results = $DB->get_records('local_qualiopi_results', ['campaign_id' => $campaign->id], 'courseid ASC');
+                $ref = $DB->get_record('local_qualiscope_referentials', ['id' => $campaign->referential_id]);
+                $results = $DB->get_records('local_qualiscope_results', ['campaign_id' => $campaign->id], 'courseid ASC');
 
                 $bycourse = [];
                 $byindicator = [];
@@ -125,10 +125,10 @@ if ($ida && $idb) {
                 $globalpct = $applicable > 0 ? (int) round(($totals['weighted'] * 100) / $applicable) : 0;
 
                 // Indicators & Criteria
-                $criteria = $DB->get_records('local_qualiopi_criteria', ['referential_id' => $campaign->referential_id], 'number ASC');
+                $criteria = $DB->get_records('local_qualiscope_criteria', ['referential_id' => $campaign->referential_id], 'number ASC');
                 $indicators = $DB->get_records_sql(
-                    "SELECT i.* FROM {local_qualiopi_indicators} i
-                     JOIN {local_qualiopi_criteria} c ON c.id = i.criterion_id
+                    "SELECT i.* FROM {local_qualiscope_indicators} i
+                     JOIN {local_qualiscope_criteria} c ON c.id = i.criterion_id
                      WHERE c.referential_id = :refid ORDER BY c.number ASC, i.number ASC",
                     ['refid' => $campaign->referential_id]
                 );

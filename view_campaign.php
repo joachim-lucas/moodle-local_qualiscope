@@ -5,7 +5,7 @@ require_once($CFG->dirroot . '/local/qualiscope/lib.php');
 
 $campaignid = required_param('id', PARAM_INT);
 
-$campaign = $DB->get_record('local_qualiopi_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
+$campaign = $DB->get_record('local_qualiscope_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
 
 require_login();
 $context = context_system::instance();
@@ -19,7 +19,7 @@ $PAGE->requires->js_call_amd('local_qualiscope/forms', 'init');
 
 $output = $PAGE->get_renderer('local_qualiscope');
 
-$referential = $DB->get_record('local_qualiopi_referentials', ['id' => $campaign->referential_id]);
+$referential = $DB->get_record('local_qualiscope_referentials', ['id' => $campaign->referential_id]);
 
 $scopelabels = [
     'all' => get_string('campaign_scope_all', 'local_qualiscope'),
@@ -27,7 +27,7 @@ $scopelabels = [
     'selected' => get_string('campaign_scope_selected', 'local_qualiscope'),
 ];
 
-$results = $DB->get_records('local_qualiopi_results', ['campaign_id' => $campaignid], 'courseid ASC');
+$results = $DB->get_records('local_qualiscope_results', ['campaign_id' => $campaignid], 'courseid ASC');
 
 $bycourse = [];
 foreach ($results as $r) {
@@ -100,10 +100,10 @@ $scopecourses = count(\local_qualiscope\analyser\course_analyser::get_campaign_c
 $coursesanalysed = count($coursesdata);
 
 // Macro analysis by criteria & indicators.
-$criteria_records = $DB->get_records('local_qualiopi_criteria', ['referential_id' => $campaign->referential_id], 'number ASC');
+$criteria_records = $DB->get_records('local_qualiscope_criteria', ['referential_id' => $campaign->referential_id], 'number ASC');
 $indicators_records = $DB->get_records_sql(
-    "SELECT i.* FROM {local_qualiopi_indicators} i
-     JOIN {local_qualiopi_criteria} c ON c.id = i.criterion_id
+    "SELECT i.* FROM {local_qualiscope_indicators} i
+     JOIN {local_qualiscope_criteria} c ON c.id = i.criterion_id
      WHERE c.referential_id = :refid
      ORDER BY c.number ASC, i.number ASC",
     ['refid' => $campaign->referential_id]
@@ -231,7 +231,7 @@ $weakpoints_filtered = array_values(array_filter($weakpoints, function($item) {
 // Consolidated CAPA Actions for Campaign.
 $actions = $DB->get_records_sql(
     "SELECT a.*, c.fullname AS coursename
-     FROM {local_qualiopi_actions} a
+     FROM {local_qualiscope_actions} a
      JOIN {course} c ON c.id = a.courseid
      WHERE a.campaign_id = :campaignid
      ORDER BY a.duedate ASC, a.id DESC",

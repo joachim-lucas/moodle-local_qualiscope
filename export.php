@@ -17,10 +17,10 @@ if ($campaignid) {
     $context = context_system::instance();
     require_capability('local/qualiscope:managecampaigns', $context);
 
-    $campaign = $DB->get_record('local_qualiopi_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
-    $referential = $DB->get_record('local_qualiopi_referentials', ['id' => $campaign->referential_id], '*', MUST_EXIST);
+    $campaign = $DB->get_record('local_qualiscope_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
+    $referential = $DB->get_record('local_qualiscope_referentials', ['id' => $campaign->referential_id], '*', MUST_EXIST);
 
-    $results = $DB->get_records('local_qualiopi_results', ['campaign_id' => $campaignid], 'courseid ASC');
+    $results = $DB->get_records('local_qualiscope_results', ['campaign_id' => $campaignid], 'courseid ASC');
 
     $bycourse = [];
     foreach ($results as $r) {
@@ -84,10 +84,10 @@ if ($campaignid) {
     $totals['score'] = $globalpercentage;
 
     // Criteria & Indicators.
-    $criteria_records = $DB->get_records('local_qualiopi_criteria', ['referential_id' => $campaign->referential_id], 'number ASC');
+    $criteria_records = $DB->get_records('local_qualiscope_criteria', ['referential_id' => $campaign->referential_id], 'number ASC');
     $indicators_records = $DB->get_records_sql(
-        "SELECT i.* FROM {local_qualiopi_indicators} i
-         JOIN {local_qualiopi_criteria} c ON c.id = i.criterion_id
+        "SELECT i.* FROM {local_qualiscope_indicators} i
+         JOIN {local_qualiscope_criteria} c ON c.id = i.criterion_id
          WHERE c.referential_id = :refid
          ORDER BY c.number ASC, i.number ASC",
         ['refid' => $campaign->referential_id]
@@ -382,7 +382,7 @@ $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 if (!$referentialid) {
     $referentialid = \local_qualiscope\analyser\course_analyser::get_default_referential_id() ?? 0;
 }
-$referential = $referentialid ? $DB->get_record('local_qualiopi_referentials', ['id' => $referentialid]) : null;
+$referential = $referentialid ? $DB->get_record('local_qualiscope_referentials', ['id' => $referentialid]) : null;
 if (!$referential) {
     throw new moodle_exception('invalidreferential', 'local_qualiscope');
 }
@@ -423,17 +423,17 @@ foreach ($results as $result) {
     $resultmap[$result['check']->id] = $result;
 }
 
-$criteria = $DB->get_records('local_qualiopi_criteria', ['referential_id' => $referentialid], 'number ASC');
+$criteria = $DB->get_records('local_qualiscope_criteria', ['referential_id' => $referentialid], 'number ASC');
 $indicators = $DB->get_records_sql(
-    "SELECT i.* FROM {local_qualiopi_indicators} i
-     JOIN {local_qualiopi_criteria} c ON c.id = i.criterion_id
+    "SELECT i.* FROM {local_qualiscope_indicators} i
+     JOIN {local_qualiscope_criteria} c ON c.id = i.criterion_id
      WHERE c.referential_id = :refid ORDER BY c.number ASC, i.number ASC",
     ['refid' => $referentialid]
 );
 $checks = $DB->get_records_sql(
-    "SELECT ch.* FROM {local_qualiopi_checks} ch
-     JOIN {local_qualiopi_indicators} i ON i.id = ch.indicator_id
-     JOIN {local_qualiopi_criteria} c ON c.id = i.criterion_id
+    "SELECT ch.* FROM {local_qualiscope_checks} ch
+     JOIN {local_qualiscope_indicators} i ON i.id = ch.indicator_id
+     JOIN {local_qualiscope_criteria} c ON c.id = i.criterion_id
      WHERE c.referential_id = :refid ORDER BY c.number ASC, i.number ASC, ch.id ASC",
     ['refid' => $referentialid]
 );

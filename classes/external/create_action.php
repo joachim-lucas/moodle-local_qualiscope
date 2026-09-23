@@ -52,7 +52,7 @@ class create_action extends \external_api {
         $action->timecreated = time();
         $action->timemodified = time();
 
-        $actionid = $DB->insert_record('local_qualiopi_actions', $action);
+        $actionid = $DB->insert_record('local_qualiscope_actions', $action);
 
         return [
             'success' => true,

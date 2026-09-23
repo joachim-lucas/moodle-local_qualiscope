@@ -10,7 +10,7 @@ class provider implements
 
     public static function get_metadata(collection $collection): collection {
         $collection->add_database_table(
-            'local_qualiopi_campaigns',
+            'local_qualiscope_campaigns',
             [
                 'userid' => 'privacy:metadata:userid',
             ],
@@ -18,7 +18,7 @@ class provider implements
         );
 
         $collection->add_database_table(
-            'local_qualiopi_evidences',
+            'local_qualiscope_evidences',
             [
                 'userid' => 'privacy:metadata:userid',
             ],
@@ -26,7 +26,7 @@ class provider implements
         );
 
         $collection->add_database_table(
-            'local_qualiopi_actions',
+            'local_qualiscope_actions',
             [
                 'userid' => 'privacy:metadata:userid',
             ],

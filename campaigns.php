@@ -16,8 +16,8 @@ $PAGE->requires->js_call_amd('local_qualiscope/forms', 'init');
 
 $output = $PAGE->get_renderer('local_qualiscope');
 
-$campaigns = $DB->get_records('local_qualiopi_campaigns', [], 'timecreated DESC');
-$referentials = $DB->get_records('local_qualiopi_referentials', ['active' => 1]);
+$campaigns = $DB->get_records('local_qualiscope_campaigns', [], 'timecreated DESC');
+$referentials = $DB->get_records('local_qualiscope_referentials', ['active' => 1]);
 $categories = $DB->get_records('course_categories', [], 'name ASC');
 $courses = $DB->get_records('course', ['visible' => 1], 'fullname ASC');
 
@@ -29,10 +29,10 @@ $scopelabels = [
 
 $campaignsdata = [];
 foreach ($campaigns as $c) {
-    $ref = $DB->get_record('local_qualiopi_referentials', ['id' => $c->referential_id]);
+    $ref = $DB->get_record('local_qualiscope_referentials', ['id' => $c->referential_id]);
     
     // Calculate average coverage percentage across all audited courses in this campaign.
-    $results = $DB->get_records('local_qualiopi_results', ['campaign_id' => $c->id]);
+    $results = $DB->get_records('local_qualiscope_results', ['campaign_id' => $c->id]);
     $coursecount = 0;
     $avgcoverage = null;
     $coverageclass = 'bg-secondary';

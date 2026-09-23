@@ -22,6 +22,6 @@ $campaign->timecreated = time();
 $campaign->timemodified = time();
 $campaign->timecompleted = 0;
 
-$DB->insert_record('local_qualiopi_campaigns', $campaign);
+$DB->insert_record('local_qualiscope_campaigns', $campaign);
 
 redirect(new moodle_url('/local/qualiscope/campaigns.php'));

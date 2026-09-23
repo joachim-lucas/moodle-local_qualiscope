@@ -14,8 +14,8 @@ $settings->add(new admin_setting_configcheckbox(
 ));
 
 $referentialoptions = [0 => get_string('defaultreferential_first', 'local_qualiscope')];
-if ($DB->get_manager()->table_exists('local_qualiopi_referentials')) {
-    $refs = $DB->get_records('local_qualiopi_referentials', ['active' => 1], 'id ASC');
+if ($DB->get_manager()->table_exists('local_qualiscope_referentials')) {
+    $refs = $DB->get_records('local_qualiscope_referentials', ['active' => 1], 'id ASC');
     foreach ($refs as $ref) {
         $referentialoptions[$ref->id] = $ref->name . ' ' . $ref->version;
     }

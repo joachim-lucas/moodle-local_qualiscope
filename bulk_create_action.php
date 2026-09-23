@@ -15,13 +15,13 @@ require_sesskey();
 $context = context_system::instance();
 require_capability('local/qualiscope:managecampaigns', $context);
 
-$campaign = $DB->get_record('local_qualiopi_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
+$campaign = $DB->get_record('local_qualiscope_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
 
 $parsedduedate = $duedate ? strtotime($duedate) : 0;
 $createdcount = 0;
 
 if ($indicatorid > 0) {
-    $results = $DB->get_records('local_qualiopi_results', [
+    $results = $DB->get_records('local_qualiscope_results', [
         'campaign_id' => $campaignid,
         'indicator_id' => $indicatorid,
     ]);
@@ -40,12 +40,12 @@ if ($indicatorid > 0) {
             $action->userid = $USER->id;
             $action->timecreated = time();
             $action->timemodified = time();
-            $DB->insert_record('local_qualiopi_actions', $action);
+            $DB->insert_record('local_qualiscope_actions', $action);
             $createdcount++;
         }
     }
 } else {
-    $results = $DB->get_records('local_qualiopi_results', ['campaign_id' => $campaignid]);
+    $results = $DB->get_records('local_qualiscope_results', ['campaign_id' => $campaignid]);
     $courseids = [];
     foreach ($results as $res) {
         $courseids[$res->courseid] = $res->courseid;
@@ -63,7 +63,7 @@ if ($indicatorid > 0) {
         $action->userid = $USER->id;
         $action->timecreated = time();
         $action->timemodified = time();
-        $DB->insert_record('local_qualiopi_actions', $action);
+        $DB->insert_record('local_qualiscope_actions', $action);
         $createdcount++;
     }
 }

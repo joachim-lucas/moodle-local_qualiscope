@@ -10,7 +10,7 @@ class evidence_analyser {
         global $DB;
 
         $evidences = [];
-        $checks = $DB->get_records('local_qualiopi_checks', ['indicator_id' => $indicatorid, 'automatic' => 1]);
+        $checks = $DB->get_records('local_qualiscope_checks', ['indicator_id' => $indicatorid, 'automatic' => 1]);
 
         foreach ($checks as $check) {
             $moodlevidence = self::collect_moodle_evidence($courseid, $check);
@@ -23,7 +23,7 @@ class evidence_analyser {
     public static function get_external_evidences(int $resultid): array {
         global $DB;
 
-        return $DB->get_records('local_qualiopi_evidences', [
+        return $DB->get_records('local_qualiscope_evidences', [
             'result_id' => $resultid,
             'type' => 'external',
         ], 'timecreated DESC');

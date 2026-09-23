@@ -23,7 +23,7 @@ $record->userid = $USER->id;
 $record->timecreated = time();
 $record->timemodified = time();
 
-$result = $DB->get_record('local_qualiopi_results', ['id' => $resultid], '*', MUST_EXIST);
+$result = $DB->get_record('local_qualiscope_results', ['id' => $resultid], '*', MUST_EXIST);
 
 if (isset($_FILES['evidencefile']) && $_FILES['evidencefile']['error'] === UPLOAD_ERR_OK) {
     $record->type = 'external';
@@ -43,18 +43,18 @@ if (isset($_FILES['evidencefile']) && $_FILES['evidencefile']['error'] === UPLOA
     $record->filename = $file->get_filename();
 }
 
-$DB->insert_record('local_qualiopi_evidences', $record);
+$DB->insert_record('local_qualiscope_evidences', $record);
 
-$result->evidence_count = $DB->count_records('local_qualiopi_evidences', ['result_id' => $resultid]);
+$result->evidence_count = $DB->count_records('local_qualiscope_evidences', ['result_id' => $resultid]);
 $result->timemodified = time();
-$DB->update_record('local_qualiopi_results', $result);
+$DB->update_record('local_qualiscope_results', $result);
 
 $referentialid = 0;
-$check = $DB->get_record('local_qualiopi_checks', ['id' => $result->check_id]);
+$check = $DB->get_record('local_qualiscope_checks', ['id' => $result->check_id]);
 if ($check) {
-    $indicator = $DB->get_record('local_qualiopi_indicators', ['id' => $check->indicator_id]);
+    $indicator = $DB->get_record('local_qualiscope_indicators', ['id' => $check->indicator_id]);
     if ($indicator) {
-        $criterion = $DB->get_record('local_qualiopi_criteria', ['id' => $indicator->criterion_id]);
+        $criterion = $DB->get_record('local_qualiscope_criteria', ['id' => $indicator->criterion_id]);
         if ($criterion) {
             $referentialid = (int) $criterion->referential_id;
         }

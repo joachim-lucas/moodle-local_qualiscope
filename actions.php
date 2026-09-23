@@ -29,7 +29,7 @@ if ($campaignid) {
     $where['campaign_id'] = $campaignid;
 }
 
-$actions = $DB->get_records('local_qualiopi_actions', $where, 'duedate ASC');
+$actions = $DB->get_records('local_qualiscope_actions', $where, 'duedate ASC');
 
 $prioritylabels = [
     'high' => get_string('action_priority_high', 'local_qualiscope'),

@@ -153,17 +153,17 @@ class pdf_generator {
         }
 
         global $DB;
-        $criteria = $DB->get_records('local_qualiopi_criteria', ['referential_id' => $this->referential->id], 'number ASC');
+        $criteria = $DB->get_records('local_qualiscope_criteria', ['referential_id' => $this->referential->id], 'number ASC');
         $indicators = $DB->get_records_sql(
-            "SELECT i.* FROM {local_qualiopi_indicators} i
-             JOIN {local_qualiopi_criteria} c ON c.id = i.criterion_id
+            "SELECT i.* FROM {local_qualiscope_indicators} i
+             JOIN {local_qualiscope_criteria} c ON c.id = i.criterion_id
              WHERE c.referential_id = :refid ORDER BY c.number ASC, i.number ASC",
             ['refid' => $this->referential->id]
         );
         $checks = $DB->get_records_sql(
-            "SELECT ch.* FROM {local_qualiopi_checks} ch
-             JOIN {local_qualiopi_indicators} i ON i.id = ch.indicator_id
-             JOIN {local_qualiopi_criteria} c ON c.id = i.criterion_id
+            "SELECT ch.* FROM {local_qualiscope_checks} ch
+             JOIN {local_qualiscope_indicators} i ON i.id = ch.indicator_id
+             JOIN {local_qualiscope_criteria} c ON c.id = i.criterion_id
              WHERE c.referential_id = :refid ORDER BY c.number ASC, i.number ASC, ch.id ASC",
             ['refid' => $this->referential->id]
         );

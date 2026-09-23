@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="local_qualiopi_referentials" COMMENT="List of quality referentials (e.g. Qualiopi).">
+    <TABLE NAME="local_qualiopi_referentials" COMMENT="List of quality referentials (e.g. Qualiopi, IACET...).">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key."/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Referential name."/>

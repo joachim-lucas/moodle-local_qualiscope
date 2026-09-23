@@ -16,7 +16,7 @@ if ($courseid) {
 }
 require_capability('local/qualiscope:viewaudit', $context);
 
-$referentials = $DB->get_records('local_qualiopi_referentials', ['active' => 1], 'id ASC');
+$referentials = $DB->get_records('local_qualiscope_referentials', ['active' => 1], 'id ASC');
 if (!$referentialid) {
     $referentialid = \local_qualiscope\analyser\course_analyser::get_default_referential_id() ?? 0;
     if (!$referentialid && !empty($referentials)) {

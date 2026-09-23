@@ -6,7 +6,7 @@ require_once($CFG->dirroot . '/local/qualiscope/lib.php');
 $id = required_param('id', PARAM_INT);
 $return = optional_param('return', '', PARAM_ALPHA);
 
-$action = $DB->get_record('local_qualiopi_actions', ['id' => $id], '*', MUST_EXIST);
+$action = $DB->get_record('local_qualiscope_actions', ['id' => $id], '*', MUST_EXIST);
 
 require_login($action->courseid);
 $context = context_course::instance($action->courseid);
@@ -30,7 +30,7 @@ if (data_submitted() && confirm_sesskey()) {
         $action->timeclosed = time();
     }
 
-    $DB->update_record('local_qualiopi_actions', $action);
+    $DB->update_record('local_qualiscope_actions', $action);
 
     if ($return === 'campaign' && $action->campaign_id) {
         redirect(new moodle_url('/local/qualiscope/view_campaign.php', ['id' => $action->campaign_id]));
