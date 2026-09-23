@@ -29,11 +29,4 @@ $settings->add(new admin_setting_configselect(
     $referentialoptions
 ));
 
-$settings->add(new admin_setting_configcheckbox(
-    'local_qualiscope/enableai',
-    get_string('enableai', 'local_qualiscope'),
-    get_string('enableai_desc', 'local_qualiscope'),
-    0
-));
-
 $ADMIN->add('local_qualiscope', $settings);
