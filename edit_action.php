@@ -1,4 +1,27 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * QualiScope Edit Action page.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 
 require_once('../../config.php');
 require_once($CFG->dirroot . '/local/qualiscope/lib.php');
@@ -56,7 +79,8 @@ $formhtml .= '<div class="mb-3"><label class="form-label">' . get_string('action
 $formhtml .= '<input type="text" class="form-control" name="responsible" value="' . s($action->responsible) . '"></div>';
 
 $formhtml .= '<div class="mb-3"><label class="form-label">' . get_string('action_duedate', 'local_qualiscope') . '</label>';
-$formhtml .= '<input type="date" class="form-control" name="duedate" value="' . ($action->duedate ? date('Y-m-d', $action->duedate) : '') . '"></div>';
+$formhtml .= '<input type="date" class="form-control" name="duedate" value="' .
+    ($action->duedate ? date('Y-m-d', $action->duedate) : '') . '"></div>';
 
 $formhtml .= '<div class="mb-3"><label class="form-label">' . get_string('action_priority', 'local_qualiscope') . '</label>';
 $formhtml .= '<select class="form-select" name="priority">';

@@ -1,4 +1,27 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * QualiScope Zip Generator class.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 
 namespace local_qualiscope\exporter;
 
@@ -14,7 +37,6 @@ require_once($CFG->libdir . '/filestorage/zip_packer.php');
  * @package local_qualiscope
  */
 class zip_generator {
-
     /** @var object Course record */
     private $course;
 
@@ -81,10 +103,11 @@ class zip_generator {
             $pctstr = $c['percentage'] !== null ? $c['percentage'] . ' %' : 'Preuves manuelles / Externes uniquement';
             $readme .= "- Critère " . (int) $critobj->number . " : " . $critobj->title . " => " . $pctstr . "\n";
         }
-        $readme .= "\nCe dossier classe les indicateurs par sous-dossiers Critere_XX / Indicateur_YY avec les fiches de preuves et données Moodle.\n";
+        $readme .= "\nCe dossier classe les indicateurs par sous-dossiers Critere_XX / " .
+            "Indicateur_YY avec les fiches de preuves et données Moodle.\n";
         $files['00_INDEX_AUDITEUR.txt'] = $readme;
 
-        // Map results by check ID
+        // Map results by check ID.
         $resultmap = [];
         foreach ($this->results as $res) {
             $resultmap[$res['check']->id] = $res;
@@ -149,12 +172,12 @@ class zip_generator {
             }
         }
 
-        // Package into ZIP using Moodle zip_packer
+        // Package into ZIP using Moodle zip_packer.
         $zipper = new \zip_packer();
         $tempdir = make_temp_directory('qualiscope_dossier');
         $tempzip = $tempdir . '/dossier_' . uniqid('', true) . '.zip';
 
-        // Convert virtual array into filesystem items or pass directly
+        // Convert virtual array into filesystem items or pass directly.
         $fileentries = [];
         foreach ($files as $relpath => $content) {
             $temppath = $tempdir . '/' . md5($relpath);
@@ -164,7 +187,7 @@ class zip_generator {
 
         $zipper->archive_to_pathname($fileentries, $tempzip);
 
-        // Cleanup individual temp files
+        // Cleanup individual temp files.
         foreach ($fileentries as $tmp) {
             @unlink($tmp);
         }

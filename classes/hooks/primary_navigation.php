@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of the QualiScope plugin for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,15 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * QualiScope Primary Navigation class.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+
 namespace local_qualiscope\hooks;
 
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Adds the campaigns link to the site primary navigation.
  */
 class primary_navigation {
-
     /**
      * Callback for \core\hook\navigation\primary_extend.
      *

@@ -1,8 +1,30 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * QualiScope Engagement Check class.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 
 namespace local_qualiscope\checks;
 
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Check for learner engagement, activity tracking, and dropout prevention (Qualiopi Indicators 10 & 12).
@@ -10,7 +32,6 @@ defined('MOODLE_INTERNAL') || die();
  * @package local_qualiscope
  */
 class engagement_check extends base_check {
-
     /**
      * Executes the learner engagement check on the course.
      *
@@ -58,7 +79,7 @@ class engagement_check extends base_check {
             $now = time();
             $cutoff = $now - (14 * 86400); // 14 days inactivity threshold
 
-            // Check users with last access
+            // Check users with last access.
             $sql = "SELECT COUNT(DISTINCT u.id)
                     FROM {user} u
                     JOIN {user_enrolments} ue ON ue.userid = u.id
@@ -83,7 +104,7 @@ class engagement_check extends base_check {
                 'rate' => $activerate,
             ]);
         } else {
-            // If no enrolled users yet, give partial credit for structural readiness
+            // If no enrolled users yet, give partial credit for structural readiness.
             $score += 10;
             $details[] = get_string('engagement_no_students_structure_only', 'local_qualiscope');
         }
@@ -130,7 +151,7 @@ class engagement_check extends base_check {
             $score += 15;
             $details[] = get_string('engagement_overrides_found', 'local_qualiscope', $totaloverrides);
         } else {
-            // Badges or custom milestones
+            // Badges or custom milestones.
             $badgecount = $DB->count_records('badge', ['courseid' => $courseid, 'status' => 1]);
             if ($badgecount > 0) {
                 $score += 10;

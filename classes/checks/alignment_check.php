@@ -1,16 +1,37 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * QualiScope Alignment Check class.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 
 namespace local_qualiscope\checks;
 
-defined('MOODLE_INTERNAL') || die();
 
 /**
- * Check for constructive alignment: Objectives/Competencies <-> Activities <-> Graded Assessments & Rubrics (Qualiopi Indicators 5, 6 & 11).
+ * Check for constructive alignment: Objectives/Competencies <-> Activities <-> Graded Assessments (Qualiopi Indicators 5, 6 & 11).
  *
  * @package local_qualiscope
  */
 class alignment_check extends base_check {
-
     /**
      * Executes the constructive alignment check on the course.
      *
@@ -30,11 +51,13 @@ class alignment_check extends base_check {
         $course = $DB->get_record('course', ['id' => $courseid]);
         $hassummaryobjectives = false;
 
-        if ($course && (
+        if (
+            $course && (
             stripos($course->summary, 'objectif') !== false ||
             stripos($course->summary, 'compétence') !== false ||
             stripos($course->summary, 'programme') !== false
-        )) {
+            )
+        ) {
             $hassummaryobjectives = true;
         }
 
@@ -91,7 +114,7 @@ class alignment_check extends base_check {
 
         // 4. Assessment Quality: Rubrics / Marking Guides / Feedback / Linked module competencies (25 pts)
         $subscore = 0;
-        // Check rubrics or marking guides in grading definitions
+        // Check rubrics or marking guides in grading definitions.
         $rubriccount = (int) $DB->count_records_sql(
             "SELECT COUNT(gd.id)
              FROM {grading_definitions} gd
@@ -102,7 +125,7 @@ class alignment_check extends base_check {
             ['courseid' => $courseid]
         );
 
-        // Check module linked competencies
+        // Check module linked competencies.
         $modcompcount = (int) $DB->count_records_sql(
             "SELECT COUNT(mc.id)
              FROM {competency_modulecomp} mc
@@ -111,7 +134,7 @@ class alignment_check extends base_check {
             ['courseid' => $courseid]
         );
 
-        // Check quiz feedback configuration
+        // Check quiz feedback configuration.
         $quizfeedbackcount = (int) $DB->count_records_sql(
             "SELECT COUNT(qf.id)
              FROM {quiz_feedback} qf
@@ -134,7 +157,7 @@ class alignment_check extends base_check {
         }
 
         if ($subscore === 0 && $gradeitemscount > 0) {
-            // Partial credit if grade items have pass grades configured
+            // Partial credit if grade items have pass grades configured.
             $passgrades = 0;
             foreach ($gradeitems as $gi) {
                 if ($gi->gradepass > 0) {

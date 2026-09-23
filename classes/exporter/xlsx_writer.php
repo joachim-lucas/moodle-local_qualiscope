@@ -1,8 +1,30 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * QualiScope Xlsx Writer class.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 
 namespace local_qualiscope\exporter;
 
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Minimal XLSX workbook writer (OGC OOXML) using ZipArchive.
@@ -13,7 +35,6 @@ defined('MOODLE_INTERNAL') || die();
  * @package local_qualiscope
  */
 class xlsx_writer {
-
     /** @var string Sheet title. */
     private $title;
 
@@ -79,9 +100,12 @@ class xlsx_writer {
             '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' .
             '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' .
             '<Default Extension="xml" ContentType="application/xml"/>' .
-            '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' .
-            '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>' .
-            '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' .
+            '<Override PartName="/xl/workbook.xml" ContentType="application/' .
+            'vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' .
+            '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/' .
+            'vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>' .
+            '<Override PartName="/xl/styles.xml" ContentType="application/' .
+            'vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' .
             '</Types>';
     }
 
@@ -93,7 +117,8 @@ class xlsx_writer {
     private function rels_xml(): string {
         return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
             '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' .
-            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>' .
+            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/' .
+            'relationships/officeDocument" Target="xl/workbook.xml"/>' .
             '</Relationships>';
     }
 
@@ -118,8 +143,10 @@ class xlsx_writer {
     private function workbook_rels_xml(): string {
         return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
             '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' .
-            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>' .
-            '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>' .
+            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/' .
+            'relationships/worksheet" Target="worksheets/sheet1.xml"/>' .
+            '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/' .
+            'relationships/styles" Target="styles.xml"/>' .
             '</Relationships>';
     }
 

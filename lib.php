@@ -1,6 +1,28 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
+/**
+ * Primary library file for the local_qualiscope plugin.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+
 
 /**
  * Adds the QualiScope entry to the course navigation "More" menu for users with the audit capability.
@@ -41,7 +63,15 @@ function local_qualiscope_extend_navigation_course(navigation_node $coursenode, 
  * @param array $options Additional download options.
  * @return void
  */
-function local_qualiscope_pluginfile($course, $cm, $context, string $filearea, array $args, bool $forcedownload, array $options = []): void {
+function local_qualiscope_pluginfile(
+    $course,
+    $cm,
+    $context,
+    string $filearea,
+    array $args,
+    bool $forcedownload,
+    array $options = []
+): void {
     if ($context->contextlevel != CONTEXT_COURSE) {
         send_file_not_found();
     }

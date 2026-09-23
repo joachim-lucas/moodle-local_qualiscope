@@ -1,4 +1,27 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * QualiScope View Campaign page.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 
 require_once('../../config.php');
 require_once($CFG->dirroot . '/local/qualiscope/lib.php');
@@ -48,10 +71,18 @@ foreach ($results as $r) {
     }
     $bycourse[$r->courseid]['total']++;
     switch ($r->status) {
-        case 'detected': $bycourse[$r->courseid]['detected']++; break;
-        case 'verify':   $bycourse[$r->courseid]['verify']++; break;
-        case 'missing':  $bycourse[$r->courseid]['missing']++; break;
-        case 'na':       $bycourse[$r->courseid]['na']++; break;
+        case 'detected':
+            $bycourse[$r->courseid]['detected']++;
+            break;
+        case 'verify':
+            $bycourse[$r->courseid]['verify']++;
+            break;
+        case 'missing':
+            $bycourse[$r->courseid]['missing']++;
+            break;
+        case 'na':
+            $bycourse[$r->courseid]['na']++;
+            break;
     }
     if ($r->status !== 'na') {
         $bycourse[$r->courseid]['weighted'] += (float) $r->ratio > 0
@@ -100,8 +131,8 @@ $scopecourses = count(\local_qualiscope\analyser\course_analyser::get_campaign_c
 $coursesanalysed = count($coursesdata);
 
 // Macro analysis by criteria & indicators.
-$criteria_records = $DB->get_records('local_qualiscope_criteria', ['referential_id' => $campaign->referential_id], 'number ASC');
-$indicators_records = $DB->get_records_sql(
+$criteriarecords = $DB->get_records('local_qualiscope_criteria', ['referential_id' => $campaign->referential_id], 'number ASC');
+$indicatorsrecords = $DB->get_records_sql(
     "SELECT i.* FROM {local_qualiscope_indicators} i
      JOIN {local_qualiscope_criteria} c ON c.id = i.criterion_id
      WHERE c.referential_id = :refid
@@ -109,15 +140,15 @@ $indicators_records = $DB->get_records_sql(
     ['refid' => $campaign->referential_id]
 );
 
-$results_by_indicator = [];
+$resultsbyindicator = [];
 foreach ($results as $r) {
-    $results_by_indicator[$r->indicator_id][] = $r;
+    $resultsbyindicator[$r->indicator_id][] = $r;
 }
 
 $criteriadata = [];
 $weakpoints = [];
 
-foreach ($criteria_records as $crit) {
+foreach ($criteriarecords as $crit) {
     $criteriadata[$crit->id] = [
         'id' => $crit->id,
         'number' => $crit->number,
@@ -136,21 +167,29 @@ foreach ($criteria_records as $crit) {
     ];
 }
 
-foreach ($indicators_records as $ind) {
-    $ind_results = $results_by_indicator[$ind->id] ?? [];
-    $total = count($ind_results);
+foreach ($indicatorsrecords as $ind) {
+    $indicatorresults = $resultsbyindicator[$ind->id] ?? [];
+    $total = count($indicatorresults);
     $detected = 0;
     $verify = 0;
     $missing = 0;
     $na = 0;
     $weighted = 0.0;
 
-    foreach ($ind_results as $r) {
+    foreach ($indicatorresults as $r) {
         switch ($r->status) {
-            case 'detected': $detected++; break;
-            case 'verify':   $verify++; break;
-            case 'missing':  $missing++; break;
-            case 'na':       $na++; break;
+            case 'detected':
+                $detected++;
+                break;
+            case 'verify':
+                $verify++;
+                break;
+            case 'missing':
+                $missing++;
+                break;
+            case 'na':
+                $na++;
+                break;
         }
         if ($r->status !== 'na') {
             $weighted += (float) $r->ratio > 0 ? (float) $r->ratio : ($r->status === 'detected' ? 1.0 : 0.0);
@@ -159,8 +198,8 @@ foreach ($indicators_records as $ind) {
 
     $app = $total - $na;
     $percentage = $app > 0 ? (int) round(($weighted * 100) / $app) : null;
-    $non_compliance = $percentage !== null ? (100 - $percentage) : 0;
-    $failing_courses = $missing + $verify;
+    $noncompliance = $percentage !== null ? (100 - $percentage) : 0;
+    $failingcourses = $missing + $verify;
 
     $class = 'bg-secondary';
     $borderclass = 'border-secondary';
@@ -169,7 +208,7 @@ foreach ($indicators_records as $ind) {
         $borderclass = $percentage >= 75 ? 'border-success' : ($percentage >= 50 ? 'border-warning' : 'border-danger');
     }
 
-    $ind_item = [
+    $indicatoritem = [
         'id' => $ind->id,
         'number' => $ind->number,
         'title' => $ind->title,
@@ -183,15 +222,15 @@ foreach ($indicators_records as $ind) {
         'haspercentage' => $percentage !== null,
         'percentageclass' => $class,
         'borderclass' => $borderclass,
-        'noncompliance' => $non_compliance,
-        'failingcourses' => $failing_courses,
-        'failingmessage' => get_string('campaign_courses_failing', 'local_qualiscope', $failing_courses),
-        'criterion_number' => $criteria_records[$ind->criterion_id]->number ?? '',
-        'criterion_title' => $criteria_records[$ind->criterion_id]->title ?? '',
+        'noncompliance' => $noncompliance,
+        'failingcourses' => $failingcourses,
+        'failingmessage' => get_string('campaign_courses_failing', 'local_qualiscope', $failingcourses),
+        'criterion_number' => $criteriarecords[$ind->criterion_id]->number ?? '',
+        'criterion_title' => $criteriarecords[$ind->criterion_id]->title ?? '',
     ];
 
     if (isset($criteriadata[$ind->criterion_id])) {
-        $criteriadata[$ind->criterion_id]['indicators'][] = $ind_item;
+        $criteriadata[$ind->criterion_id]['indicators'][] = $indicatoritem;
         if ($total > 0) {
             $criteriadata[$ind->criterion_id]['manualonly'] = false;
         }
@@ -204,7 +243,7 @@ foreach ($indicators_records as $ind) {
     }
 
     if ($app > 0) {
-        $weakpoints[] = $ind_item;
+        $weakpoints[] = $indicatoritem;
     }
 }
 
@@ -212,19 +251,20 @@ foreach ($criteriadata as &$cdata) {
     $capp = $cdata['total'] - $cdata['na'];
     if ($capp > 0) {
         $cdata['percentage'] = (int) round(($cdata['weighted'] * 100) / $capp);
-        $cdata['percentageclass'] = $cdata['percentage'] >= 75 ? 'bg-success' : ($cdata['percentage'] >= 50 ? 'bg-warning' : 'bg-danger');
+        $cdata['percentageclass'] = $cdata['percentage'] >= 75 ? 'bg-success' :
+        ($cdata['percentage'] >= 50 ? 'bg-warning' : 'bg-danger');
     }
 }
 unset($cdata);
 
-usort($weakpoints, function($a, $b) {
+usort($weakpoints, function ($a, $b) {
     if ($a['percentage'] === $b['percentage']) {
         return $b['failingcourses'] <=> $a['failingcourses'];
     }
     return $a['percentage'] <=> $b['percentage'];
 });
 
-$weakpoints_filtered = array_values(array_filter($weakpoints, function($item) {
+$weakpointsfiltered = array_values(array_filter($weakpoints, function ($item) {
     return $item['percentage'] < 100;
 }));
 
@@ -286,10 +326,10 @@ foreach ($actions as $action) {
     ];
 }
 
-$indicators_dropdown = [];
+$indicatorsdropdown = [];
 foreach ($criteriadata as $crit) {
     foreach ($crit['indicators'] as $ind) {
-        $indicators_dropdown[] = [
+        $indicatorsdropdown[] = [
             'id' => $ind['id'],
             'label' => 'C' . $crit['number'] . ' - I' . $ind['number'] . ' : ' . core_text::substr($ind['title'], 0, 60),
         ];
@@ -344,9 +384,15 @@ echo $output->render_campaign_dashboard([
     'dateformatted' => userdate($campaign->timecreated),
     'runurl' => new moodle_url('/local/qualiscope/run.php', ['campaignid' => $campaignid, 'sesskey' => sesskey()]),
     'rerunurl' => new moodle_url('/local/qualiscope/run.php', ['campaignid' => $campaignid, 'rerun' => 1, 'sesskey' => sesskey()]),
-    'exportcsvurl' => new moodle_url('/local/qualiscope/export.php', ['campaignid' => $campaignid, 'format' => 'csv', 'sesskey' => sesskey()]),
-    'exportxlsxurl' => new moodle_url('/local/qualiscope/export.php', ['campaignid' => $campaignid, 'format' => 'xlsx', 'sesskey' => sesskey()]),
-    'exportpdfurl' => new moodle_url('/local/qualiscope/export.php', ['campaignid' => $campaignid, 'format' => 'pdf', 'sesskey' => sesskey()]),
+    'exportcsvurl' => new moodle_url('/local/qualiscope/export.php', [
+        'campaignid' => $campaignid, 'format' => 'csv', 'sesskey' => sesskey(),
+    ]),
+    'exportxlsxurl' => new moodle_url('/local/qualiscope/export.php', [
+        'campaignid' => $campaignid, 'format' => 'xlsx', 'sesskey' => sesskey(),
+    ]),
+    'exportpdfurl' => new moodle_url('/local/qualiscope/export.php', [
+        'campaignid' => $campaignid, 'format' => 'pdf', 'sesskey' => sesskey(),
+    ]),
     'printreporturl' => new moodle_url('/local/qualiscope/print_campaign.php', ['id' => $campaignid]),
     'compareurl' => new moodle_url('/local/qualiscope/compare_campaigns.php', ['id_a' => $campaignid]),
     'backurl' => new moodle_url('/local/qualiscope/campaigns.php'),
@@ -354,15 +400,15 @@ echo $output->render_campaign_dashboard([
     'hasresults' => !empty($coursesdata),
     'courses' => $coursesdata,
     'criteria' => array_values($criteriadata),
-    'weakpoints' => $weakpoints_filtered,
-    'hasweakpoints' => !empty($weakpoints_filtered),
+    'weakpoints' => $weakpointsfiltered,
+    'hasweakpoints' => !empty($weakpointsfiltered),
     'actions' => $actionsdata,
     'hasactions' => !empty($actionsdata),
     'actionstotal' => count($actionsdata),
     'actionstodo' => $actionstodo,
     'actionsinprogress' => $actionsinprogress,
     'actionsclosed' => $actionsclosed,
-    'indicatorslist' => $indicators_dropdown,
+    'indicatorslist' => $indicatorsdropdown,
     'bulkactionurl' => new moodle_url('/local/qualiscope/bulk_create_action.php'),
     'sesskey' => sesskey(),
     'campaignid' => $campaignid,

@@ -1,8 +1,30 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * QualiScope Course Analyser class.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 
 namespace local_qualiscope\analyser;
 
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Orchestrates the audit of a single Moodle course against an active referential.
@@ -10,7 +32,6 @@ defined('MOODLE_INTERNAL') || die();
  * @package local_qualiscope
  */
 class course_analyser {
-
     /** @var int The course id being analysed. */
     private $courseid;
 
@@ -87,7 +108,7 @@ class course_analyser {
                 if (!$scopeids) {
                     return [];
                 }
-                list($insql, $inparams) = $DB->get_in_or_equal($scopeids, SQL_PARAMS_NAMED, 'cat');
+                [$insql, $inparams] = $DB->get_in_or_equal($scopeids, SQL_PARAMS_NAMED, 'cat');
                 $inparams['siteid'] = $siteid;
                 return $DB->get_fieldset_sql(
                     "SELECT id FROM {course} WHERE visible = 1 AND id <> :siteid AND category $insql ORDER BY id ASC",
@@ -98,7 +119,7 @@ class course_analyser {
                 if (!$scopeids) {
                     return [];
                 }
-                list($insql, $inparams) = $DB->get_in_or_equal($scopeids, SQL_PARAMS_NAMED, 'cid');
+                [$insql, $inparams] = $DB->get_in_or_equal($scopeids, SQL_PARAMS_NAMED, 'cid');
                 $inparams['siteid'] = $siteid;
                 return $DB->get_fieldset_sql(
                     "SELECT id FROM {course} WHERE visible = 1 AND id <> :siteid AND id $insql ORDER BY id ASC",
