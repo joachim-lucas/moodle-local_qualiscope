@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="local_qualiopi_referentials" COMMENT="List of quality referentials (e.g. Qualiopi, IACET...).">
+    <TABLE NAME="local_qualiscope_referentials" COMMENT="List of quality referentials (e.g. Qualiopi, IACET...).">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key."/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Referential name."/>
@@ -19,7 +19,7 @@
       </KEYS>
     </TABLE>
 
-    <TABLE NAME="local_qualiopi_criteria" COMMENT="Criteria belonging to a referential.">
+    <TABLE NAME="local_qualiscope_criteria" COMMENT="Criteria belonging to a referential.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key."/>
         <FIELD NAME="referential_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="FK to referentials."/>
@@ -31,14 +31,14 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key."/>
-        <KEY NAME="referential" TYPE="foreign" FIELDS="referential_id" REFTABLE="local_qualiopi_referentials" REFFIELDS="id" COMMENT="FK to referentials."/>
+        <KEY NAME="referential" TYPE="foreign" FIELDS="referential_id" REFTABLE="local_qualiscope_referentials" REFFIELDS="id" COMMENT="FK to referentials."/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="referential_number" UNIQUE="true" FIELDS="referential_id, number" COMMENT="Unique referential + number."/>
       </INDEXES>
     </TABLE>
 
-    <TABLE NAME="local_qualiopi_indicators" COMMENT="Indicators belonging to a criterion.">
+    <TABLE NAME="local_qualiscope_indicators" COMMENT="Indicators belonging to a criterion.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key."/>
         <FIELD NAME="criterion_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="FK to criteria."/>
@@ -51,14 +51,14 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key."/>
-        <KEY NAME="criterion" TYPE="foreign" FIELDS="criterion_id" REFTABLE="local_qualiopi_criteria" REFFIELDS="id" COMMENT="FK to criteria."/>
+        <KEY NAME="criterion" TYPE="foreign" FIELDS="criterion_id" REFTABLE="local_qualiscope_criteria" REFFIELDS="id" COMMENT="FK to criteria."/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="criterion_number" UNIQUE="true" FIELDS="criterion_id, number" COMMENT="Unique criterion + number."/>
       </INDEXES>
     </TABLE>
 
-    <TABLE NAME="local_qualiopi_checks" COMMENT="Individual checks for each indicator.">
+    <TABLE NAME="local_qualiscope_checks" COMMENT="Individual checks for each indicator.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key."/>
         <FIELD NAME="indicator_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="FK to indicators."/>
@@ -72,11 +72,11 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key."/>
-        <KEY NAME="indicator" TYPE="foreign" FIELDS="indicator_id" REFTABLE="local_qualiopi_indicators" REFFIELDS="id" COMMENT="FK to indicators."/>
+        <KEY NAME="indicator" TYPE="foreign" FIELDS="indicator_id" REFTABLE="local_qualiscope_indicators" REFFIELDS="id" COMMENT="FK to indicators."/>
       </KEYS>
     </TABLE>
 
-    <TABLE NAME="local_qualiopi_campaigns" COMMENT="Audit campaigns.">
+    <TABLE NAME="local_qualiscope_campaigns" COMMENT="Audit campaigns.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key."/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Campaign name."/>
@@ -90,11 +90,11 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key."/>
-        <KEY NAME="referential" TYPE="foreign" FIELDS="referential_id" REFTABLE="local_qualiopi_referentials" REFFIELDS="id" COMMENT="FK to referentials."/>
+        <KEY NAME="referential" TYPE="foreign" FIELDS="referential_id" REFTABLE="local_qualiscope_referentials" REFFIELDS="id" COMMENT="FK to referentials."/>
       </KEYS>
     </TABLE>
 
-    <TABLE NAME="local_qualiopi_results" COMMENT="Analysis results per course per campaign.">
+    <TABLE NAME="local_qualiscope_results" COMMENT="Analysis results per course per campaign.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key."/>
         <FIELD NAME="campaign_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="FK to campaigns."/>
@@ -110,16 +110,16 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key."/>
-        <KEY NAME="campaign" TYPE="foreign" FIELDS="campaign_id" REFTABLE="local_qualiopi_campaigns" REFFIELDS="id" COMMENT="FK to campaigns."/>
-        <KEY NAME="check" TYPE="foreign" FIELDS="check_id" REFTABLE="local_qualiopi_checks" REFFIELDS="id" COMMENT="FK to checks."/>
-        <KEY NAME="indicator" TYPE="foreign" FIELDS="indicator_id" REFTABLE="local_qualiopi_indicators" REFFIELDS="id" COMMENT="FK to indicators."/>
+        <KEY NAME="campaign" TYPE="foreign" FIELDS="campaign_id" REFTABLE="local_qualiscope_campaigns" REFFIELDS="id" COMMENT="FK to campaigns."/>
+        <KEY NAME="check" TYPE="foreign" FIELDS="check_id" REFTABLE="local_qualiscope_checks" REFFIELDS="id" COMMENT="FK to checks."/>
+        <KEY NAME="indicator" TYPE="foreign" FIELDS="indicator_id" REFTABLE="local_qualiscope_indicators" REFFIELDS="id" COMMENT="FK to indicators."/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="campaign_course" UNIQUE="false" FIELDS="campaign_id, courseid" COMMENT="Campaign + course index."/>
       </INDEXES>
     </TABLE>
 
-    <TABLE NAME="local_qualiopi_evidences" COMMENT="Evidence items for results.">
+    <TABLE NAME="local_qualiscope_evidences" COMMENT="Evidence items for results.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key."/>
         <FIELD NAME="result_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="FK to results."/>
@@ -137,11 +137,11 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key."/>
-        <KEY NAME="result" TYPE="foreign" FIELDS="result_id" REFTABLE="local_qualiopi_results" REFFIELDS="id" COMMENT="FK to results."/>
+        <KEY NAME="result" TYPE="foreign" FIELDS="result_id" REFTABLE="local_qualiscope_results" REFFIELDS="id" COMMENT="FK to results."/>
       </KEYS>
     </TABLE>
 
-    <TABLE NAME="local_qualiopi_actions" COMMENT="Corrective actions.">
+    <TABLE NAME="local_qualiscope_actions" COMMENT="Corrective actions.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary key."/>
         <FIELD NAME="result_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="FK to results."/>
@@ -160,8 +160,8 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key."/>
-        <KEY NAME="result" TYPE="foreign" FIELDS="result_id" REFTABLE="local_qualiopi_results" REFFIELDS="id" COMMENT="FK to results."/>
-        <KEY NAME="campaign" TYPE="foreign" FIELDS="campaign_id" REFTABLE="local_qualiopi_campaigns" REFFIELDS="id" COMMENT="FK to campaigns."/>
+        <KEY NAME="result" TYPE="foreign" FIELDS="result_id" REFTABLE="local_qualiscope_results" REFFIELDS="id" COMMENT="FK to results."/>
+        <KEY NAME="campaign" TYPE="foreign" FIELDS="campaign_id" REFTABLE="local_qualiscope_campaigns" REFFIELDS="id" COMMENT="FK to campaigns."/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="campaign_status" UNIQUE="false" FIELDS="campaign_id, status" COMMENT="Campaign + status index."/>
