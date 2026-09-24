@@ -1,0 +1,6 @@
+/amd/build/*.min.js.map
+/.phpunit.result.cache
+/.idea/
+/vendor/
+*.swp
+*.bak
