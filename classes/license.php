@@ -131,27 +131,53 @@ class license {
             return ['valid' => false, 'code' => 'missing', 'expiry' => null];
         }
 
+        $parsed = self::parse_key($key);
+        if ($parsed === null) {
+            return ['valid' => false, 'code' => 'malformed', 'expiry' => null];
+        }
+
+        $pubkey = $publickey ?? self::public_key();
+        if ($pubkey === null || !sodium_crypto_sign_verify_detached($parsed['sig'], $parsed['payload'], $pubkey)) {
+            return ['valid' => false, 'code' => 'bad_signature', 'expiry' => null];
+        }
+
+        return self::check_payload($parsed['data'], $sitehash);
+    }
+
+    /**
+     * Split, decode and interpret a licence key payload.
+     *
+     * @param string $key The licence key.
+     * @return array|null Array with 'payload', 'sig' and 'data', or null when malformed.
+     */
+    private static function parse_key(string $key): ?array {
         $parts = explode('.', $key);
         if (count($parts) !== 2) {
-            return ['valid' => false, 'code' => 'malformed', 'expiry' => null];
+            return null;
         }
 
         $payload = self::b64u_decode($parts[0]);
         $sig = self::b64u_decode($parts[1]);
         if ($payload === false || $sig === false) {
-            return ['valid' => false, 'code' => 'malformed', 'expiry' => null];
+            return null;
         }
 
         $data = json_decode($payload, true);
         if (!is_array($data) || ($data['v'] ?? null) !== self::PAYLOAD_VERSION) {
-            return ['valid' => false, 'code' => 'malformed', 'expiry' => null];
+            return null;
         }
 
-        $pubkey = $publickey ?? self::public_key();
-        if ($pubkey === null || !sodium_crypto_sign_verify_detached($sig, $payload, $pubkey)) {
-            return ['valid' => false, 'code' => 'bad_signature', 'expiry' => null];
-        }
+        return ['payload' => $payload, 'sig' => $sig, 'data' => $data];
+    }
 
+    /**
+     * Check a signed payload against the site binding and the expiry deadline.
+     *
+     * @param array       $data     The decoded payload.
+     * @param string|null $sitehash Site hash; defaults to the current site.
+     * @return array Associative array with 'valid', 'code' and 'expiry'.
+     */
+    private static function check_payload(array $data, ?string $sitehash): array {
         $sitehash = $sitehash ?? self::site_hash();
         if (!isset($data['site']) || $data['site'] !== $sitehash) {
             return ['valid' => false, 'code' => 'wrong_site', 'expiry' => null];

@@ -96,21 +96,22 @@ final class license_test extends \advanced_testcase {
     }
 
     /**
-     * Test that a licence valid for one year is still valid, and refused the
-     * day after its one-year expiry.
+     * Test that a licence valid for exactly one year is accepted, and refused
+     * as soon as its one-year expiry has passed.
      *
      * @covers \local_qualiscope\license::validate
      * @return void
      */
     public function test_one_year_expiry_boundary(): void {
         $sitehash = license::site_hash();
+
+        // A licence valid for exactly one year is accepted.
         $onepyear = time() + YEARSECS;
         set_config(license::CONFIG_KEY, $this->makekey($sitehash, $onepyear), 'local_qualiscope');
-
         $this->assertTrue(license::is_licensed());
 
-        $in2027 = $onepyear + 1;
-        set_config(license::CONFIG_KEY, $this->makekey($sitehash, $in2027), 'local_qualiscope');
+        // At the expiry instant the licence is already refused (no grace).
+        set_config(license::CONFIG_KEY, $this->makekey($sitehash, time()), 'local_qualiscope');
         $this->assertFalse(license::is_licensed());
         $this->assertSame('expired', license::validate(license::stored_key())['code']);
     }
