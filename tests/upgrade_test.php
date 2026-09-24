@@ -57,6 +57,10 @@ final class upgrade_test extends \advanced_testcase {
 
         $DB->execute('INSERT INTO {local_qualiscope_auditedcourses} (id, courseid, timeaudited) VALUES (1, 99, 1000)');
 
+        // Simulate a site still on the previous plugin version so the savepoint
+        // of the 2026092403 step is a real upgrade, not a downgrade.
+        $DB->set_field('config_plugins', 'value', '2026092402', ['plugin' => 'local_qualiscope', 'name' => 'version']);
+
         require_once($CFG->dirroot . '/lib/upgradelib.php');
         require_once($CFG->dirroot . '/local/qualiscope/db/upgrade.php');
 
