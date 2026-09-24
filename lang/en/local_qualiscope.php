@@ -341,6 +341,7 @@ $string['level_strong'] = 'Strong Moodle evidence';
 $string['level_strong_desc'] = 'Moodle contains direct and sufficient traces.';
 $string['licence_activate'] = 'Activate licence';
 $string['licence_expired_on'] = 'Expired on {$a}.';
+$string['licence_sitehash'] = 'Site hash to send to your licence provider: <code>{$a}</code>';
 $string['licence_status_bad_signature'] = 'Licence key invalid (signature does not match).';
 $string['licence_status_expired'] = 'Licence key expired.';
 $string['licence_status_malformed'] = 'Licence key malformed.';

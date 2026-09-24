@@ -341,6 +341,7 @@ $string['level_strong'] = 'Preuve Moodle forte';
 $string['level_strong_desc'] = 'Moodle contient des traces directes et suffisantes.';
 $string['licence_activate'] = 'Activer la licence';
 $string['licence_expired_on'] = 'Expirée le {$a}.';
+$string['licence_sitehash'] = 'Empreinte du site à transmettre à votre prestataire de licence : <code>{$a}</code>';
 $string['licence_status_bad_signature'] = 'Clé de licence invalide (signature non conforme).';
 $string['licence_status_expired'] = 'Clé de licence expirée.';
 $string['licence_status_malformed'] = 'Clé de licence mal formée.';

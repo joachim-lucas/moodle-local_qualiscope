@@ -42,6 +42,7 @@ if ($licencestatus['valid']) {
 }
 $licencestatusdesc = get_string('licencekey_desc', 'local_qualiscope', ['max' => \local_qualiscope\quota::FREE_COURSES]);
 $licencestatusdesc .= ' ' . $licencestatuslabel;
+$licencestatusdesc .= ' ' . get_string('licence_sitehash', 'local_qualiscope', \local_qualiscope\license::site_hash());
 
 $settings->add(new admin_setting_configtext(
     'local_qualiscope/licensekey',
