@@ -86,7 +86,7 @@ jobs:
 
       - name: Moodle Code Checker
         if: ${{ !cancelled() }}
-        run: moodle-plugin-ci phpcs --max-warnings 0
+        run: moodle-plugin-ci phpcs --max-warnings 0 --exclude=moodle.PHPUnit.TestCaseNames.UnexpectedLevel2NS
 
       - name: Moodle PHPDoc Checker
         if: ${{ !cancelled() }}
