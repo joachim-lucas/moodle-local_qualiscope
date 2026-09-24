@@ -45,10 +45,13 @@ class primary_navigation {
         }
 
         $view = $hook->get_primaryview();
+        $nodetype = class_exists('core\navigation\navigation_node')
+            ? \core\navigation\navigation_node::TYPE_CUSTOM
+            : \navigation_node::TYPE_CUSTOM;
         $view->add(
             get_string('nav_campaigns', 'local_qualiscope'),
             new \moodle_url('/local/qualiscope/campaigns.php'),
-            \core\navigation\navigation_node::TYPE_CUSTOM,
+            $nodetype,
             null,
             'qualiscope-campaigns'
         );
