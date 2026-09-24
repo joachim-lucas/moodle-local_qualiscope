@@ -1,3 +1,92 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_qualiscope/campaign_dashboard
+
+    Campaign results dashboard with courses, criteria and weak points.
+
+    Example context (json):
+    {
+        "campaignname": "Audit campaign 2026",
+        "completed": true,
+        "compareurl": "compare.php",
+        "hasresults": true,
+        "exportpdfurl": "export.php?format=pdf",
+        "exportxlsxurl": "export.php?format=xlsx",
+        "exportcsvurl": "export.php?format=csv",
+        "printreporturl": "report.php?print=1",
+        "runurl": "run.php",
+        "rerunurl": "rerun.php",
+        "referential": "Qualiopi",
+        "scopelabel": "All courses",
+        "dateformatted": "24/09/2026",
+        "summaryitems": [
+            {"bgclass": "text-success", "label": "Courses", "value": "5"},
+            {"bgclass": "text-danger", "label": "Weak points", "value": "2"}
+        ],
+        "courses": [
+            {
+                "coursename": "Course full name",
+                "percentage": 82,
+                "percentageclass": "bg-success",
+                "detected": 10,
+                "verify": 2,
+                "missing": 1,
+                "na": 0,
+                "viewurl": "course_view.php?id=4"
+            }
+        ],
+        "criteria": [
+            {
+                "number": 1,
+                "title": "Criterion title",
+                "manualonly": false,
+                "percentageclass": "bg-success",
+                "percentage": 74,
+                "indicators": [
+                    {
+                        "number": 1,
+                        "title": "Indicator title",
+                        "haspercentage": true,
+                        "percentageclass": "bg-success",
+                        "percentage": 74,
+                        "detected": 2,
+                        "verify": 1,
+                        "missing": 0,
+                        "na": 0
+                    }
+                ]
+            }
+        ],
+        "hasweakpoints": false,
+        "actionstotal": 1,
+        "actionstodo": 1,
+        "actionsinprogress": 0,
+        "actionsclosed": 0,
+        "hasactions": false,
+        "bulkactionurl": "bulk_actions.php",
+        "sesskey": "abc123",
+        "campaignid": 1,
+        "indicatorslist": [
+            {"id": 1, "label": "I1 - Indicator title"}
+        ],
+        "backurl": "campaigns.php"
+    }
+}}
 <div class="qualiscope-campaign-dashboard container-fluid py-4">
     <div class="row mb-4">
         <div class="col-12 d-flex justify-content-between align-items-center">

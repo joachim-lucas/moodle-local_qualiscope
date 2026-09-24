@@ -1,3 +1,68 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_qualiscope/campaign
+
+    Campaigns list and creation form.
+
+    Example context (json):
+    {
+        "compareurl": "compare.php",
+        "savecampaignurl": "campaign_save.php",
+        "sesskey": "abc123",
+        "referentials": [
+            {"id": 1, "name": "Qualiopi", "version": "1.0"}
+        ],
+        "categories": [
+            {"id": 2, "name": "Category name"}
+        ],
+        "courses": [
+            {"id": 4, "fullname": "Course full name"}
+        ],
+        "campaigns": [
+            {
+                "viewurl": "campaign_view.php?id=1",
+                "name": "Completed audit",
+                "referential": "Qualiopi",
+                "scopelabel": "All courses",
+                "course_count": 5,
+                "has_coverage": true,
+                "coverage_class": "bg-success",
+                "avg_coverage": "82%",
+                "dateformatted": "24/09/2026",
+                "timecompleted": 1,
+                "rerunurl": "campaign_rerun.php?id=1"
+            },
+            {
+                "viewurl": "campaign_view.php?id=2",
+                "name": "Running audit",
+                "referential": "Qualiopi",
+                "scopelabel": "Category",
+                "course_count": 3,
+                "has_coverage": false,
+                "coverage_class": "bg-secondary",
+                "avg_coverage": "0%",
+                "dateformatted": "24/09/2026",
+                "timecompleted": 0,
+                "runurl": "campaign_run.php?id=2"
+            }
+        ]
+    }
+}}
 <div class="qualiscope-campaign container-fluid py-4">
     <div class="row mb-4">
         <div class="col-12 d-flex justify-content-between align-items-center">
