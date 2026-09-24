@@ -160,12 +160,20 @@ final class provider_test extends \advanced_testcase {
      * @return void
      */
     public function test_get_contexts_for_userid_with_data(): void {
+        global $DB;
+
         $user = $this->getDataGenerator()->create_user();
         $this->insertevidence($user->id);
 
-        $contextlist = provider::get_contexts_for_userid($user->id);
+        // Sanity: the insert must have landed, otherwise the provider has no data to find.
+        $this->assertTrue($DB->record_exists('local_qualiscope_evidences', ['userid' => $user->id]));
 
-        $this->assertContains(\context_system::instance()->id, $contextlist->get_contextids());
+        $contextlist = provider::get_contexts_for_userid($user->id);
+        $contextids = $contextlist->get_contextids();
+
+        $this->assertCount(1, $contextids);
+        $context = \context::instance_by_id(reset($contextids));
+        $this->assertEquals(\CONTEXT_SYSTEM, $context->contextlevel);
     }
 
     /**

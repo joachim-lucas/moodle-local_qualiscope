@@ -83,12 +83,19 @@ final class referential_seeder_test extends \advanced_testcase {
     public function test_seed_referential_creates_tree(): void {
         global $DB;
 
+        $before = [
+            'local_qualiscope_referentials' => $DB->count_records('local_qualiscope_referentials'),
+            'local_qualiscope_criteria' => $DB->count_records('local_qualiscope_criteria'),
+            'local_qualiscope_indicators' => $DB->count_records('local_qualiscope_indicators'),
+            'local_qualiscope_checks' => $DB->count_records('local_qualiscope_checks'),
+        ];
+
         referential_seeder::seed_referential($this->sampledef());
 
-        $this->assertEquals(1, $DB->count_records('local_qualiscope_referentials'));
-        $this->assertEquals(1, $DB->count_records('local_qualiscope_criteria'));
-        $this->assertEquals(1, $DB->count_records('local_qualiscope_indicators'));
-        $this->assertEquals(1, $DB->count_records('local_qualiscope_checks'));
+        $this->assertEquals($before['local_qualiscope_referentials'] + 1, $DB->count_records('local_qualiscope_referentials'));
+        $this->assertEquals($before['local_qualiscope_criteria'] + 1, $DB->count_records('local_qualiscope_criteria'));
+        $this->assertEquals($before['local_qualiscope_indicators'] + 1, $DB->count_records('local_qualiscope_indicators'));
+        $this->assertEquals($before['local_qualiscope_checks'] + 1, $DB->count_records('local_qualiscope_checks'));
     }
 
     /**
@@ -100,13 +107,20 @@ final class referential_seeder_test extends \advanced_testcase {
     public function test_seed_referential_idempotent(): void {
         global $DB;
 
+        $before = [
+            'local_qualiscope_referentials' => $DB->count_records('local_qualiscope_referentials'),
+            'local_qualiscope_criteria' => $DB->count_records('local_qualiscope_criteria'),
+            'local_qualiscope_indicators' => $DB->count_records('local_qualiscope_indicators'),
+            'local_qualiscope_checks' => $DB->count_records('local_qualiscope_checks'),
+        ];
+
         referential_seeder::seed_referential($this->sampledef());
         referential_seeder::seed_referential($this->sampledef());
 
-        $this->assertEquals(1, $DB->count_records('local_qualiscope_referentials'));
-        $this->assertEquals(1, $DB->count_records('local_qualiscope_criteria'));
-        $this->assertEquals(1, $DB->count_records('local_qualiscope_indicators'));
-        $this->assertEquals(1, $DB->count_records('local_qualiscope_checks'));
+        $this->assertEquals($before['local_qualiscope_referentials'] + 1, $DB->count_records('local_qualiscope_referentials'));
+        $this->assertEquals($before['local_qualiscope_criteria'] + 1, $DB->count_records('local_qualiscope_criteria'));
+        $this->assertEquals($before['local_qualiscope_indicators'] + 1, $DB->count_records('local_qualiscope_indicators'));
+        $this->assertEquals($before['local_qualiscope_checks'] + 1, $DB->count_records('local_qualiscope_checks'));
     }
 
     /**
@@ -119,12 +133,14 @@ final class referential_seeder_test extends \advanced_testcase {
         global $DB;
 
         referential_seeder::seed_referential($this->sampledef());
+        $referential = $DB->get_record('local_qualiscope_referentials', ['name' => 'TestRef']);
+        $this->assertNotFalse($referential);
 
         $def = $this->sampledef();
         $def['criteria'][0]['title'] = 'Criterion updated';
         referential_seeder::seed_referential($def);
 
-        $criteria = $DB->get_records('local_qualiscope_criteria');
+        $criteria = $DB->get_records('local_qualiscope_criteria', ['referential_id' => $referential->id]);
         $this->assertCount(1, $criteria);
         $this->assertEquals('Criterion updated', reset($criteria)->title);
     }
