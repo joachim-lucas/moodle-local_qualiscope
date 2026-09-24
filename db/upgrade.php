@@ -59,5 +59,16 @@ function xmldb_local_qualiscope_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2026092201, 'local', 'qualiscope');
     }
 
+    if ($oldversion < 2026092401) {
+        $table = new xmldb_table('local_qualiscope_auditedcourses');
+        if (!$dbman->table_exists($table)) {
+            $table->add_field('courseid', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null);
+            $table->add_field('timeaudited', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, 0);
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, ['courseid']);
+            $dbman->create_table($table);
+        }
+        upgrade_plugin_savepoint(true, 2026092401, 'local', 'qualiscope');
+    }
+
     return true;
 }

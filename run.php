@@ -47,9 +47,26 @@ if ($campaignid) {
     $direct = optional_param('direct', 0, PARAM_INT);
 
     if ($ajax && $singlecourseid) {
+        if (!\local_qualiscope\quota::can_audit($singlecourseid)) {
+            if ($finish) {
+                $campaign->timecompleted = time();
+                $campaign->timemodified = time();
+                $DB->update_record('local_qualiscope_campaigns', $campaign);
+            }
+
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode([
+                'status' => 'licence_required',
+                'courseid' => $singlecourseid,
+                'finished' => (bool) $finish,
+            ]);
+            exit;
+        }
+
         $analyser = new \local_qualiscope\analyser\course_analyser($singlecourseid, $campaignid, $referentialid);
         $analyser->run();
         $analyser->save_results($campaignid);
+        \local_qualiscope\quota::record($singlecourseid);
 
         if ($finish) {
             $campaign->timecompleted = time();
@@ -65,9 +82,13 @@ if ($campaignid) {
     if ($direct) {
         $courseids = \local_qualiscope\analyser\course_analyser::get_campaign_course_ids($campaign);
         foreach ($courseids as $cid) {
+            if (!\local_qualiscope\quota::can_audit($cid)) {
+                continue;
+            }
             $analyser = new \local_qualiscope\analyser\course_analyser($cid, $campaignid, $referentialid);
             $analyser->run();
             $analyser->save_results($campaignid);
+            \local_qualiscope\quota::record($cid);
         }
         $campaign->timecompleted = time();
         $campaign->timemodified = time();

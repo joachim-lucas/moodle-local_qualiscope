@@ -126,6 +126,7 @@ class license {
      * @return array Associative array with 'valid', 'code' and 'expiry'.
      */
     public static function validate(string $key, ?string $sitehash = null, ?string $publickey = null): array {
+        $key = trim($key);
         if ($key === '') {
             return ['valid' => false, 'code' => 'missing', 'expiry' => null];
         }

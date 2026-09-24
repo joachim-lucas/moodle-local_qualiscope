@@ -69,11 +69,16 @@ class run_analysis extends \external_api {
         $context = \context_system::instance();
         require_capability('local/qualiscope:managecampaigns', $context);
 
+        if ($campaignid && !\local_qualiscope\quota::can_audit($courseid)) {
+            throw new \moodle_exception('licencerequired', 'local_qualiscope');
+        }
+
         $analyser = new \local_qualiscope\analyser\course_analyser($courseid, $campaignid);
         $results = $analyser->run();
 
         if ($campaignid) {
             $analyser->save_results($campaignid);
+            \local_qualiscope\quota::record($courseid);
         }
 
         return [

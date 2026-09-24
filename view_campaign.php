@@ -376,6 +376,7 @@ $summaryitems = [
 ];
 
 echo $output->header();
+echo \local_qualiscope\quota::banner($output);
 echo $output->render_campaign_dashboard([
     'campaignname' => $campaign->name,
     'completed' => (bool) $campaign->timecompleted,

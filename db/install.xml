@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/qualiscope/db" VERSION="2026091100" COMMENT="XMLDB file for Moodle local/qualiscope"
+<XMLDB PATH="local/qualiscope/db" VERSION="2026092401" COMMENT="XMLDB file for Moodle local/qualiscope"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../lib/xmldb/xmldb.xsd"
 >
@@ -166,6 +166,16 @@
       <INDEXES>
         <INDEX NAME="campaign_status" UNIQUE="false" FIELDS="campaign_id, status" COMMENT="Campaign + status index."/>
       </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="local_qualiscope_auditedcourses" COMMENT="Distinct courses audited on this site (freemium quota tracking).">
+      <FIELDS>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course id (unique)."/>
+        <FIELD NAME="timeaudited" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="First time this course was audited."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="courseid" COMMENT="Primary key."/>
+      </KEYS>
     </TABLE>
   </TABLES>
 </XMLDB>

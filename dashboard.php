@@ -114,6 +114,7 @@ foreach ($summaryitemdefs as $def) {
 }
 
 echo $output->header();
+echo \local_qualiscope\quota::banner($output);
 echo $output->render_dashboard([
     'summary' => $summary,
     'summaryitems' => $summaryitems,

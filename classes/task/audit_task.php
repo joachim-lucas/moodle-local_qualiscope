@@ -68,9 +68,13 @@ class audit_task extends \core\task\scheduled_task {
         $scopeids = \local_qualiscope\analyser\course_analyser::get_campaign_course_ids($campaign);
 
         foreach ($scopeids as $courseid) {
+            if (!\local_qualiscope\quota::can_audit($courseid)) {
+                continue;
+            }
             $analyser = new \local_qualiscope\analyser\course_analyser($courseid, $campaign->id, (int) $campaign->referential_id);
             $analyser->run();
             $analyser->save_results($campaign->id);
+            \local_qualiscope\quota::record($courseid);
         }
 
         $DB->update_record('local_qualiscope_campaigns', [

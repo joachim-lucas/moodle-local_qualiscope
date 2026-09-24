@@ -108,6 +108,7 @@ foreach ($campaigns as $c) {
 }
 
 echo $output->header();
+echo \local_qualiscope\quota::banner($output);
 echo $output->render_campaign_list([
     'campaigns' => $campaignsdata,
     'referentials' => array_values($referentials),
