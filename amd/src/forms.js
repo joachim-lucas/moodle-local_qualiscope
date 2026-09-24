@@ -66,8 +66,12 @@ define([], function() {
                 scopeSelect.addEventListener('change', function() {
                     var cats = document.getElementById('scope-categories');
                     var courses = document.getElementById('scope-courses');
-                    if (cats) cats.style.display = this.value === 'category' ? 'block' : 'none';
-                    if (courses) courses.style.display = this.value === 'selected' ? 'block' : 'none';
+                    if (cats) {
+                        cats.style.display = this.value === 'category' ? 'block' : 'none';
+                    }
+                    if (courses) {
+                        courses.style.display = this.value === 'selected' ? 'block' : 'none';
+                    }
                 });
             }
 
