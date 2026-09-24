@@ -64,13 +64,35 @@ function xmldb_local_qualiscope_upgrade($oldversion) {
         if ($dbman->table_exists($table)) {
             $dbman->drop_table($table);
         }
-        $table->add_field('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, XMLDB_SEQUENCE);
+        $table->add_field('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
         $table->add_field('courseid', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null);
         $table->add_field('timeaudited', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, 0);
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
         $table->add_index('courseid', XMLDB_INDEX_UNIQUE, ['courseid']);
         $dbman->create_table($table);
         upgrade_plugin_savepoint(true, 2026092402, 'local', 'qualiscope');
+    }
+
+    if ($oldversion < 2026092403) {
+        $table = new xmldb_table('local_qualiscope_auditedcourses');
+        if ($dbman->table_exists($table)) {
+            $columns = $DB->get_columns('local_qualiscope_auditedcourses');
+            if (!isset($columns['id']) || !$columns['id']->auto_increment) {
+                $rows = $DB->get_records('local_qualiscope_auditedcourses');
+                $dbman->drop_table($table);
+                $table = new xmldb_table('local_qualiscope_auditedcourses');
+                $table->add_field('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+                $table->add_field('courseid', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null);
+                $table->add_field('timeaudited', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, 0);
+                $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+                $table->add_index('courseid', XMLDB_INDEX_UNIQUE, ['courseid']);
+                $dbman->create_table($table);
+                foreach ($rows as $row) {
+                    $DB->insert_record('local_qualiscope_auditedcourses', $row);
+                }
+            }
+        }
+        upgrade_plugin_savepoint(true, 2026092403, 'local', 'qualiscope');
     }
 
     return true;

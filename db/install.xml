@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/qualiscope/db" VERSION="2026092402" COMMENT="XMLDB file for Moodle local/qualiscope"
+<XMLDB PATH="local/qualiscope/db" VERSION="2026092403" COMMENT="XMLDB file for Moodle local/qualiscope"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../lib/xmldb/xmldb.xsd"
 >
