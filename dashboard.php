@@ -41,6 +41,13 @@ $PAGE->set_context($context);
 $output = $PAGE->get_renderer('local_qualiscope');
 $PAGE->requires->js_call_amd('local_qualiscope/criteria', 'init');
 
+if (!\local_qualiscope\quota::can_audit($courseid)) {
+    echo $output->header();
+    echo $output->notification(get_string('licencerequired', 'local_qualiscope'), \core\output\notification::NOTIFY_ERROR);
+    echo $output->footer();
+    exit;
+}
+
 $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 
 $referentials = $DB->get_records('local_qualiscope_referentials', ['active' => 1], 'id ASC');
@@ -51,6 +58,7 @@ $selectedreferential = $referentialid ? $DB->get_record('local_qualiscope_refere
 
 $analyser = new \local_qualiscope\analyser\course_analyser($courseid, 0, $referentialid ?: null);
 $analyser->run();
+\local_qualiscope\quota::record($courseid);
 $summary = $analyser->get_summary();
 $criteria = $analyser->get_criteria_summary();
 

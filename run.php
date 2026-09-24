@@ -244,7 +244,17 @@ require_login($courseid);
 $context = context_system::instance();
 require_capability('local/qualiscope:managecampaigns', $context);
 
+if (!\local_qualiscope\quota::can_audit($courseid)) {
+    redirect(
+        new moodle_url('/local/qualiscope/campaigns.php'),
+        get_string('licencerequired', 'local_qualiscope'),
+        null,
+        \core\output\notification::NOTIFY_ERROR
+    );
+}
+
 $analyser = new \local_qualiscope\analyser\course_analyser($courseid, 0, $referentialid ?: null);
 $analyser->run();
+\local_qualiscope\quota::record($courseid);
 
 redirect(new moodle_url('/local/qualiscope/dashboard.php', ['courseid' => $courseid, 'referentialid' => $referentialid]));
