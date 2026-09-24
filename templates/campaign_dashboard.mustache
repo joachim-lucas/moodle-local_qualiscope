@@ -107,7 +107,7 @@
                 </a>
                 {{#hasresults}}
                 <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="campaignExportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="campaignExportDropdown" data-toggle="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa fa-download me-1" aria-hidden="true"></i> {{#str}} campaign_export_report, local_qualiscope {{/str}}
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="campaignExportDropdown">
@@ -169,23 +169,23 @@
     {{#hasresults}}
     <ul class="nav nav-tabs mb-4" id="campaignTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="courses-tab" data-bs-toggle="tab" data-bs-target="#courses-content" type="button" role="tab" aria-controls="courses-content" aria-selected="true">
+            <button class="nav-link active" id="courses-tab" data-bs-toggle="tab" data-bs-target="#courses-content" data-toggle="tab" data-target="#courses-content" type="button" role="tab" aria-controls="courses-content" aria-selected="true">
                 <i class="fa fa-graduation-cap me-1" aria-hidden="true"></i> {{#str}} campaign_tab_courses, local_qualiscope {{/str}}
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="macro-tab" data-bs-toggle="tab" data-bs-target="#macro-content" type="button" role="tab" aria-controls="macro-content" aria-selected="false">
+            <button class="nav-link" id="macro-tab" data-bs-toggle="tab" data-bs-target="#macro-content" data-toggle="tab" data-target="#macro-content" type="button" role="tab" aria-controls="macro-content" aria-selected="false">
                 <i class="fa fa-bar-chart me-1" aria-hidden="true"></i> {{#str}} campaign_tab_macro, local_qualiscope {{/str}}
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="weakpoints-tab" data-bs-toggle="tab" data-bs-target="#weakpoints-content" type="button" role="tab" aria-controls="weakpoints-content" aria-selected="false">
+            <button class="nav-link" id="weakpoints-tab" data-bs-toggle="tab" data-bs-target="#weakpoints-content" data-toggle="tab" data-target="#weakpoints-content" type="button" role="tab" aria-controls="weakpoints-content" aria-selected="false">
                 <i class="fa fa-exclamation-triangle me-1" aria-hidden="true"></i> {{#str}} campaign_tab_weakpoints, local_qualiscope {{/str}}
                 {{#hasweakpoints}}<span class="badge bg-danger ms-1">{{weakpoints.length}}</span>{{/hasweakpoints}}
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="capa-tab" data-bs-toggle="tab" data-bs-target="#capa-content" type="button" role="tab" aria-controls="capa-content" aria-selected="false">
+            <button class="nav-link" id="capa-tab" data-bs-toggle="tab" data-bs-target="#capa-content" data-toggle="tab" data-target="#capa-content" type="button" role="tab" aria-controls="capa-content" aria-selected="false">
                 <i class="fa fa-tasks me-1" aria-hidden="true"></i> {{#str}} campaign_tab_actions, local_qualiscope {{/str}}
                 <span class="badge bg-secondary ms-1">{{actionstotal}}</span>
             </button>
@@ -379,7 +379,7 @@
                     <p class="text-muted small mb-0">{{#str}} campaign_actions_desc, local_qualiscope {{/str}}</p>
                 </div>
                 <div>
-                    <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#bulkActionForm" aria-expanded="false" aria-controls="bulkActionForm">
+                    <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#bulkActionForm" data-toggle="collapse" data-target="#bulkActionForm" aria-expanded="false" aria-controls="bulkActionForm">
                         <i class="fa fa-plus-circle me-1" aria-hidden="true"></i> {{#str}} campaign_bulk_action_create, local_qualiscope {{/str}}
                     </button>
                 </div>

@@ -21,7 +21,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['theme_boost/bootstrap/collapse'], function(Collapse) {
+define(['theme_boost/bootstrap/collapse', 'theme_boost/bootstrap/dropdown'], function(Collapse, Dropdown) {
 
     'use strict';
 
@@ -58,6 +58,32 @@ define(['theme_boost/bootstrap/collapse'], function(Collapse) {
         }
     }
 
+    /**
+     * Return a Collapse instance for a pane, supporting both Bootstrap 5
+     * (Moodle 5.x, getOrCreateInstance) and Bootstrap 4 (Moodle 4.5, constructor).
+     *
+     * @param {Element} pane
+     * @return {object}
+     */
+    function getCollapseInstance(pane) {
+        if (typeof Collapse.getOrCreateInstance === 'function') {
+            return Collapse.getOrCreateInstance(pane);
+        }
+        return new Collapse(pane, {toggle: false});
+    }
+
+    /**
+     * Load the Bootstrap data-API modules alongside this module.
+     *
+     * @return {Array}
+     */
+    function bootstrapDataApi() {
+        return [Collapse, Dropdown];
+    }
+
+    // Bind the Bootstrap data-API (dropdowns) as soon as this module is loaded.
+    bootstrapDataApi();
+
     return {
         /**
          * Initialise the accordion.
@@ -88,7 +114,7 @@ define(['theme_boost/bootstrap/collapse'], function(Collapse) {
                 }
                 panes.forEach(function(pane) {
                     if (pane !== e.target && pane.classList.contains('show')) {
-                        Collapse.getOrCreateInstance(pane).hide();
+                        getCollapseInstance(pane).hide();
                     }
                 });
             });
@@ -106,7 +132,7 @@ define(['theme_boost/bootstrap/collapse'], function(Collapse) {
 
                     openingAll = !open;
                     panes.forEach(function(pane) {
-                        var instance = Collapse.getOrCreateInstance(pane);
+                        var instance = getCollapseInstance(pane);
                         if (open) {
                             instance.hide();
                         } else if (!pane.classList.contains('show')) {

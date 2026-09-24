@@ -85,7 +85,7 @@
                     <i class="fa fa-question-circle" aria-hidden="true"></i> {{#str}} help_button_label, local_qualiscope {{/str}}
                 </a>
                 <div class="dropdown">
-                    <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="exportDropdown" data-toggle="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         {{#str}} export_report, local_qualiscope {{/str}}
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="exportDropdown">
@@ -183,7 +183,7 @@
     <div data-qualiscope="criteria-accordion">
     {{#criteria}}
     <div class="card mb-3">
-        <div class="card-header d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#qualified-criteria-{{id}}" role="button">
+        <div class="card-header d-flex justify-content-between align-items-center" data-toggle="collapse" data-target="#qualified-criteria-{{id}}" data-bs-toggle="collapse" data-bs-target="#qualified-criteria-{{id}}" role="button">
             <span>
                 <strong>C{{number}}</strong> &mdash; {{shorttitle}}
             </span>

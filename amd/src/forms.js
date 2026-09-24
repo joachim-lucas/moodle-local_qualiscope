@@ -21,8 +21,21 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define([], function() {
+define(['theme_boost/bootstrap/collapse', 'theme_boost/bootstrap/dropdown', 'theme_boost/bootstrap/tab'],
+    function(Collapse, Dropdown, Tab) {
     'use strict';
+
+    /**
+     * Load the Bootstrap data-API modules for collapse, dropdown and tabs.
+     *
+     * @return {Array}
+     */
+    function bootstrapDataApi() {
+        return [Collapse, Dropdown, Tab];
+    }
+
+    // Bind the Bootstrap data-API (collapse, dropdowns, tabs) on load.
+    bootstrapDataApi();
 
     return {
         /**
