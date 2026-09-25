@@ -16,8 +16,6 @@
 
 namespace local_qualiscope;
 
-use stdClass;
-
 /**
  * Localisation helpers for referential records.
  *
