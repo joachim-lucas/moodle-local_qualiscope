@@ -23,6 +23,7 @@ namespace local_qualiscope;
  * every page (settings, plugin pages, CLI, AJAX) without depending on the
  * plugin lib.php being loaded.
  *
+ * @package local_qualiscope
  * @copyright  2026 QualiScope contributors
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
