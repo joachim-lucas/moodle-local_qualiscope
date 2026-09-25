@@ -272,7 +272,11 @@ class evidence_analyser {
                     $evidences[] = [
                         'title' => get_string('evidence_course_summary', 'local_qualiscope'),
                         'source' => 'course',
-                        'description' => mb_substr($course->summary, 0, 200),
+                        'description' => format_text(
+                            mb_substr(html_to_text($course->summary, 0, false), 0, 200),
+                            FORMAT_MOODLE,
+                            ['context' => \context_course::instance($courseid)]
+                        ),
                     ];
                 }
                 break;
