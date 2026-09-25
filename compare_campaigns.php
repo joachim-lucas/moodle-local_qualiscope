@@ -46,7 +46,7 @@ $campaignsoptionsa = [];
 $campaignsoptionsb = [];
 foreach ($allcampaigns as $c) {
     $ref = $DB->get_record('local_qualiscope_referentials', ['id' => $c->referential_id]);
-    $label = $c->name . ' (' . ($ref ? $ref->name . ' ' . $ref->version : '') . ' - ' .
+    $label = $c->name . ' (' . ($ref ? local_qualiscope_localized($ref, 'name') . ' ' . $ref->version : '') . ' - ' .
     userdate($c->timecreated, get_string('strftimedateshort', 'langconfig')) . ')';
     $campaignsoptionsa[] = [
         'id' => $c->id,
@@ -182,7 +182,7 @@ if ($ida && $idb) {
                     $critstats[$crit->id] = [
                         'id' => $crit->id,
                         'number' => $crit->number,
-                        'title' => $crit->title,
+                        'title' => local_qualiscope_localized($crit, 'title'),
                         'total' => 0,
                         'na' => 0,
                         'weighted' => 0.0,
@@ -210,7 +210,7 @@ if ($ida && $idb) {
                     $indstats[$ind->number] = [
                         'id' => $ind->id,
                         'number' => $ind->number,
-                        'title' => $ind->title,
+                        'title' => local_qualiscope_localized($ind, 'title'),
                         'criterion_id' => $ind->criterion_id,
                         'percentage' => $indpct,
                     ];
@@ -232,7 +232,7 @@ if ($ida && $idb) {
 
                 return [
                     'campaign' => $campaign,
-                    'referential' => $ref ? $ref->name . ' ' . $ref->version : '—',
+                    'referential' => $ref ? local_qualiscope_localized($ref, 'name') . ' ' . $ref->version : '—',
                     'dateformatted' => userdate($campaign->timecreated, get_string('strftimedateshort', 'langconfig')),
                     'coursescount' => count($coursesdata),
                     'coursesdata' => $coursesdata,

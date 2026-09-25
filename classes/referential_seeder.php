@@ -99,6 +99,7 @@ class referential_seeder {
             $refid = $existing->id;
             $existing->version = $def['version'] ?? $existing->version;
             $existing->description = $def['description'] ?? $existing->description;
+            $existing->description_en = $def['description_en'] ?? ($existing->description_en ?? '');
             $existing->timemodified = time();
             $DB->update_record('local_qualiscope_referentials', $existing);
         } else {
@@ -106,6 +107,7 @@ class referential_seeder {
                 'name'         => $def['name'],
                 'version'      => $def['version'] ?? '',
                 'description'  => $def['description'] ?? '',
+                'description_en' => $def['description_en'] ?? '',
                 'active'       => $def['active'] ?? 1,
                 'timecreated'  => time(),
                 'timemodified' => time(),
@@ -122,6 +124,8 @@ class referential_seeder {
                 $cid = $existingcrit->id;
                 $existingcrit->title = $c['title'];
                 $existingcrit->description = $c['description'] ?? '';
+                $existingcrit->title_en = $c['title_en'] ?? '';
+                $existingcrit->description_en = $c['description_en'] ?? '';
                 $existingcrit->timemodified = time();
                 $DB->update_record('local_qualiscope_criteria', $existingcrit);
             } else {
@@ -130,6 +134,8 @@ class referential_seeder {
                     'number'         => $c['number'],
                     'title'          => $c['title'],
                     'description'    => $c['description'] ?? '',
+                    'title_en'       => $c['title_en'] ?? '',
+                    'description_en' => $c['description_en'] ?? '',
                     'timecreated'    => time(),
                     'timemodified'   => time(),
                 ]);
@@ -145,6 +151,8 @@ class referential_seeder {
                     $indid = $existingind->id;
                     $existingind->title = $ind['title'];
                     $existingind->description = $ind['description'] ?? '';
+                    $existingind->title_en = $ind['title_en'] ?? '';
+                    $existingind->description_en = $ind['description_en'] ?? '';
                     $existingind->scope = $ind['scope'] ?? 'course';
                     $existingind->timemodified = time();
                     $DB->update_record('local_qualiscope_indicators', $existingind);
@@ -154,6 +162,8 @@ class referential_seeder {
                         'number'        => $ind['number'],
                         'title'         => $ind['title'],
                         'description'   => $ind['description'] ?? '',
+                        'title_en'      => $ind['title_en'] ?? '',
+                        'description_en' => $ind['description_en'] ?? '',
                         'scope'         => $ind['scope'] ?? 'course',
                         'timecreated'   => time(),
                         'timemodified'  => time(),
@@ -167,7 +177,10 @@ class referential_seeder {
                     ]);
 
                     if ($existingchk) {
+                        $existingchk->name = $chk['name'];
                         $existingchk->description = $chk['description'] ?? '';
+                        $existingchk->name_en = $chk['name_en'] ?? '';
+                        $existingchk->description_en = $chk['description_en'] ?? '';
                         $existingchk->type = $chk['type'];
                         $existingchk->automatic = !empty($chk['automatic']) ? 1 : 0;
                         $existingchk->weight = $chk['weight'] ?? 1;
@@ -178,6 +191,8 @@ class referential_seeder {
                             'indicator_id' => $indid,
                             'name'         => $chk['name'],
                             'description'  => $chk['description'] ?? '',
+                            'name_en'      => $chk['name_en'] ?? '',
+                            'description_en' => $chk['description_en'] ?? '',
                             'type'         => $chk['type'],
                             'automatic'    => !empty($chk['automatic']) ? 1 : 0,
                             'weight'       => $chk['weight'] ?? 1,

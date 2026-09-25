@@ -93,7 +93,7 @@ class zip_generator {
         // 2. Generate a main README / Index for the auditor
         $readme = "# DOSSIER DE PREUVES QUALIOPI - QUALISCOPE\n\n";
         $readme .= "Formation / Cours : " . $this->course->fullname . " (" . $this->course->shortname . ")\n";
-        $readme .= "Référentiel : " . $this->referential->name . " " . $this->referential->version . "\n";
+        $readme .= "Référentiel : " . \local_qualiscope_localized($this->referential, 'name') . " " . $this->referential->version . "\n";
         $readme .= "Date d'audit : " . userdate(time(), get_string('strftimedatetime', 'langconfig')) . "\n";
         $readme .= "Niveau de conformité global Moodle : " . $this->summary['percentage'] . " %\n\n";
         $readme .= "## SYNTHÈSE DES CRITÈRES\n";
@@ -101,7 +101,7 @@ class zip_generator {
         foreach ($this->criteriasummary as $c) {
             $critobj = $c['criteria'];
             $pctstr = $c['percentage'] !== null ? $c['percentage'] . ' %' : 'Preuves manuelles / Externes uniquement';
-            $readme .= "- Critère " . (int) $critobj->number . " : " . $critobj->title . " => " . $pctstr . "\n";
+            $readme .= "- Critère " . (int) $critobj->number . " : " . \local_qualiscope_localized($critobj, 'title') . " => " . $pctstr . "\n";
         }
         $readme .= "\nCe dossier classe les indicateurs par sous-dossiers Critere_XX / " .
             "Indicateur_YY avec les fiches de preuves et données Moodle.\n";
@@ -145,8 +145,8 @@ class zip_generator {
                 $indchecks = $checksbyindicator[$indicator->id] ?? [];
 
                 $inddoc = "# FICHE DE PREUVE - INDICATEUR " . (int) $indicator->number . "\n";
-                $inddoc .= "Titre : " . $indicator->title . "\n";
-                $inddoc .= "Exigence : " . $indicator->description . "\n";
+                $inddoc .= "Titre : " . \local_qualiscope_localized($indicator, 'title') . "\n";
+                $inddoc .= "Exigence : " . \local_qualiscope_localized($indicator, 'description') . "\n";
                 $inddoc .= "Scope : " . $indicator->scope . "\n\n";
                 $inddoc .= "## CONTRÔLES QUALISCOPE MOODLE\n\n";
 
@@ -155,8 +155,8 @@ class zip_generator {
                 } else {
                     foreach ($indchecks as $check) {
                         $res = $resultmap[$check->id] ?? null;
-                        $inddoc .= "### " . $check->name . "\n";
-                        $inddoc .= "- Description : " . $check->description . "\n";
+                        $inddoc .= "### " . \local_qualiscope_localized($check, 'name') . "\n";
+                        $inddoc .= "- Description : " . \local_qualiscope_localized($check, 'description') . "\n";
                         if ($check->automatic && $res) {
                             $inddoc .= "- Statut Moodle : " . get_string('status_' . $res['status'], 'local_qualiscope') . "\n";
                             $ratio = $res['ratio'] ?? ($res['status'] === 'detected' ? 1.0 : 0.0);

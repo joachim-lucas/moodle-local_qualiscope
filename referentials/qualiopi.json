@@ -2,37 +2,48 @@
   "name": "Qualiopi",
   "version": "RNQ V9/V10 2026",
   "description": "Référentiel National Qualité (RNQ) - Décret n°2026-728 du 1er août 2026 - 7 critères, 33 indicateurs. Analyse des éléments de démarche qualité présents dans Moodle et identification des preuves externes nécessaires.",
+  "description_en": "National Quality Framework (RNQ) - Decree No. 2026-728 of 1 August 2026 - 7 criteria, 33 indicators. Analysis of the quality management elements present in Moodle and identification of the necessary external evidence.",
   "active": true,
   "criteria": [
     {
       "number": 1,
       "title": "Les conditions d'information du public sur les prestations proposées, les délais pour y accéder et les résultats obtenus",
+      "title_en": "The conditions under which the public is informed about the services offered, the timeframes to access them and the results achieved",
       "description": "Le prestataire diffuse une information accessible au public, détaillée et vérifiable sur chaque prestation : objectifs, durée, modalités et délais d'accès, tarifs, contacts, méthodes mobilisées, accessibilité aux personnes en situation de handicap et indicateurs de résultats.",
+      "description_en": "The provider disseminates accessible, detailed and verifiable information to the public about each service: objectives, duration, methods and timeframes for access, prices, contacts, the methods used, accessibility for people with disabilities and results indicators.",
       "indicators": [
         {
           "number": 1,
           "title": "Information du public sur les prestations proposées",
+          "title_en": "Public information about the services offered",
           "description": "Le prestataire diffuse une information accessible au public, détaillée et vérifiable sur chaque prestation proposée.",
+          "description_en": "The provider disseminates accessible, detailed and verifiable information to the public about each service offered.",
           "scope": "course",
           "moodle_level": "partial",
           "checks": [
             {
               "name": "Description du cours, objectifs et structure",
+              "name_en": "Course description, objectives and structure",
               "description": "Vérification de la présence du résumé du cours, des objectifs et des sections pédagogiques structurées.",
+              "description_en": "Verification of the presence of the course summary, objectives and structured pedagogical sections.",
               "type": "field_exists",
               "automatic": true,
               "weight": 2
             },
             {
               "name": "Ressources et informations pédagogiques",
+              "name_en": "Learning resources and pedagogical information",
               "description": "Présence de ressources documentaires, programmes ou syllabus dans le cours.",
+              "description_en": "Presence of documentary resources, programs or syllabi in the course.",
               "type": "resource_exists",
               "automatic": true,
               "weight": 1
             },
             {
               "name": "Accessibilité et lisibilité des informations publiques (WCAG / RGAA)",
+              "name_en": "Accessibility and readability of public information (WCAG / RGAA)",
               "description": "Structure des titres (h1-h6), attributs alt pertinents sur les images et contrastes de couleurs dans les descriptions publiques.",
+              "description_en": "Heading structure (h1-h6), relevant alt attributes on images and color contrasts in public descriptions.",
               "type": "accessibility_exists",
               "automatic": true,
               "weight": 2
@@ -42,13 +53,17 @@
         {
           "number": 2,
           "title": "Indicateurs de résultats et modalités de calcul",
+          "title_en": "Results indicators and calculation methods",
           "description": "Le prestataire diffuse des indicateurs de résultats adaptés à la nature des prestations et précise les modalités de calcul.",
+          "description_en": "The provider disseminates results indicators adapted to the nature of the services and specifies the calculation methods.",
           "scope": "course",
           "moodle_level": "partial",
           "checks": [
             {
               "name": "Statistiques et indicateurs de résultats calculés",
+              "name_en": "Calculated statistics and results indicators",
               "description": "Calcul automatique des taux d'inscription, complétion et notes du cours avec modalités de calcul traçables.",
+              "description_en": "Automatic calculation of enrolment, completion and course grade rates with traceable calculation methods.",
               "type": "stats_exists",
               "automatic": true,
               "weight": 2
@@ -58,13 +73,17 @@
         {
           "number": 3,
           "title": "Résultats liés aux certifications professionnelles",
+          "title_en": "Results related to professional certifications",
           "description": "Pour les formations certifiantes, le prestataire informe sur les taux d'obtention des certifications, équivalences et passerelles.",
+          "description_en": "For certificating training, the provider provides information on certification attainment rates, equivalences and pathways.",
           "scope": "course",
           "moodle_level": "documentary",
           "checks": [
             {
               "name": "Preuve de publication des taux de certification et passerelles",
+              "name_en": "Evidence of publication of certification rates and pathways",
               "description": "Dépôt des éléments attestant la communication des taux de certification et débouchés.",
+              "description_en": "Submission of evidence attesting to the communication of certification rates and career outcomes.",
               "type": "manual",
               "automatic": false,
               "weight": 1
@@ -76,18 +95,24 @@
     {
       "number": 2,
       "title": "L'identification précise des objectifs des prestations proposées et l'adaptation de ces prestations aux publics bénéficiaires, lors de la conception des prestations",
+      "title_en": "The precise identification of the objectives of the services offered and the adaptation of these services to the beneficiary audiences, at the design stage",
       "description": "Le prestataire identifie les besoins du bénéficiaire, définit des objectifs opérationnels et évaluables, adapte les contenus et modalités de mise en œuvre et positionne à l'entrée.",
+      "description_en": "The provider identifies the needs of the beneficiary, defines operational and measurable objectives, adapts the content and implementation methods and positions at entry.",
       "indicators": [
         {
           "number": 4,
           "title": "Analyse du besoin des bénéficiaires",
+          "title_en": "Analysis of beneficiaries' needs",
           "description": "Le prestataire analyse le besoin du bénéficiaire en amont de la prestation.",
+          "description_en": "The provider analyzes the beneficiary's need before the service.",
           "scope": "course",
           "moodle_level": "partial",
           "checks": [
             {
               "name": "Questionnaire ou diagnostic de recueil des besoins",
+              "name_en": "Needs collection questionnaire or diagnostic",
               "description": "Présence d'un questionnaire, test de besoin préalable ou formulaire d'accueil.",
+              "description_en": "Presence of a questionnaire, prerequisite needs test or intake form.",
               "type": "positioning_exists",
               "automatic": true,
               "weight": 1
@@ -97,20 +122,26 @@
         {
           "number": 5,
           "title": "Objectifs opérationnels et évaluables",
+          "title_en": "Operational and measurable objectives",
           "description": "Le prestataire définit les objectifs opérationnels et évaluables de la prestation.",
+          "description_en": "The provider defines the operational and measurable objectives of the service.",
           "scope": "course",
           "moodle_level": "strong",
           "checks": [
             {
               "name": "Compétences et objectifs opérationnels configurés",
+              "name_en": "Configured competencies and operational objectives",
               "description": "Vérification des compétences Moodle associées au cours ou définies dans le descriptif.",
+              "description_en": "Verification of the Moodle competencies associated with the course or defined in the description.",
               "type": "competency_exists",
               "automatic": true,
               "weight": 2
             },
             {
               "name": "Alignement constructif : Objectifs et Compétences",
+              "name_en": "Constructive alignment: Objectives and Competencies",
               "description": "Traçabilité des compétences, structuration des modules et articulation pédagogique.",
+              "description_en": "Traceability of competencies, modular structuring and pedagogical articulation.",
               "type": "alignment_exists",
               "automatic": true,
               "weight": 2
@@ -120,13 +151,17 @@
         {
           "number": 6,
           "title": "Contenus et modalités adaptés aux objectifs et aux publics",
+          "title_en": "Content and methods adapted to the objectives and audiences",
           "description": "Le prestataire établit les contenus et les modalités de mise en œuvre de la prestation, adaptés aux objectifs définis et aux publics bénéficiaires.",
+          "description_en": "The provider establishes the content and implementation methods of the service, adapted to the defined objectives and beneficiary audiences.",
           "scope": "course",
           "moodle_level": "strong",
           "checks": [
             {
               "name": "Activités pédagogiques interactives présentes",
+              "name_en": "Interactive learning activities present",
               "description": "Activités d'apprentissage structurées et diversifiées dans le parcours.",
+              "description_en": "Structured and diversified learning activities in the learning path.",
               "type": "activity_exists",
               "automatic": true,
               "weight": 2
@@ -136,13 +171,17 @@
         {
           "number": 7,
           "title": "Adéquation des contenus aux exigences de certification",
+          "title_en": "Adequacy of content to certification requirements",
           "description": "Lorsque la prestation est certifiante, le prestataire s'assure de l'adéquation des contenus aux référentiels de certification.",
+          "description_en": "When the service is certificating, the provider ensures the adequacy of the content with the certification frameworks.",
           "scope": "course",
           "moodle_level": "partial",
           "checks": [
             {
               "name": "Mapping compétences / référentiel de certification",
+              "name_en": "Competency mapping / certification framework",
               "description": "Compétences Moodle alignées sur les activités d'évaluation ou document d'adéquation.",
+              "description_en": "Moodle competencies aligned with the assessment activities or an adequacy document.",
               "type": "competency_exists",
               "automatic": true,
               "weight": 1
@@ -152,13 +191,17 @@
         {
           "number": 8,
           "title": "Positionnement et évaluation des acquis à l'entrée",
+          "title_en": "Positioning and assessment of prior learning at entry",
           "description": "Le prestataire positionne les bénéficiaires à l'entrée de la prestation pour adapter le parcours.",
+          "description_en": "The provider positions the beneficiaries at entry to the service to adapt the learning path.",
           "scope": "course",
           "moodle_level": "strong",
           "checks": [
             {
               "name": "Dispositif de positionnement initial détecté",
+              "name_en": "Initial positioning system detected",
               "description": "Test d'entrée, quiz de positionnement ou auto-évaluation initiale.",
+              "description_en": "Entry test, positioning quiz or initial self-assessment.",
               "type": "positioning_exists",
               "automatic": true,
               "weight": 2
@@ -170,18 +213,24 @@
     {
       "number": 3,
       "title": "L'adaptation aux publics bénéficiaires des prestations et des modalités d'accueil, d'accompagnement, de suivi et d'évaluation mises en œuvre",
+      "title_en": "The adaptation of the services and of the reception, support, monitoring and evaluation arrangements implemented to the beneficiary audiences",
       "description": "Le prestataire informe les publics sur les conditions de déroulement, adapte la prestation et le suivi, évalue les acquis, prévient les ruptures et accompagne les parcours.",
+      "description_en": "The provider informs the public about the conditions of delivery, adapts the service and its monitoring, evaluates achievement, prevents dropout and supports the learning pathways.",
       "indicators": [
         {
           "number": 9,
           "title": "Conditions de déroulement de la prestation",
+          "title_en": "Service delivery conditions",
           "description": "Le prestataire informe les publics sur les conditions de déroulement de la prestation.",
+          "description_en": "The provider informs the public about the conditions under which the service is delivered.",
           "scope": "course",
           "moodle_level": "strong",
           "checks": [
             {
               "name": "Informations de déroulement et calendrier du cours",
+              "name_en": "Delivery information and course schedule",
               "description": "Vérification des dates, consignes de déroulement et présentation.",
+              "description_en": "Verification of dates, delivery instructions and presentation.",
               "type": "field_exists",
               "automatic": true,
               "weight": 2
@@ -191,20 +240,26 @@
         {
           "number": 10,
           "title": "Adaptation de la prestation, accompagnement et suivi",
+          "title_en": "Adaptation of the service, support and monitoring",
           "description": "Le prestataire met en œuvre et adapte la prestation, l'accompagnement et le suivi aux bénéficiaires.",
+          "description_en": "The provider implements and adapts the service, support and monitoring to the beneficiaries.",
           "scope": "course",
           "moodle_level": "strong",
           "checks": [
             {
               "name": "Suivi individualisé et progression activée",
+              "name_en": "Individualized monitoring and activated progression",
               "description": "Achèvement des activités et suivi de parcours configurés.",
+              "description_en": "Activity completion and learning path tracking configured.",
               "type": "completion_enabled",
               "automatic": true,
               "weight": 2
             },
             {
               "name": "Dispositif d'accompagnement, forums et aménagements",
+              "name_en": "Support system, forums and adjustments",
               "description": "Canaux d'assistance, échanges pédagogiques et traçabilité des aménagements / dérogations.",
+              "description_en": "Assistance channels, pedagogical exchanges and traceability of adjustments / derogations.",
               "type": "engagement_exists",
               "automatic": true,
               "weight": 2
@@ -214,20 +269,26 @@
         {
           "number": 11,
           "title": "Évaluation de l'atteinte des objectifs",
+          "title_en": "Evaluation of objective achievement",
           "description": "Le prestataire évalue l'atteinte par les publics bénéficiaires des objectifs de la prestation.",
+          "description_en": "The provider evaluates the achievement by the beneficiaries of the objectives of the service.",
           "scope": "course",
           "moodle_level": "strong",
           "checks": [
             {
               "name": "Évaluations configurées dans le carnet de notes",
+              "name_en": "Assessments configured in the gradebook",
               "description": "Éléments d'évaluation sommative/formative présents dans le carnet de notes.",
+              "description_en": "Summative/formative assessment items present in the gradebook.",
               "type": "gradebook_exists",
               "automatic": true,
               "weight": 2
             },
             {
               "name": "Matrice d'évaluation : Grilles critériées et feedback",
+              "name_en": "Assessment matrix: rubric grids and feedback",
               "description": "Qualité de l'évaluation avec rubriques, guides d'évaluation et feedback d'apprentissage.",
+              "description_en": "Quality of assessment with rubrics, marking guides and learning feedback.",
               "type": "alignment_exists",
               "automatic": true,
               "weight": 2
@@ -237,20 +298,26 @@
         {
           "number": 12,
           "title": "Engagement des bénéficiaires et prévention des ruptures",
+          "title_en": "Beneficiary engagement and dropout prevention",
           "description": "Le prestataire favorise l'engagement des bénéficiaires et prévient les ruptures de parcours.",
+          "description_en": "The provider fosters the engagement of beneficiaries and prevents learning path interruptions.",
           "scope": "course",
           "moodle_level": "strong",
           "checks": [
             {
               "name": "Dispositif de suivi de l'activité et complétion",
+              "name_en": "Activity tracking and completion system",
               "description": "Traces d'engagement et suivi régulier de la progression apprenants.",
+              "description_en": "Engagement traces and regular monitoring of learner progression.",
               "type": "completion_enabled",
               "automatic": true,
               "weight": 2
             },
             {
               "name": "Prévention des ruptures et suivi de l'assiduité",
+              "name_en": "Dropout prevention and attendance monitoring",
               "description": "Détection d'inactivité, analyse du taux d'assiduité et alertes de relance.",
+              "description_en": "Inactivity detection, attendance rate analysis and follow-up alerts.",
               "type": "engagement_exists",
               "automatic": true,
               "weight": 2
@@ -260,13 +327,17 @@
         {
           "number": 13,
           "title": "Coordination des apprentissages en entreprise (alternance)",
+          "title_en": "Coordination of workplace learning (work-study)",
           "description": "Pour les formations en alternance, le prestataire assure la coordination avec l'entreprise.",
+          "description_en": "For work-study programs, the provider ensures coordination with the company.",
           "scope": "course",
           "moodle_level": "partial",
           "checks": [
             {
               "name": "Suivi de liaison alternance / tuteurs entreprise",
+              "name_en": "Work-study liaison / company tutor monitoring",
               "description": "Livret de suivi, espace tuteur entreprise ou convention d'alternance.",
+              "description_en": "Follow-up booklet, company tutor space or work-sharing agreement.",
               "type": "manual",
               "automatic": false,
               "weight": 1
@@ -276,13 +347,17 @@
         {
           "number": 14,
           "title": "Accompagnement socio-professionnel et citoyenneté",
+          "title_en": "Socio-professional support and citizenship",
           "description": "Le prestataire met en œuvre un accompagnement socio-professionnel et à la citoyenneté.",
+          "description_en": "The provider implements socio-professional and citizenship support.",
           "scope": "course",
           "moodle_level": "partial",
           "checks": [
             {
               "name": "Ressources d'accompagnement socio-professionnel",
+              "name_en": "Socio-professional support resources",
               "description": "Espaces d'information, ateliers ou partenariats d'insertion.",
+              "description_en": "Information spaces, workshops or integration partnerships.",
               "type": "manual",
               "automatic": false,
               "weight": 1
@@ -292,13 +367,17 @@
         {
           "number": 15,
           "title": "Droits et devoirs de l'apprenti",
+          "title_en": "Rights and duties of the apprentice",
           "description": "Le prestataire informe les apprentis de leurs droits et devoirs et s'assure de leur compréhension.",
+          "description_en": "The provider informs apprentices of their rights and duties and ensures their understanding.",
           "scope": "course",
           "moodle_level": "strong",
           "checks": [
             {
               "name": "Information et ressources pédagogiques sur les droits et devoirs",
+              "name_en": "Information and learning resources on rights and duties",
               "description": "Ressources documentaires, livret d'accueil ou charte des droits et devoirs.",
+              "description_en": "Documentary resources, welcome booklet or charter of rights and duties.",
               "type": "resource_exists",
               "automatic": true,
               "weight": 1
@@ -308,13 +387,17 @@
         {
           "number": 16,
           "title": "Présentation des bénéficiaires à la certification",
+          "title_en": "Presentation of beneficiaries for certification",
           "description": "Pour les formations certifiantes, le prestataire s'assure des conditions de présentation à la certification.",
+          "description_en": "For certificating programs, the provider ensures the conditions of presentation for certification.",
           "scope": "course",
           "moodle_level": "partial",
           "checks": [
             {
               "name": "Conditions de validation et épreuves de certification",
+              "name_en": "Validation conditions and certification exams",
               "description": "Carnet de notes ou attestation de conformité des inscriptions à la certification.",
+              "description_en": "Gradebook or certificate of conformity of registrations for certification.",
               "type": "manual",
               "automatic": false,
               "weight": 1
@@ -326,18 +409,24 @@
     {
       "number": 4,
       "title": "L'adéquation des moyens pédagogiques, techniques et d'encadrement aux prestations mises en œuvre",
+      "title_en": "The adequacy of the pedagogical, technical and supervisory means to the services implemented",
       "description": "Le prestataire met à disposition les moyens humains et techniques adaptés, coordonne les intervenants et met des ressources pédagogiques à disposition des bénéficiaires.",
+      "description_en": "The provider makes available suitable human and technical means, coordinates the instructors and makes learning resources available to beneficiaries.",
       "indicators": [
         {
           "number": 17,
           "title": "Moyens humains et techniques adaptés",
+          "title_en": "Suitable human and technical means",
           "description": "Le prestataire met à disposition des moyens humains et techniques adaptés aux prestations.",
+          "description_en": "The provider makes available human and technical means adapted to the services.",
           "scope": "course",
           "moodle_level": "partial",
           "checks": [
             {
               "name": "Environnement numérique d'apprentissage opérationnel",
+              "name_en": "Operational digital learning environment",
               "description": "Présence de l'espace de formation Moodle avec ressources actives.",
+              "description_en": "Presence of the Moodle training space with active resources.",
               "type": "resource_exists",
               "automatic": true,
               "weight": 1
@@ -347,13 +436,17 @@
         {
           "number": 18,
           "title": "Coordination des intervenants",
+          "title_en": "Coordination of instructors",
           "description": "Le prestataire mobilise et coordonne les différents intervenants internes et externes.",
+          "description_en": "The provider mobilizes and coordinates the various internal and external instructors.",
           "scope": "course",
           "moodle_level": "partial",
           "checks": [
             {
               "name": "Coordination pédagogique des enseignants et intervenants",
+              "name_en": "Pedagogical coordination of teachers and instructors",
               "description": "Affectation des enseignants et traçabilité des interventions.",
+              "description_en": "Assignment of teachers and traceability of interventions.",
               "type": "manual",
               "automatic": false,
               "weight": 1
@@ -363,13 +456,17 @@
         {
           "number": 19,
           "title": "Ressources pédagogiques mises à disposition",
+          "title_en": "Learning resources made available",
           "description": "Le prestataire met à disposition ou s'assure de la mise à disposition des ressources pédagogiques appropriées.",
+          "description_en": "The provider makes available or ensures the availability of suitable learning resources.",
           "scope": "course",
           "moodle_level": "strong",
           "checks": [
             {
               "name": "Ressources documentaires et supports de cours",
+              "name_en": "Documentary resources and course materials",
               "description": "Présence de fichiers, pages, livres ou supports multimédias récents.",
+              "description_en": "Presence of recent files, pages, books or multimedia materials.",
               "type": "resource_exists",
               "automatic": true,
               "weight": 2
@@ -379,13 +476,17 @@
         {
           "number": 20,
           "title": "Personnels dédiés : mobilité, handicap, conseil de perfectionnement",
+          "title_en": "Dedicated staff: mobility, disability, advisory council",
           "description": "Le prestataire dispose de personnels dédiés (référent mobilité, handicap, conseil de perfectionnement).",
+          "description_en": "The provider has dedicated staff (mobility referent, disability referent, advisory council).",
           "scope": "course",
           "moodle_level": "documentary",
           "checks": [
             {
               "name": "Désignation et informations sur les référents",
+              "name_en": "Designation and information about the referents",
               "description": "Justificatif de désignation des référents et contacts affichés.",
+              "description_en": "Proof of designation of the referents and displayed contacts.",
               "type": "manual",
               "automatic": false,
               "weight": 1
@@ -397,18 +498,24 @@
     {
       "number": 5,
       "title": "La qualification et le développement des connaissances et compétences des personnels chargés de mettre en œuvre les prestations",
+      "title_en": "The qualification and development of the knowledge and skills of the staff responsible for implementing the services",
       "description": "Le prestataire détermine, mobilise et évalue les compétences des intervenants, et entretient et développe les compétences de ses salariés.",
+      "description_en": "The provider determines, mobilizes and evaluates the competencies of the instructors, and maintains and develops the skills of its employees.",
       "indicators": [
         {
           "number": 21,
           "title": "Compétences des intervenants",
+          "title_en": "Competencies of the instructors",
           "description": "Le prestataire s'assure des compétences professionnelles des intervenants internes et externes.",
+          "description_en": "The provider ensures the professional competencies of internal and external instructors.",
           "scope": "global",
           "moodle_level": "partial",
           "checks": [
             {
               "name": "Dossiers de compétences et qualifications des intervenants",
+              "name_en": "Competency files and qualifications of the instructors",
               "description": "CV, diplômes, titres ou grille de compétences des formateurs.",
+              "description_en": "CVs, degrees, titles or instructor competency grid.",
               "type": "manual",
               "automatic": false,
               "weight": 1
@@ -418,13 +525,17 @@
         {
           "number": 22,
           "title": "Développement des compétences des salariés",
+          "title_en": "Development of employee competencies",
           "description": "Le prestataire entretient et développe les compétences de ses salariés adaptées aux prestations.",
+          "description_en": "The provider maintains and develops the skills of its employees adapted to the services.",
           "scope": "global",
           "moodle_level": "partial",
           "checks": [
             {
               "name": "Plan de formation et développement des compétences",
+              "name_en": "Training plan and competency development",
               "description": "Attestations de formation, parcours de formation continue interne ou plan annuel.",
+              "description_en": "Training certificates, internal continuing education pathways or annual plan.",
               "type": "manual",
               "automatic": false,
               "weight": 1
@@ -436,18 +547,24 @@
     {
       "number": 6,
       "title": "L'inscription et l'investissement du prestataire dans son environnement professionnel",
+      "title_en": "The provider's engagement and investment in its professional environment",
       "description": "Le prestataire réalise des veilles (légale, métiers, innovations), mobilise les réseaux du handicap et respecte la conformité en cas de sous-traitance et alternance.",
+      "description_en": "The provider carries out watch activities (legal, occupational, innovation), mobilizes disability networks and ensures compliance in case of subcontracting and apprenticeships.",
       "indicators": [
         {
           "number": 23,
           "title": "Veille légale et réglementaire",
+          "title_en": "Legal and regulatory watch",
           "description": "Le prestataire réalise une veille légale et réglementaire sur le champ de la formation professionnelle.",
+          "description_en": "The provider carries out a legal and regulatory watch in the field of vocational training.",
           "scope": "global",
           "moodle_level": "documentary",
           "checks": [
             {
               "name": "Traces et exploitation de la veille légale et réglementaire",
+              "name_en": "Evidence and use of the legal and regulatory watch",
               "description": "Fiches de veille, abonnements juridiques, compte-rendus d'impact.",
+              "description_en": "Watch sheets, legal subscriptions, impact reports.",
               "type": "manual",
               "automatic": false,
               "weight": 1
@@ -457,13 +574,17 @@
         {
           "number": 24,
           "title": "Veille sur les métiers, emplois et compétences",
+          "title_en": "Watch on occupations, jobs and skills",
           "description": "Le prestataire réalise une veille sur les évolutions des métiers, compétences et qualifications.",
+          "description_en": "The provider monitors developments in occupations, competencies and qualifications.",
           "scope": "global",
           "moodle_level": "documentary",
           "checks": [
             {
               "name": "Traces de veille métiers et compétences",
+              "name_en": "Evidence of the occupational and competency watch",
               "description": "Études de branches, bilans d'observatoire, revues spécialisées.",
+              "description_en": "Industry studies, observatory reports, specialized reviews.",
               "type": "manual",
               "automatic": false,
               "weight": 1
@@ -473,13 +594,17 @@
         {
           "number": 25,
           "title": "Veille pédagogique et technologique",
+          "title_en": "Pedagogical and technological watch",
           "description": "Le prestataire réalise une veille sur les innovations pédagogiques et technologies de formation.",
+          "description_en": "The provider monitors innovations in pedagogy and training technologies.",
           "scope": "global",
           "moodle_level": "documentary",
           "checks": [
             {
               "name": "Traces de veille pédagogique et technologique",
+              "name_en": "Evidence of the pedagogical and technological watch",
               "description": "Participation à des webinaires, expérimentations EdTech, articles de veille.",
+              "description_en": "Participation in webinars, EdTech experiments, watch articles.",
               "type": "manual",
               "automatic": false,
               "weight": 1
@@ -489,20 +614,26 @@
         {
           "number": 26,
           "title": "Mobilisation des réseaux handicap et accessibilité",
+          "title_en": "Mobilization of disability and accessibility networks",
           "description": "Le prestataire mobilise les expertises et réseaux spécialisés pour l'accueil des personnes en situation de handicap et veille à l'accessibilité des supports.",
+          "description_en": "The provider mobilizes specialized expertise and networks to welcome people with disabilities and ensures the accessibility of the materials.",
           "scope": "course",
           "moodle_level": "strong",
           "checks": [
             {
               "name": "Audit d'accessibilité numérique des contenus (WCAG 2.1 / RGAA)",
+              "name_en": "Digital accessibility audit of the content (WCAG 2.1 / RGAA)",
               "description": "Contrôles automatisés : attributs alt des images, sous-titrage des vidéos (.vtt), structure des titres HTML (h1-h6) et ratio de contraste des couleurs.",
+              "description_en": "Automated checks: alt attributes on images, video subtitles (.vtt), HTML heading structure (h1-h6) and color contrast ratio.",
               "type": "accessibility_exists",
               "automatic": true,
               "weight": 2
             },
             {
               "name": "Réseaux handicap et accompagnement spécialisé",
+              "name_en": "Disability networks and specialized support",
               "description": "Partenariats Agefiph/Cap Emploi, protocole d'accueil et d'adaptation des parcours handicap.",
+              "description_en": "Agefiph/Cap Emploi partnerships, reception and adaptation protocol for disability pathways.",
               "type": "manual",
               "automatic": false,
               "weight": 1
@@ -512,13 +643,17 @@
         {
           "number": 27,
           "title": "Conformité en cas de sous-traitance ou portage",
+          "title_en": "Compliance in case of subcontracting or hosting",
           "description": "Le prestataire s'assure du respect de la conformité au RNQ par ses sous-traitants et prestataires contractuels.",
+          "description_en": "The provider ensures RNQ compliance by its subcontractors and contractual providers.",
           "scope": "global",
           "moodle_level": "documentary",
           "checks": [
             {
               "name": "Contrats de sous-traitance et traçabilité Qualiopi",
+              "name_en": "Subcontracting contracts and Qualiopi traceability",
               "description": "Contrats, clauses qualité et vérification de la conformité des sous-traitants (V10).",
+              "description_en": "Contracts, quality clauses and verification of subcontractor compliance (V10).",
               "type": "manual",
               "automatic": false,
               "weight": 1
@@ -528,13 +663,17 @@
         {
           "number": 28,
           "title": "Formation en situation de travail (AFEST)",
+          "title_en": "Training in a work situation (AFEST)",
           "description": "Lorsque la prestation est réalisée en situation de travail, le prestataire organise les conditions de mise en œuvre.",
+          "description_en": "When the service is delivered in a work situation, the provider organizes the conditions of implementation.",
           "scope": "course",
           "moodle_level": "partial",
           "checks": [
             {
               "name": "Protocole et livret AFEST",
+              "name_en": "AFEST protocol and booklet",
               "description": "Protocole individuel de formation en situation de travail et phases réflexives.",
+              "description_en": "Individual protocol for training in a work situation and reflective phases.",
               "type": "manual",
               "automatic": false,
               "weight": 1
@@ -544,13 +683,17 @@
         {
           "number": 29,
           "title": "Insertion professionnelle et poursuite de parcours",
+          "title_en": "Professional integration and continuation of pathways",
           "description": "Le prestataire développe des actions favorisant l'insertion professionnelle et la poursuite d'études.",
+          "description_en": "The provider develops actions fostering professional integration and the continuation of studies.",
           "scope": "course",
           "moodle_level": "partial",
           "checks": [
             {
               "name": "Actions d'aide à l'insertion professionnelle",
+              "name_en": "Actions supporting professional integration",
               "description": "Ateliers CV, réseau d'entreprises partenaires et suivi des débouchés.",
+              "description_en": "CV workshops, network of partner companies and monitoring of outcomes.",
               "type": "manual",
               "automatic": false,
               "weight": 1
@@ -562,18 +705,24 @@
     {
       "number": 7,
       "title": "Le recueil et la prise en compte des appréciations et des réclamations formulées par les parties prenantes aux prestations délivrées",
+      "title_en": "The collection and consideration of the assessments and complaints made by the stakeholders of the services delivered",
       "description": "Le prestataire recueille les appréciations des parties prenantes, traite les difficultés, réclamations et aléas, met en œuvre une démarche d'amélioration continue et évalue spécifiquement les enseignements.",
+      "description_en": "The provider collects the assessments of the stakeholders, handles difficulties, complaints and contingencies, implements a continuous improvement approach and specifically evaluates the teaching.",
       "indicators": [
         {
           "number": 30,
           "title": "Recueil des appréciations des parties prenantes",
+          "title_en": "Collection of stakeholder assessments",
           "description": "Le prestataire recueille les appréciations des bénéficiaires, financeurs, équipes pédagogiques et entreprises.",
+          "description_en": "The provider collects the assessments of beneficiaries, funders, teaching teams and companies.",
           "scope": "course",
           "moodle_level": "strong",
           "checks": [
             {
               "name": "Questionnaire de satisfaction apprenants",
+              "name_en": "Learner satisfaction questionnaire",
               "description": "Questionnaire Feedback ou enquête de satisfaction présent avec recueil des réponses.",
+              "description_en": "Feedback activity or satisfaction survey present with response collection.",
               "type": "feedback_exists",
               "automatic": true,
               "weight": 2
@@ -583,13 +732,17 @@
         {
           "number": 31,
           "title": "Traitement des réclamations, difficultés et aléas",
+          "title_en": "Handling of complaints, difficulties and contingencies",
           "description": "Le prestataire met en œuvre des modalités de traitement des réclamations et difficultés formulées.",
+          "description_en": "The provider implements arrangements for handling the complaints and difficulties raised.",
           "scope": "global",
           "moodle_level": "partial",
           "checks": [
             {
               "name": "Registre et procédure de traitement des réclamations",
+              "name_en": "Complaints register and handling procedure",
               "description": "Registre des réclamations formalisé, formulaire de signalement et suivi des actions correctives.",
+              "description_en": "Formalized complaints register, reporting form and corrective action tracking.",
               "type": "manual",
               "automatic": false,
               "weight": 1
@@ -599,13 +752,17 @@
         {
           "number": 32,
           "title": "Démarche d'amélioration continue et analyse des risques",
+          "title_en": "Continuous improvement approach and risk analysis",
           "description": "Le prestataire met en œuvre des mesures d'amélioration continue basées sur l'analyse des appréciations, réclamations et risques qualité (V10).",
+          "description_en": "The provider implements continuous improvement measures based on the analysis of assessments, complaints and quality risks (V10).",
           "scope": "global",
           "moodle_level": "partial",
           "checks": [
             {
               "name": "Plan d'actions d'amélioration et gestion des risques qualité",
+              "name_en": "Improvement action plan and quality risk management",
               "description": "Actions correctives créées suite aux évaluations et traçabilité des modifications apportées aux cours.",
+              "description_en": "Corrective actions created following the evaluations and traceability of course modifications.",
               "type": "manual",
               "automatic": false,
               "weight": 1
@@ -615,13 +772,17 @@
         {
           "number": 33,
           "title": "Évaluation des contenus et des enseignements par les apprenants (V10 - applicable 01/11/2026)",
+          "title_en": "Evaluation of content and teaching by learners (V10 - applicable 01/11/2026)",
           "description": "Le prestataire met en place un dispositif d'évaluation des contenus et des enseignements par les apprenants, distinct du recueil général, partagé avec les équipes pédagogiques et mesuré périodiquement.",
+          "description_en": "The provider sets up a system for evaluating content and teaching by learners, distinct from the general collection, shared with the teaching teams and measured periodically.",
           "scope": "course",
           "moodle_level": "strong",
           "checks": [
             {
               "name": "Évaluation pédagogique des enseignements",
+              "name_en": "Pedagogical evaluation of the teaching",
               "description": "Questionnaire d'évaluation spécifique des contenus pédagogiques et enseignements par les apprenants.",
+              "description_en": "Specific evaluation questionnaire of the pedagogical content and teaching by the learners.",
               "type": "feedback_exists",
               "automatic": true,
               "weight": 2

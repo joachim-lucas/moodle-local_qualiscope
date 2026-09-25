@@ -149,11 +149,12 @@ $criteriadata = [];
 $weakpoints = [];
 
 foreach ($criteriarecords as $crit) {
+    $crittitle = local_qualiscope_localized($crit, 'title');
     $criteriadata[$crit->id] = [
         'id' => $crit->id,
         'number' => $crit->number,
-        'title' => $crit->title,
-        'shorttitle' => core_text::strlen($crit->title) > 60 ? core_text::substr($crit->title, 0, 60) . '…' : $crit->title,
+        'title' => $crittitle,
+        'shorttitle' => core_text::strlen($crittitle) > 60 ? core_text::substr($crittitle, 0, 60) . '…' : $crittitle,
         'indicators' => [],
         'total' => 0,
         'detected' => 0,
@@ -211,7 +212,7 @@ foreach ($indicatorsrecords as $ind) {
     $indicatoritem = [
         'id' => $ind->id,
         'number' => $ind->number,
-        'title' => $ind->title,
+        'title' => local_qualiscope_localized($ind, 'title'),
         'total' => $total,
         'detected' => $detected,
         'verify' => $verify,
@@ -226,7 +227,7 @@ foreach ($indicatorsrecords as $ind) {
         'failingcourses' => $failingcourses,
         'failingmessage' => get_string('campaign_courses_failing', 'local_qualiscope', $failingcourses),
         'criterion_number' => $criteriarecords[$ind->criterion_id]->number ?? '',
-        'criterion_title' => $criteriarecords[$ind->criterion_id]->title ?? '',
+        'criterion_title' => isset($criteriarecords[$ind->criterion_id]) ? local_qualiscope_localized($criteriarecords[$ind->criterion_id], 'title') : '',
     ];
 
     if (isset($criteriadata[$ind->criterion_id])) {
@@ -380,7 +381,7 @@ echo \local_qualiscope\quota::banner($output);
 echo $output->render_campaign_dashboard([
     'campaignname' => $campaign->name,
     'completed' => (bool) $campaign->timecompleted,
-    'referential' => $referential ? $referential->name . ' ' . $referential->version : '—',
+    'referential' => $referential ? local_qualiscope_localized($referential, 'name') . ' ' . $referential->version : '—',
     'scopelabel' => $scopelabels[$campaign->scope] ?? $campaign->scope,
     'dateformatted' => userdate($campaign->timecreated),
     'runurl' => new moodle_url('/local/qualiscope/run.php', ['campaignid' => $campaignid, 'sesskey' => sesskey()]),

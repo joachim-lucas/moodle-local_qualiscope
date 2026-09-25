@@ -131,7 +131,7 @@ foreach ($criteriarecords as $crit) {
     $criteriadata[$crit->id] = [
         'id' => $crit->id,
         'number' => $crit->number,
-        'title' => $crit->title,
+        'title' => local_qualiscope_localized($crit, 'title'),
         'indicators' => [],
         'total' => 0,
         'detected' => 0,
@@ -180,7 +180,7 @@ foreach ($indicatorsrecords as $ind) {
     $indicatoritem = [
         'id' => $ind->id,
         'number' => $ind->number,
-        'title' => $ind->title,
+        'title' => local_qualiscope_localized($ind, 'title'),
         'total' => $total,
         'detected' => $detected,
         'verify' => $verify,
@@ -191,7 +191,7 @@ foreach ($indicatorsrecords as $ind) {
         'haspercentage' => $percentage !== null,
         'failingcourses' => $failingcourses,
         'criterion_number' => $criteriarecords[$ind->criterion_id]->number ?? '',
-        'criterion_title' => $criteriarecords[$ind->criterion_id]->title ?? '',
+        'criterion_title' => isset($criteriarecords[$ind->criterion_id]) ? local_qualiscope_localized($criteriarecords[$ind->criterion_id], 'title') : '',
     ];
 
     if (isset($criteriadata[$ind->criterion_id])) {
@@ -298,7 +298,7 @@ $html = '<!DOCTYPE html>
             <div><strong>' . s(get_string('campaign_name', 'local_qualiscope')) . ' :</strong> ' .
                 s($campaign->name) . '</div>
             <div><strong>' . s(get_string('campaign_referential', 'local_qualiscope')) . ' :</strong> ' .
-                s($referential->name . ' ' . $referential->version) . '</div>
+                s(local_qualiscope_localized($referential, 'name') . ' ' . $referential->version) . '</div>
             <div><strong>' . s(get_string('campaign_scope', 'local_qualiscope')) . ' :</strong> ' .
                 s($scopelabels[$campaign->scope] ?? $campaign->scope) . '</div>
             <div style="margin-top: 8px;">

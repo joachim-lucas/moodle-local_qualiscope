@@ -2,39 +2,51 @@
   "name": "ISO 21001",
   "version": "2018",
   "description": "ISO 21001:2018 - Organismes d'enseignement : système de management des organismes d'enseignement (EOMS) - Exigences et recommandations pour son utilisation. 7 exigences majeures (clauses 4 à 10, structure HLS). Seuls les indicateurs vérifiables automatiquement via Moodle sont analysés ; les autres exigences (processus, informations documentées, audits, revue de direction...) relèvent d'une analyse manuelle.",
+  "description_en": "ISO 21001:2018 - Educational organizations: management systems for educational organizations (EOMS) - Requirements with guidance for use. 7 major requirements (clauses 4 to 10, HLS structure). Only the indicators verifiable automatically via Moodle are analysed; the other requirements (processes, documented information, audits, management review, etc.) fall under manual analysis.",
   "active": true,
   "criteria": [
     {
       "number": 4,
       "title": "Contexte de l'organisme",
+      "title_en": "Context of the organization",
       "description": "Comprendre l'organisme et son contexte, les besoins et attentes des parties intéressées, déterminer le périmètre du système de management des organismes d'enseignement (EOMS) et en assurer le bon fonctionnement. (Exigences 4.1 à 4.4 : analyse manuelle requise.)",
+      "description_en": "Understanding the organization and its context, the needs and expectations of interested parties, determining the scope of the educational organizations management system (EOMS) and ensuring its proper operation. (Requirements 4.1 to 4.4: manual analysis required.)",
       "indicators": []
     },
     {
       "number": 5,
       "title": "Leadership",
+      "title_en": "Leadership",
       "description": "Engagement de la direction, politique qualité incluant mission, vision et objectifs, et définition des rôles, responsabilités et autorités au sein de l'organisme. (Exigences 5.1 à 5.3 : analyse manuelle requise.)",
+      "description_en": "Management commitment, quality policy including mission, vision and objectives, and definition of roles, responsibilities and authorities within the organization. (Requirements 5.1 to 5.3: manual analysis required.)",
       "indicators": []
     },
     {
       "number": 6,
       "title": "Planification",
+      "title_en": "Planning",
       "description": "Actions à mettre en œuvre face aux risques et opportunités, définition des objectifs de l'organisme d'enseignement et planification des actions pour les atteindre, et planification des modifications. (Exigences 6.1 à 6.3 : analyse manuelle requise.)",
+      "description_en": "Actions to address risks and opportunities, definition of the educational organization's objectives and planning of actions to achieve them, and planning of changes. (Requirements 6.1 to 6.3: manual analysis required.)",
       "indicators": []
     },
     {
       "number": 7,
       "title": "Support",
+      "title_en": "Support",
       "description": "Mise à disposition des ressources nécessaires : humaines, infrastructures, environnement des processus d'enseignement, ressources de suivi et de mesure, connaissances organisationnelles et ressources d'apprentissage ; compétences, sensibilisation, communication et informations documentées. (Exigences 7.2 à 7.5 : analyse manuelle requise.)",
+      "description_en": "Provision of the necessary resources: human resources, infrastructure, environment for teaching processes, monitoring and measurement resources, organizational knowledge and learning resources; competence, awareness, communication and documented information. (Requirements 7.2 to 7.5: manual analysis required.)",
       "indicators": [
         {
           "number": 1,
           "title": "7.1 Ressources — ressources d'apprentissage",
+          "title_en": "7.1 Resources — learning resources",
           "description": "L'organisme met à disposition les ressources d'apprentissage nécessaires au déroulement de l'enseignement (exigence 7.1). Vérifié ici : présence de ressources pédagogiques dans les cours, ce que la plateforme peut prouver.",
+          "description_en": "The organization provides the learning resources required for the delivery of education (requirement 7.1). Verified here: presence of learning resources in the courses, which the platform can prove.",
           "scope": "course",
           "checks": [
             {
               "name": "Ressources d'apprentissage présentes dans les cours",
+              "name_en": "Learning resources present in the courses",
               "type": "resource_exists",
               "automatic": true,
               "weight": 1
@@ -46,22 +58,28 @@
     {
       "number": 8,
       "title": "Réalisation des activités opérationnelles",
+      "title_en": "Operation",
       "description": "Planification et maîtrise opérationnelles, exigences relatives aux produits et services d'enseignement, conception et développement, maîtrise des processus fournis par des prestataires externes, prestation et libération des produits et services d'enseignement, maîtrise des éléments de sortie non conformes. (Exigences 8.1 à 8.4, 8.6, 8.7 : analyse manuelle requise.)",
+      "description_en": "Operational planning and control, requirements for educational products and services, design and development, control of externally provided processes, provision and release of educational products and services, control of nonconforming outputs. (Requirements 8.1 to 8.4, 8.6, 8.7: manual analysis required.)",
       "indicators": [
         {
           "number": 5,
           "title": "8.5 Prestation des produits et services d'enseignement",
+          "title_en": "8.5 Provision of educational products and services",
           "description": "L'organisme maîtrise la prestation des produits et services d'enseignement (activités et contenus mis à disposition des apprenants, exigence 8.5). Vérifié ici : présence d'activités d'apprentissage et de ressources pédagogiques dans les cours, ce que la plateforme peut prouver.",
+          "description_en": "The organization controls the provision of educational products and services (activities and content made available to learners, requirement 8.5). Verified here: presence of learning activities and educational resources in the courses, which the platform can prove.",
           "scope": "course",
           "checks": [
             {
               "name": "Activités d'apprentissage proposées dans les cours",
+              "name_en": "Learning activities offered in the courses",
               "type": "activity_exists",
               "automatic": true,
               "weight": 2
             },
             {
               "name": "Ressources pédagogiques mises à disposition",
+              "name_en": "Learning resources made available",
               "type": "resource_exists",
               "automatic": true,
               "weight": 1
@@ -73,22 +91,28 @@
     {
       "number": 9,
       "title": "Évaluation des performances",
+      "title_en": "Performance evaluation",
       "description": "Surveillance, mesure, analyse et évaluation de la performance de l'organisme et de la satisfaction des apprenants, des autres bénéficiaires et du personnel ; audits internes et revue de direction. (Exigences 9.2, 9.3 : analyse manuelle requise.)",
+      "description_en": "Monitoring, measurement, analysis and evaluation of the organization's performance and of learner, other beneficiary and staff satisfaction; internal audits and management review. (Requirements 9.2, 9.3: manual analysis required.)",
       "indicators": [
         {
           "number": 1,
           "title": "9.1 Surveillance, mesure, analyse et évaluation",
+          "title_en": "9.1 Monitoring, measurement, analysis and evaluation",
           "description": "L'organisme surveille et mesure sa performance et évalue la satisfaction des apprenants (exigence 9.1, notamment 9.1.2). Vérifié ici : présence de questionnaires aux apprenants et d'un suivi des performances (évaluations) dans les cours, ce que la plateforme peut prouver.",
+          "description_en": "The organization monitors and measures its performance and evaluates learner satisfaction (requirement 9.1, notably 9.1.2). Verified here: presence of learner questionnaires and performance tracking (assessments) in the courses, which the platform can prove.",
           "scope": "course",
           "checks": [
             {
               "name": "Recueil des appréciations des apprenants",
+              "name_en": "Collection of learner feedback",
               "type": "feedback_exists",
               "automatic": true,
               "weight": 2
             },
             {
               "name": "Suivi et mesure des performances des apprenants",
+              "name_en": "Monitoring and measurement of learner performance",
               "type": "gradebook_exists",
               "automatic": true,
               "weight": 1
@@ -100,7 +124,9 @@
     {
       "number": 10,
       "title": "Amélioration",
+      "title_en": "Improvement",
       "description": "Traitement des non-conformités et actions correctives, amélioration continue et recherche d'opportunités d'amélioration. (Exigences 10.1 à 10.3 : analyse manuelle requise.)",
+      "description_en": "Handling of nonconformities and corrective actions, continual improvement and pursuit of improvement opportunities. (Requirements 10.1 to 10.3: manual analysis required.)",
       "indicators": []
     }
   ]

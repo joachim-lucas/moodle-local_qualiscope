@@ -141,7 +141,7 @@ class pdf_generator {
                         <strong>' . s(get_string('export_course', 'local_qualiscope')) . '</strong>
                             ' . s($this->course->fullname) . ' (' . s($this->course->shortname) . ')<br/>
                         <strong>' . s(get_string('export_referential', 'local_qualiscope')) . '</strong>
-                            ' . s($this->referential->name) . ' ' . s($this->referential->version) . '<br/>
+                            ' . s(\local_qualiscope_localized($this->referential, 'name')) . ' ' . s($this->referential->version) . '<br/>
                         <strong>' . s(get_string('export_global_rate', 'local_qualiscope')) . '</strong>
                             <span class="badge-score">' . (int) $this->summary['percentage'] . ' %</span>
                     </td>
@@ -189,7 +189,7 @@ class pdf_generator {
             $html .= '
                 <tr>
                     <td align="center"><strong>C' . (int) $critobj->number . '</strong></td>
-                    <td><strong>' . s($critobj->title) . '</strong></td>
+                    <td><strong>' . s(\local_qualiscope_localized($critobj, 'title')) . '</strong></td>
                     <td align="center"><strong>' . $pctstr . '</strong></td>
                     <td align="center">' . $breakdown . '</td>
                 </tr>';
@@ -234,7 +234,7 @@ class pdf_generator {
 
         foreach ($criteria as $criterion) {
             $html .= '
-            <h3>Critère ' . (int) $criterion->number . ' — ' . s($criterion->title) . '</h3>
+            <h3>Critère ' . (int) $criterion->number . ' — ' . s(\local_qualiscope_localized($criterion, 'title')) . '</h3>
             <table class="grid" cellpadding="4" cellspacing="0">
                 <thead>
                     <tr>
@@ -256,7 +256,7 @@ class pdf_generator {
                         <td colspan="4"><span class="status-manual">' . s(get_string(
                             'criteria_manual_only',
                             'local_qualiscope'
-                        )) . '</span> — ' . s($indicator->description) . '</td>
+                        )) . '</span> — ' . s(\local_qualiscope_localized($indicator, 'description')) . '</td>
                     </tr>';
                     continue;
                 }
@@ -277,19 +277,19 @@ class pdf_generator {
                         $stclass = 'status-verify';
                         $stlabel = '—';
                         $compliancestr = '—';
-                        $detailstr = s($check->description ?? '');
+                        $detailstr = s(\local_qualiscope_localized($check, 'description'));
                     } else {
                         $stclass = 'status-manual';
                         $stlabel = get_string('dashboard_manual_only', 'local_qualiscope');
                         $compliancestr = '—';
-                        $detailstr = s($check->description ?? '');
+                        $detailstr = s(\local_qualiscope_localized($check, 'description'));
                     }
 
                     $html .= '
                     <tr>
                         <td><strong>Ind. ' . (int) $indicator->number . '</strong><br/><span style="font-size: 7.5pt;
-                                color: #64748b;">' . s($indicator->title) . '</span></td>
-                        <td><strong>' . s($check->name) . '</strong></td>
+                                color: #64748b;">' . s(\local_qualiscope_localized($indicator, 'title')) . '</span></td>
+                        <td><strong>' . s(\local_qualiscope_localized($check, 'name')) . '</strong></td>
                         <td><span class="' . $stclass . '">' . s($stlabel) . '</span></td>
                         <td align="center"><strong>' . $compliancestr . '</strong></td>
                         <td>' . $detailstr . '</td>

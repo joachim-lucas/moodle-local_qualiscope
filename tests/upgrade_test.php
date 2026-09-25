@@ -70,4 +70,59 @@ final class upgrade_test extends \advanced_testcase {
         $this->assertTrue($columns['id']->auto_increment);
         $this->assertTrue($DB->record_exists('local_qualiscope_auditedcourses', ['courseid' => 99]));
     }
+
+    /**
+     * Tests the 2026092500 upgrade step adds the localized columns and
+     * reseeds the referentials with their English values.
+     *
+     * @covers \xmldb_local_qualiscope_upgrade
+     */
+    public function test_upgrade_2026092500_adds_localized_columns(): void {
+        global $CFG, $DB;
+
+        $this->resetAfterTest();
+
+        $dbman = $DB->get_manager();
+
+        // Simulate a legacy install where the localized columns do not exist yet.
+        $fieldsets = [
+            ['local_qualiscope_referentials', 'description_en'],
+            ['local_qualiscope_criteria', 'title_en'],
+            ['local_qualiscope_criteria', 'description_en'],
+            ['local_qualiscope_indicators', 'title_en'],
+            ['local_qualiscope_indicators', 'description_en'],
+            ['local_qualiscope_checks', 'name_en'],
+            ['local_qualiscope_checks', 'description_en'],
+        ];
+        foreach ($fieldsets as [$tablename, $fieldname]) {
+            $table = new xmldb_table($tablename);
+            if ($dbman->field_exists($table, $fieldname)) {
+                $dbman->drop_field($table, new xmldb_field($fieldname));
+            }
+        }
+
+        // Simulate a site on the previous plugin version.
+        $DB->set_field('config_plugins', 'value', '2026092404', ['plugin' => 'local_qualiscope', 'name' => 'version']);
+
+        require_once($CFG->dirroot . '/lib/upgradelib.php');
+        require_once($CFG->dirroot . '/local/qualiscope/db/upgrade.php');
+
+        $this->assertTrue(xmldb_local_qualiscope_upgrade(2026092404));
+
+        // The localized columns now exist.
+        $this->assertTrue($DB->get_manager()->field_exists('local_qualiscope_criteria', 'title_en'));
+        $this->assertTrue($DB->get_manager()->field_exists('local_qualiscope_checks', 'name_en'));
+
+        // The reseed populated English values for the seeded criteria.
+        $criteria = $DB->get_recordset_sql(
+            'SELECT id FROM {local_qualiscope_criteria} WHERE title_en <> :empty',
+            ['empty' => '']
+        );
+        $count = 0;
+        foreach ($criteria as $c) {
+            $count++;
+        }
+        $criteria->close();
+        $this->assertGreaterThan(0, $count);
+    }
 }

@@ -53,18 +53,25 @@ final class referential_seeder_test extends \advanced_testcase {
             'name' => 'TestRef',
             'version' => '1.0',
             'description' => 'A test referential',
+            'description_en' => 'A test referential (EN)',
             'criteria' => [[
                 'number' => 1,
                 'title' => 'Criterion one',
                 'description' => 'First criterion',
+                'title_en' => 'Criterion one (EN)',
+                'description_en' => 'First criterion (EN)',
                 'indicators' => [[
                     'number' => 1,
                     'title' => 'Indicator one',
                     'description' => 'First indicator',
+                    'title_en' => 'Indicator one (EN)',
+                    'description_en' => 'First indicator (EN)',
                     'scope' => 'course',
                     'checks' => [[
                         'name' => 'activity_exists',
                         'description' => 'An activity is present',
+                        'name_en' => 'Activity exists (EN)',
+                        'description_en' => 'An activity is present (EN)',
                         'type' => 'activity_exists',
                         'automatic' => true,
                         'weight' => 2,
@@ -96,6 +103,25 @@ final class referential_seeder_test extends \advanced_testcase {
         $this->assertEquals($before['local_qualiscope_criteria'] + 1, $DB->count_records('local_qualiscope_criteria'));
         $this->assertEquals($before['local_qualiscope_indicators'] + 1, $DB->count_records('local_qualiscope_indicators'));
         $this->assertEquals($before['local_qualiscope_checks'] + 1, $DB->count_records('local_qualiscope_checks'));
+
+        $referential = $DB->get_record('local_qualiscope_referentials', ['name' => 'TestRef']);
+        $this->assertNotFalse($referential);
+        $this->assertEquals('A test referential (EN)', $referential->description_en);
+
+        $criterion = $DB->get_record('local_qualiscope_criteria', ['referential_id' => $referential->id]);
+        $this->assertNotFalse($criterion);
+        $this->assertEquals('Criterion one (EN)', $criterion->title_en);
+        $this->assertEquals('First criterion (EN)', $criterion->description_en);
+
+        $indicator = $DB->get_record('local_qualiscope_indicators', ['criterion_id' => $criterion->id]);
+        $this->assertNotFalse($indicator);
+        $this->assertEquals('Indicator one (EN)', $indicator->title_en);
+        $this->assertEquals('First indicator (EN)', $indicator->description_en);
+
+        $check = $DB->get_record('local_qualiscope_checks', ['indicator_id' => $indicator->id]);
+        $this->assertNotFalse($check);
+        $this->assertEquals('Activity exists (EN)', $check->name_en);
+        $this->assertEquals('An activity is present (EN)', $check->description_en);
     }
 
     /**
@@ -138,11 +164,13 @@ final class referential_seeder_test extends \advanced_testcase {
 
         $def = $this->sampledef();
         $def['criteria'][0]['title'] = 'Criterion updated';
+        $def['criteria'][0]['title_en'] = 'Criterion updated (EN)';
         referential_seeder::seed_referential($def);
 
         $criteria = $DB->get_records('local_qualiscope_criteria', ['referential_id' => $referential->id]);
         $this->assertCount(1, $criteria);
         $this->assertEquals('Criterion updated', reset($criteria)->title);
+        $this->assertEquals('Criterion updated (EN)', reset($criteria)->title_en);
     }
 
     /**

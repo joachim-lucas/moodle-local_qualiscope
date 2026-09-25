@@ -64,7 +64,7 @@ $referentialoptions = [0 => get_string('defaultreferential_first', 'local_qualis
 if ($DB->get_manager()->table_exists('local_qualiscope_referentials')) {
     $refs = $DB->get_records('local_qualiscope_referentials', ['active' => 1], 'id ASC');
     foreach ($refs as $ref) {
-        $referentialoptions[$ref->id] = $ref->name . ' ' . $ref->version;
+        $referentialoptions[$ref->id] = local_qualiscope_localized($ref, 'name') . ' ' . $ref->version;
     }
 }
 

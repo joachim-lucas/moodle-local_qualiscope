@@ -52,6 +52,46 @@ function local_qualiscope_extend_navigation_course(navigation_node $coursenode, 
 }
 
 /**
+ * Returns the localized value of a referential record field.
+ *
+ * Referential definitions are stored in French (the base fields), with an
+ * English counterpart available in the *_en fields. When the current language
+ * is English and an English value exists, it is returned.
+ *
+ * @param \stdClass $record A referential record (criterion, indicator or check).
+ * @param string $field Base field name ('title', 'name' or 'description').
+ * @return string The localized value, falling back to the base (French) value.
+ */
+function local_qualiscope_localized(\stdClass $record, string $field): string {
+    $value = $record->$field ?? '';
+    $enfield = $field . '_en';
+    if (str_starts_with(current_language(), 'en') && !empty($record->$enfield)) {
+        return $record->$enfield;
+    }
+    return $value;
+}
+
+/**
+ * Returns a copy of a referential record with its display fields localized.
+ *
+ * @param \stdClass $record A referential record (criterion, indicator or check).
+ * @return \stdClass The record copy with localized title, name and description.
+ */
+function local_qualiscope_localize_record(\stdClass $record): \stdClass {
+    if (!str_starts_with(current_language(), 'en')) {
+        return $record;
+    }
+    $copy = clone $record;
+    foreach (['title', 'name', 'description'] as $field) {
+        $enfield = $field . '_en';
+        if (!empty($copy->$enfield)) {
+            $copy->$field = $copy->$enfield;
+        }
+    }
+    return $copy;
+}
+
+/**
  * Serves evidence files stored in the course context by QualiScope.
  *
  * @param \stdClass $course Course record.

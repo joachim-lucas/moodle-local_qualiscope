@@ -95,5 +95,35 @@ function xmldb_local_qualiscope_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2026092403, 'local', 'qualiscope');
     }
 
+    if ($oldversion < 2026092500) {
+        $fieldsets = [
+            'local_qualiscope_referentials' => [
+                new xmldb_field('description_en', XMLDB_TYPE_TEXT),
+            ],
+            'local_qualiscope_criteria' => [
+                new xmldb_field('title_en', XMLDB_TYPE_CHAR, '255'),
+                new xmldb_field('description_en', XMLDB_TYPE_TEXT),
+            ],
+            'local_qualiscope_indicators' => [
+                new xmldb_field('title_en', XMLDB_TYPE_CHAR, '255'),
+                new xmldb_field('description_en', XMLDB_TYPE_TEXT),
+            ],
+            'local_qualiscope_checks' => [
+                new xmldb_field('name_en', XMLDB_TYPE_CHAR, '255'),
+                new xmldb_field('description_en', XMLDB_TYPE_TEXT),
+            ],
+        ];
+        foreach ($fieldsets as $tablename => $fields) {
+            $table = new xmldb_table($tablename);
+            foreach ($fields as $field) {
+                if (!$dbman->field_exists($table, $field)) {
+                    $dbman->add_field($table, $field);
+                }
+            }
+        }
+        \local_qualiscope\referential_seeder::seed_all_from_files();
+        upgrade_plugin_savepoint(true, 2026092500, 'local', 'qualiscope');
+    }
+
     return true;
 }

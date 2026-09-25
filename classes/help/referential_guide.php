@@ -204,8 +204,8 @@ class referential_guide {
 
                     $checksdata[] = [
                         'id' => $check->id,
-                        'name' => $check->name,
-                        'description' => $check->description,
+                        'name' => \local_qualiscope_localized($check, 'name'),
+                        'description' => \local_qualiscope_localized($check, 'description'),
                         'type' => $check->type,
                         'weight' => $weight,
                         'isautomatic' => $isautomatic,
@@ -239,8 +239,8 @@ class referential_guide {
                 $indicatorsdata[] = [
                     'id' => $indicator->id,
                     'number' => $indicator->number,
-                    'title' => $indicator->title,
-                    'description' => $indicator->description,
+                    'title' => \local_qualiscope_localized($indicator, 'title'),
+                    'description' => \local_qualiscope_localized($indicator, 'description'),
                     'scope' => $scope,
                     'scopelabel' => $scopelabel,
                     'moodle_level' => $moodlelevel,
@@ -259,8 +259,8 @@ class referential_guide {
             $criteriadata[] = [
                 'id' => $criterion->id,
                 'number' => $criterion->number,
-                'title' => $criterion->title,
-                'description' => $criterion->description,
+                'title' => \local_qualiscope_localized($criterion, 'title'),
+                'description' => \local_qualiscope_localized($criterion, 'description'),
                 'indicators' => $indicatorsdata,
                 'indicatorscount' => count($indicatorsdata),
                 'autocheckcount' => $criterionautocheckcount,
