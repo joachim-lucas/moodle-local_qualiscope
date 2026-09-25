@@ -191,7 +191,8 @@ foreach ($indicatorsrecords as $ind) {
         'haspercentage' => $percentage !== null,
         'failingcourses' => $failingcourses,
         'criterion_number' => $criteriarecords[$ind->criterion_id]->number ?? '',
-        'criterion_title' => isset($criteriarecords[$ind->criterion_id]) ? local_qualiscope_localized($criteriarecords[$ind->criterion_id], 'title') : '',
+        'criterion_title' => isset($criteriarecords[$ind->criterion_id]) ?
+            local_qualiscope_localized($criteriarecords[$ind->criterion_id], 'title') : '',
     ];
 
     if (isset($criteriadata[$ind->criterion_id])) {

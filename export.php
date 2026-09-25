@@ -198,7 +198,8 @@ if ($campaignid) {
             'haspercentage' => $percentage !== null,
             'failingcourses' => $failingcourses,
             'criterion_number' => $criteriarecords[$ind->criterion_id]->number ?? '',
-            'criterion_title' => isset($criteriarecords[$ind->criterion_id]) ? local_qualiscope_localized($criteriarecords[$ind->criterion_id], 'title') : '',
+            'criterion_title' => isset($criteriarecords[$ind->criterion_id]) ?
+                local_qualiscope_localized($criteriarecords[$ind->criterion_id], 'title') : '',
         ];
 
         if (isset($criteriadata[$ind->criterion_id])) {
@@ -271,7 +272,8 @@ if ($campaignid) {
 
         fputcsv($out, [get_string('campaign_report_subtitle', 'local_qualiscope')]);
         fputcsv($out, [get_string('campaign_name', 'local_qualiscope'), $campaign->name]);
-        fputcsv($out, [get_string('campaign_referential', 'local_qualiscope'), local_qualiscope_localized($referential, 'name') . ' ' . $referential->version]);
+        fputcsv($out, [get_string('campaign_referential', 'local_qualiscope'),
+            local_qualiscope_localized($referential, 'name') . ' ' . $referential->version]);
         fputcsv($out, [get_string('export_generated', 'local_qualiscope'), userdate(time())]);
         fputcsv($out, [get_string('export_global_rate', 'local_qualiscope'), $globalpercentage . ' %']);
         fputcsv($out, [
@@ -497,7 +499,8 @@ $writer = new \local_qualiscope\exporter\xlsx_writer(
 
 $writer->add_row([get_string('export_report_title', 'local_qualiscope')], true);
 $writer->add_row([get_string('export_course', 'local_qualiscope') . ' ' . $course->fullname]);
-$writer->add_row([get_string('export_referential', 'local_qualiscope') . ' ' . local_qualiscope_localized($referential, 'name') . ' ' . $referential->version]);
+$writer->add_row([get_string('export_referential', 'local_qualiscope') . ' ' .
+    local_qualiscope_localized($referential, 'name') . ' ' . $referential->version]);
 $writer->add_row([get_string('export_generated', 'local_qualiscope') . ' ' .
         userdate(time(), get_string('strftimedatetime', 'langconfig'))]);
 $writer->add_row([get_string('export_global_rate', 'local_qualiscope') . ' ' . $summary['percentage'] . ' %']);
@@ -520,7 +523,8 @@ $hasstatus = false;
 foreach ($criteria as $criterion) {
     foreach ($indicatorsbycriterion[$criterion->id] ?? [] as $indicator) {
         $criterionlabel = (int) $criterion->number . ' — ' . local_qualiscope_localized($criterion, 'title');
-        $indicatorlabel = (int) $criterion->number . '.' . (int) $indicator->number . ' — ' . local_qualiscope_localized($indicator, 'title');
+        $indicatorlabel = (int) $criterion->number . '.' . (int) $indicator->number .
+            ' — ' . local_qualiscope_localized($indicator, 'title');
         $indicatorchecks = $checksbyindicator[$indicator->id] ?? [];
 
         if (!$indicatorchecks) {

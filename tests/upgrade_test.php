@@ -95,9 +95,9 @@ final class upgrade_test extends \advanced_testcase {
             ['local_qualiscope_checks', 'description_en'],
         ];
         foreach ($fieldsets as [$tablename, $fieldname]) {
-            $table = new xmldb_table($tablename);
+            $table = new \xmldb_table($tablename);
             if ($dbman->field_exists($table, $fieldname)) {
-                $dbman->drop_field($table, new xmldb_field($fieldname));
+                $dbman->drop_field($table, new \xmldb_field($fieldname));
             }
         }
 

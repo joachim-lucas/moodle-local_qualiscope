@@ -128,7 +128,8 @@ echo $output->render_dashboard([
     'summaryitems' => $summaryitems,
     'criteria' => array_values($criteria),
     'referentials' => array_values($referentialsdata),
-    'selectedreferential' => $selectedreferential ? local_qualiscope_localized($selectedreferential, 'name') . ' ' . $selectedreferential->version : '',
+    'selectedreferential' => $selectedreferential ? local_qualiscope_localized($selectedreferential, 'name') . ' ' .
+        $selectedreferential->version : '',
     'referentialurl' => new moodle_url('/local/qualiscope/dashboard.php', ['courseid' => $courseid]),
     'exporturl' => new moodle_url('/local/qualiscope/export.php', [
         'courseid' => $courseid,

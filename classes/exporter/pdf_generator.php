@@ -141,7 +141,8 @@ class pdf_generator {
                         <strong>' . s(get_string('export_course', 'local_qualiscope')) . '</strong>
                             ' . s($this->course->fullname) . ' (' . s($this->course->shortname) . ')<br/>
                         <strong>' . s(get_string('export_referential', 'local_qualiscope')) . '</strong>
-                            ' . s(\local_qualiscope_localized($this->referential, 'name')) . ' ' . s($this->referential->version) . '<br/>
+                            ' . s(\local_qualiscope_localized($this->referential, 'name')) . ' ' .
+                                s($this->referential->version) . '<br/>
                         <strong>' . s(get_string('export_global_rate', 'local_qualiscope')) . '</strong>
                             <span class="badge-score">' . (int) $this->summary['percentage'] . ' %</span>
                     </td>

@@ -227,7 +227,8 @@ foreach ($indicatorsrecords as $ind) {
         'failingcourses' => $failingcourses,
         'failingmessage' => get_string('campaign_courses_failing', 'local_qualiscope', $failingcourses),
         'criterion_number' => $criteriarecords[$ind->criterion_id]->number ?? '',
-        'criterion_title' => isset($criteriarecords[$ind->criterion_id]) ? local_qualiscope_localized($criteriarecords[$ind->criterion_id], 'title') : '',
+        'criterion_title' => isset($criteriarecords[$ind->criterion_id]) ?
+            local_qualiscope_localized($criteriarecords[$ind->criterion_id], 'title') : '',
     ];
 
     if (isset($criteriadata[$ind->criterion_id])) {

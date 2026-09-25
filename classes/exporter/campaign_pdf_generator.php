@@ -161,7 +161,8 @@ class campaign_pdf_generator {
                         <strong>' . s(get_string('campaign_name', 'local_qualiscope')) . ' :</strong> ' .
                             s($this->campaign->name) . '<br/>
                         <strong>' . s(get_string('campaign_referential', 'local_qualiscope')) . ' :</strong> ' .
-                            s(\local_qualiscope_localized($this->referential, 'name')) . ' ' . s($this->referential->version) . '<br/>
+                            s(\local_qualiscope_localized($this->referential, 'name')) . ' ' .
+                            s($this->referential->version) . '<br/>
                         <strong>' . s(get_string('campaign_scope', 'local_qualiscope')) . ' :</strong> ' . s($scopestr) . '<br/>
                         <strong>' . s(get_string('export_global_rate', 'local_qualiscope')) . '</strong>
                             <span class="badge-score">' . (int) $this->summary['score'] . ' %</span>
