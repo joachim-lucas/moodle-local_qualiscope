@@ -50,7 +50,7 @@ $PAGE->requires->js_call_amd('local_qualiscope/forms', 'init');
 $output = $PAGE->get_renderer('local_qualiscope');
 
 $indicator = $DB->get_record('local_qualiscope_indicators', ['id' => $indicatorid], '*', MUST_EXIST);
-$indicator = local_qualiscope_localize_record($indicator);
+$indicator = \local_qualiscope\helper::localize_record($indicator);
 
 $analyser = new \local_qualiscope\analyser\course_analyser($courseid, $campaignid, $referentialid ?: null);
 $results = $analyser->run();
@@ -62,7 +62,7 @@ $indicatorresults = array_filter($results, function ($r) use ($indicatorid) {
 $checkresults = [];
 foreach ($indicatorresults as $r) {
     $checkresults[] = [
-        'checkname' => local_qualiscope_localized($r['check'], 'name'),
+        'checkname' => \local_qualiscope\helper::localized($r['check'], 'name'),
         'detail' => $r['detail'] ?? '',
         'status' => $r['status'],
         'statuslabel' => \local_qualiscope\analyser\indicator_analyser::get_status_label($r['status']),

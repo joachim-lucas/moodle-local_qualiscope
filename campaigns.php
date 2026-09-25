@@ -93,7 +93,7 @@ foreach ($campaigns as $c) {
     $campaignsdata[] = [
         'id' => $c->id,
         'name' => $c->name,
-        'referential' => $ref ? local_qualiscope_localized($ref, 'name') . ' ' . $ref->version : '—',
+        'referential' => $ref ? \local_qualiscope\helper::localized($ref, 'name') . ' ' . $ref->version : '—',
         'scopelabel' => $scopelabels[$c->scope] ?? $c->scope,
         'dateformatted' => userdate($c->timecreated),
         'timecompleted' => (int) $c->timecompleted,
@@ -112,7 +112,7 @@ echo \local_qualiscope\quota::banner($output);
 echo $output->render_campaign_list([
     'campaigns' => $campaignsdata,
     'referentials' => array_map(function ($ref) {
-        return local_qualiscope_localize_record($ref);
+        return \local_qualiscope\helper::localize_record($ref);
     }, array_values($referentials)),
     'categories' => array_values($categories),
     'courses' => array_values($courses),

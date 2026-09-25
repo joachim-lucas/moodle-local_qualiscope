@@ -138,7 +138,7 @@ if ($campaignid) {
         $criteriadata[$crit->id] = [
             'id' => $crit->id,
             'number' => $crit->number,
-            'title' => local_qualiscope_localized($crit, 'title'),
+            'title' => \local_qualiscope\helper::localized($crit, 'title'),
             'indicators' => [],
             'total' => 0,
             'detected' => 0,
@@ -187,7 +187,7 @@ if ($campaignid) {
         $indicatoritem = [
             'id' => $ind->id,
             'number' => $ind->number,
-            'title' => local_qualiscope_localized($ind, 'title'),
+            'title' => \local_qualiscope\helper::localized($ind, 'title'),
             'total' => $total,
             'detected' => $detected,
             'verify' => $verify,
@@ -199,7 +199,7 @@ if ($campaignid) {
             'failingcourses' => $failingcourses,
             'criterion_number' => $criteriarecords[$ind->criterion_id]->number ?? '',
             'criterion_title' => isset($criteriarecords[$ind->criterion_id]) ?
-                local_qualiscope_localized($criteriarecords[$ind->criterion_id], 'title') : '',
+                \local_qualiscope\helper::localized($criteriarecords[$ind->criterion_id], 'title') : '',
         ];
 
         if (isset($criteriadata[$ind->criterion_id])) {
@@ -273,7 +273,7 @@ if ($campaignid) {
         fputcsv($out, [get_string('campaign_report_subtitle', 'local_qualiscope')]);
         fputcsv($out, [get_string('campaign_name', 'local_qualiscope'), $campaign->name]);
         fputcsv($out, [get_string('campaign_referential', 'local_qualiscope'),
-            local_qualiscope_localized($referential, 'name') . ' ' . $referential->version]);
+            \local_qualiscope\helper::localized($referential, 'name') . ' ' . $referential->version]);
         fputcsv($out, [get_string('export_generated', 'local_qualiscope'), userdate(time())]);
         fputcsv($out, [get_string('export_global_rate', 'local_qualiscope'), $globalpercentage . ' %']);
         fputcsv($out, [
@@ -345,7 +345,7 @@ if ($campaignid) {
     $writer->add_row([get_string('campaign_report_subtitle', 'local_qualiscope')], true);
     $writer->add_row([get_string('campaign_name', 'local_qualiscope') . ' : ' . $campaign->name]);
     $writer->add_row([get_string('campaign_referential', 'local_qualiscope') .
-        ' : ' . local_qualiscope_localized($referential, 'name') . ' ' . $referential->version]);
+        ' : ' . \local_qualiscope\helper::localized($referential, 'name') . ' ' . $referential->version]);
     $writer->add_row([get_string('export_generated', 'local_qualiscope') . ' : ' .
         userdate(time(), get_string('strftimedatetime', 'langconfig'))]);
     $writer->add_row([get_string('export_global_rate', 'local_qualiscope') . ' ' . $globalpercentage . ' %']);
@@ -500,7 +500,7 @@ $writer = new \local_qualiscope\exporter\xlsx_writer(
 $writer->add_row([get_string('export_report_title', 'local_qualiscope')], true);
 $writer->add_row([get_string('export_course', 'local_qualiscope') . ' ' . $course->fullname]);
 $writer->add_row([get_string('export_referential', 'local_qualiscope') . ' ' .
-    local_qualiscope_localized($referential, 'name') . ' ' . $referential->version]);
+    \local_qualiscope\helper::localized($referential, 'name') . ' ' . $referential->version]);
 $writer->add_row([get_string('export_generated', 'local_qualiscope') . ' ' .
         userdate(time(), get_string('strftimedatetime', 'langconfig'))]);
 $writer->add_row([get_string('export_global_rate', 'local_qualiscope') . ' ' . $summary['percentage'] . ' %']);
@@ -522,9 +522,9 @@ $writer->add_row([
 $hasstatus = false;
 foreach ($criteria as $criterion) {
     foreach ($indicatorsbycriterion[$criterion->id] ?? [] as $indicator) {
-        $criterionlabel = (int) $criterion->number . ' — ' . local_qualiscope_localized($criterion, 'title');
+        $criterionlabel = (int) $criterion->number . ' — ' . \local_qualiscope\helper::localized($criterion, 'title');
         $indicatorlabel = (int) $criterion->number . '.' . (int) $indicator->number .
-            ' — ' . local_qualiscope_localized($indicator, 'title');
+            ' — ' . \local_qualiscope\helper::localized($indicator, 'title');
         $indicatorchecks = $checksbyindicator[$indicator->id] ?? [];
 
         if (!$indicatorchecks) {
@@ -553,16 +553,16 @@ foreach ($criteria as $criterion) {
             } else if ($check->automatic) {
                 $status = '—';
                 $compliance = '—';
-                $detail = local_qualiscope_localized($check, 'description');
+                $detail = \local_qualiscope\helper::localized($check, 'description');
             } else {
                 $status = get_string('dashboard_manual_only', 'local_qualiscope');
                 $compliance = '—';
-                $detail = local_qualiscope_localized($check, 'description');
+                $detail = \local_qualiscope\helper::localized($check, 'description');
             }
             $writer->add_row([
                 $criterionlabel,
                 $indicatorlabel,
-                local_qualiscope_localized($check, 'name'),
+                \local_qualiscope\helper::localized($check, 'name'),
                 $status,
                 $compliance,
                 $detail,

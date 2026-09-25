@@ -69,7 +69,7 @@ $referentialsdata = [];
 foreach ($referentials as $ref) {
     $referentialsdata[] = [
         'id' => $ref->id,
-        'label' => local_qualiscope_localized($ref, 'name') . ' ' . $ref->version,
+        'label' => \local_qualiscope\helper::localized($ref, 'name') . ' ' . $ref->version,
         'selected' => $ref->id == $referentialid,
     ];
 }

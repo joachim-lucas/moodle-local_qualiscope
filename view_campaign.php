@@ -149,7 +149,7 @@ $criteriadata = [];
 $weakpoints = [];
 
 foreach ($criteriarecords as $crit) {
-    $crittitle = local_qualiscope_localized($crit, 'title');
+    $crittitle = \local_qualiscope\helper::localized($crit, 'title');
     $criteriadata[$crit->id] = [
         'id' => $crit->id,
         'number' => $crit->number,
@@ -212,7 +212,7 @@ foreach ($indicatorsrecords as $ind) {
     $indicatoritem = [
         'id' => $ind->id,
         'number' => $ind->number,
-        'title' => local_qualiscope_localized($ind, 'title'),
+        'title' => \local_qualiscope\helper::localized($ind, 'title'),
         'total' => $total,
         'detected' => $detected,
         'verify' => $verify,
@@ -228,7 +228,7 @@ foreach ($indicatorsrecords as $ind) {
         'failingmessage' => get_string('campaign_courses_failing', 'local_qualiscope', $failingcourses),
         'criterion_number' => $criteriarecords[$ind->criterion_id]->number ?? '',
         'criterion_title' => isset($criteriarecords[$ind->criterion_id]) ?
-            local_qualiscope_localized($criteriarecords[$ind->criterion_id], 'title') : '',
+            \local_qualiscope\helper::localized($criteriarecords[$ind->criterion_id], 'title') : '',
     ];
 
     if (isset($criteriadata[$ind->criterion_id])) {
@@ -382,7 +382,7 @@ echo \local_qualiscope\quota::banner($output);
 echo $output->render_campaign_dashboard([
     'campaignname' => $campaign->name,
     'completed' => (bool) $campaign->timecompleted,
-    'referential' => $referential ? local_qualiscope_localized($referential, 'name') . ' ' . $referential->version : '—',
+    'referential' => $referential ? \local_qualiscope\helper::localized($referential, 'name') . ' ' . $referential->version : '—',
     'scopelabel' => $scopelabels[$campaign->scope] ?? $campaign->scope,
     'dateformatted' => userdate($campaign->timecreated),
     'runurl' => new moodle_url('/local/qualiscope/run.php', ['campaignid' => $campaignid, 'sesskey' => sesskey()]),

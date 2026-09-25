@@ -68,7 +68,7 @@ $summary['percentagelt50'] = $summary['percentage'] < 50;
 
 foreach ($criteria as &$entry) {
     $entry['number'] = $entry['criteria']->number;
-    $entry['title'] = local_qualiscope_localized($entry['criteria'], 'title');
+    $entry['title'] = \local_qualiscope\helper::localized($entry['criteria'], 'title');
     $entry['shorttitle'] = core_text::strlen($entry['title']) > 60 ?
     core_text::substr($entry['title'], 0, 60) . '…' : $entry['title'];
     $entry['percentagegt75'] = $entry['percentage'] !== null && $entry['percentage'] >= 75;
@@ -81,7 +81,7 @@ foreach ($criteria as &$entry) {
         $r['statusverify'] = $r['status'] === 'verify';
         $r['statusmissing'] = $r['status'] === 'missing';
         $r['statusna'] = $r['status'] === 'na';
-        $r['checkname'] = local_qualiscope_localized($r['check'], 'name');
+        $r['checkname'] = \local_qualiscope\helper::localized($r['check'], 'name');
         $r['detail'] = $r['detail'] ?? '';
         $r['indicatorurl'] = new moodle_url('/local/qualiscope/indicator.php', [
             'courseid' => $courseid,
@@ -96,7 +96,7 @@ $referentialsdata = [];
 foreach ($referentials as $ref) {
     $referentialsdata[] = [
         'id' => $ref->id,
-        'label' => local_qualiscope_localized($ref, 'name') . ' ' . $ref->version,
+        'label' => \local_qualiscope\helper::localized($ref, 'name') . ' ' . $ref->version,
         'selected' => $ref->id == $referentialid,
     ];
 }
@@ -128,7 +128,7 @@ echo $output->render_dashboard([
     'summaryitems' => $summaryitems,
     'criteria' => array_values($criteria),
     'referentials' => array_values($referentialsdata),
-    'selectedreferential' => $selectedreferential ? local_qualiscope_localized($selectedreferential, 'name') . ' ' .
+    'selectedreferential' => $selectedreferential ? \local_qualiscope\helper::localized($selectedreferential, 'name') . ' ' .
         $selectedreferential->version : '',
     'referentialurl' => new moodle_url('/local/qualiscope/dashboard.php', ['courseid' => $courseid]),
     'exporturl' => new moodle_url('/local/qualiscope/export.php', [
