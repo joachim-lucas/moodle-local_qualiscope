@@ -19,74 +19,74 @@
 .badge.bg-warning,
 .badge.bg-info,
 .badge.bg-dark {
-    color: #fff !important;
+    color: #fff;
 }
 
 /* Subtle backgrounds (Bootstrap 5.3 only). */
 .bg-primary-subtle {
-    background-color: #cfe2ff !important;
+    background-color: #cfe2ff;
 }
 
 .bg-secondary-subtle {
-    background-color: #e9ecef !important;
+    background-color: #e9ecef;
 }
 
 .bg-success-subtle {
-    background-color: #d1e7dd !important;
+    background-color: #d1e7dd;
 }
 
 .bg-danger-subtle {
-    background-color: #f8d7da !important;
+    background-color: #f8d7da;
 }
 
 .bg-warning-subtle {
-    background-color: #fff3cd !important;
+    background-color: #fff3cd;
 }
 
 .bg-info-subtle {
-    background-color: #cff4fc !important;
+    background-color: #cff4fc;
 }
 
 .bg-light-subtle {
-    background-color: #fcfcfd !important;
+    background-color: #fcfcfd;
 }
 
 .bg-dark-subtle {
-    background-color: #ced4da !important;
+    background-color: #ced4da;
 }
 
 /* Font sizes (Bootstrap 5.3 only). */
 .fs-1 {
-    font-size: 2.5rem !important;
+    font-size: 2.5rem;
 }
 
 .fs-2 {
-    font-size: 2rem !important;
+    font-size: 2rem;
 }
 
 .fs-3 {
-    font-size: 1.75rem !important;
+    font-size: 1.75rem;
 }
 
 .fs-4 {
-    font-size: 1.5rem !important;
+    font-size: 1.5rem;
 }
 
 .fs-5 {
-    font-size: 1.25rem !important;
+    font-size: 1.25rem;
 }
 
 .fs-6 {
-    font-size: 1rem !important;
+    font-size: 1rem;
 }
 
 /* Font weights (Bootstrap 5 only). */
 .fw-bold {
-    font-weight: 700 !important;
+    font-weight: 700;
 }
 
 .fw-semibold {
-    font-weight: 600 !important;
+    font-weight: 600;
 }
 
 /* Display sizes available in Bootstrap 5 only. */
@@ -104,32 +104,32 @@
 
 /* Line height helper. */
 .lh-1 {
-    line-height: 1 !important;
+    line-height: 1;
 }
 
 /* Flex gap (Bootstrap 5 only). */
 .gap-0 {
-    gap: 0 !important;
+    gap: 0;
 }
 
 .gap-1 {
-    gap: .25rem !important;
+    gap: .25rem;
 }
 
 .gap-2 {
-    gap: .5rem !important;
+    gap: .5rem;
 }
 
 .gap-3 {
-    gap: 1rem !important;
+    gap: 1rem;
 }
 
 .gap-4 {
-    gap: 1.5rem !important;
+    gap: 1.5rem;
 }
 
 .gap-5 {
-    gap: 3rem !important;
+    gap: 3rem;
 }
 
 /* Grid gutters (Bootstrap 5 only). */
@@ -175,62 +175,62 @@
 
 /* Margin inline-end/start (Bootstrap 5 only). */
 .me-0 {
-    margin-right: 0 !important;
+    margin-right: 0;
 }
 
 .me-1 {
-    margin-right: .25rem !important;
+    margin-right: .25rem;
 }
 
 .me-2 {
-    margin-right: .5rem !important;
+    margin-right: .5rem;
 }
 
 .me-3 {
-    margin-right: 1rem !important;
+    margin-right: 1rem;
 }
 
 .ms-0 {
-    margin-left: 0 !important;
+    margin-left: 0;
 }
 
 .ms-1 {
-    margin-left: .25rem !important;
+    margin-left: .25rem;
 }
 
 .ms-2 {
-    margin-left: .5rem !important;
+    margin-left: .5rem;
 }
 
 .ms-3 {
-    margin-left: 1rem !important;
+    margin-left: 1rem;
 }
 
 /* Padding inline-start (Bootstrap 5 only). */
 .ps-0 {
-    padding-left: 0 !important;
+    padding-left: 0;
 }
 
 .ps-1 {
-    padding-left: .25rem !important;
+    padding-left: .25rem;
 }
 
 .ps-2 {
-    padding-left: .5rem !important;
+    padding-left: .5rem;
 }
 
 .ps-3 {
-    padding-left: 1rem !important;
+    padding-left: 1rem;
 }
 
 /* Text helpers (Bootstrap 5 only). */
 .text-end {
-    text-align: right !important;
+    text-align: right;
 }
 
 @media (min-width: 768px) {
     .text-md-end {
-        text-align: right !important;
+        text-align: right;
     }
 }
 
@@ -240,13 +240,13 @@
 
 /* Dropdown alignment alias (Bootstrap 5 uses .dropdown-menu-end). */
 .dropdown-menu-end {
-    right: 0 !important;
-    left: auto !important;
+    right: 0;
+    left: auto;
 }
 
 /* Form selects (Bootstrap 5 only; Bootstrap 4 uses .custom-select). */
 .form-select {
-    --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    --bs-form-select-bg-img: url("/local/qualiscope/pix/select-chevron.svg");
     display: block;
     width: 100%;
     padding: .375rem 2.25rem .375rem .75rem;
@@ -279,9 +279,7 @@
     border-radius: .25rem;
 }
 
-.form-select.w-auto {
-    width: auto !important;
-}
+/* .w-auto already provides width:auto on both Bootstrap 4 and 5. */
 
 /* Form label helper (Bootstrap 5 only). */
 .form-label {
