@@ -1,3 +1,78 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_qualiscope/dashboard
+
+    Course audit dashboard with score, criteria and results.
+
+    Example context (json):
+    {
+        "coursename": "Course full name",
+        "courseid": 4,
+        "helpurl": "help.php",
+        "referentials": [
+            {"id": 1, "label": "Qualiopi", "selected": true}
+        ],
+        "referentialurl": "dashboard.php",
+        "exportpdfurl": "export.php?format=pdf",
+        "exportzipurl": "export.php?format=zip",
+        "exporturl": "export.php?format=xlsx",
+        "summary": {
+            "percentage": 74,
+            "percentagebetween50and75": true
+        },
+        "summaryitems": [
+            {
+                "bgclass": "text-success",
+                "use_fontawesome": false,
+                "emoji": "✔",
+                "count": 12,
+                "label": "Detected"
+            },
+            {
+                "bgclass": "text-warning",
+                "use_fontawesome": true,
+                "icon": "<i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\"></i>",
+                "count": 3,
+                "label": "To verify"
+            }
+        ],
+        "criteria": [
+            {
+                "id": 3,
+                "number": 1,
+                "shorttitle": "Governance",
+                "manualonly": false,
+                "percentagebetween50and75": true,
+                "percentage": 74,
+                "results": [
+                    {
+                        "indicator": {"number": 1},
+                        "checkname": "Course summary is present",
+                        "detail": "Summary found in the course",
+                        "statusdetected": true,
+                        "statuslabel": "Detected",
+                        "indicatorurl": "indicator.php?id=1"
+                    }
+                ]
+            }
+        ]
+    }
+}}
 <div class="qualiscope-dashboard container-fluid py-4">
     <div class="row mb-4">
         <div class="col-12 d-flex flex-wrap align-items-start justify-content-between gap-2">
@@ -10,7 +85,7 @@
                     <i class="fa fa-question-circle" aria-hidden="true"></i> {{#str}} help_button_label, local_qualiscope {{/str}}
                 </a>
                 <div class="dropdown">
-                    <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="exportDropdown" data-toggle="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         {{#str}} export_report, local_qualiscope {{/str}}
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="exportDropdown">
@@ -108,7 +183,7 @@
     <div data-qualiscope="criteria-accordion">
     {{#criteria}}
     <div class="card mb-3">
-        <div class="card-header d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#qualified-criteria-{{id}}" role="button">
+        <div class="card-header d-flex justify-content-between align-items-center" data-toggle="collapse" data-target="#qualified-criteria-{{id}}" data-bs-toggle="collapse" data-bs-target="#qualified-criteria-{{id}}" role="button">
             <span>
                 <strong>C{{number}}</strong> &mdash; {{shorttitle}}
             </span>
@@ -136,7 +211,7 @@
                         <a href="{{{indicatorurl}}}">
                             <strong>I{{indicator.number}}</strong> &mdash; {{checkname}}
                         </a>
-                        {{#detail}}<br/><small class="text-muted">{{detail}}</small>{{/detail}}
+                        {{#detail}}<br><small class="text-muted">{{detail}}</small>{{/detail}}
                     </span>
                     <span class="badge
                         {{#statusdetected}}bg-success{{/statusdetected}}

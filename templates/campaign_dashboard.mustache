@@ -1,3 +1,92 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_qualiscope/campaign_dashboard
+
+    Campaign results dashboard with courses, criteria and weak points.
+
+    Example context (json):
+    {
+        "campaignname": "Audit campaign 2026",
+        "completed": true,
+        "compareurl": "compare.php",
+        "hasresults": true,
+        "exportpdfurl": "export.php?format=pdf",
+        "exportxlsxurl": "export.php?format=xlsx",
+        "exportcsvurl": "export.php?format=csv",
+        "printreporturl": "report.php?print=1",
+        "runurl": "run.php",
+        "rerunurl": "rerun.php",
+        "referential": "Qualiopi",
+        "scopelabel": "All courses",
+        "dateformatted": "24/09/2026",
+        "summaryitems": [
+            {"bgclass": "text-success", "label": "Courses", "value": "5"},
+            {"bgclass": "text-danger", "label": "Weak points", "value": "2"}
+        ],
+        "courses": [
+            {
+                "coursename": "Course full name",
+                "percentage": 82,
+                "percentageclass": "bg-success",
+                "detected": 10,
+                "verify": 2,
+                "missing": 1,
+                "na": 0,
+                "viewurl": "course_view.php?id=4"
+            }
+        ],
+        "criteria": [
+            {
+                "number": 1,
+                "title": "Criterion title",
+                "manualonly": false,
+                "percentageclass": "bg-success",
+                "percentage": 74,
+                "indicators": [
+                    {
+                        "number": 1,
+                        "title": "Indicator title",
+                        "haspercentage": true,
+                        "percentageclass": "bg-success",
+                        "percentage": 74,
+                        "detected": 2,
+                        "verify": 1,
+                        "missing": 0,
+                        "na": 0
+                    }
+                ]
+            }
+        ],
+        "hasweakpoints": false,
+        "actionstotal": 1,
+        "actionstodo": 1,
+        "actionsinprogress": 0,
+        "actionsclosed": 0,
+        "hasactions": false,
+        "bulkactionurl": "bulk_actions.php",
+        "sesskey": "abc123",
+        "campaignid": 1,
+        "indicatorslist": [
+            {"id": 1, "label": "I1 - Indicator title"}
+        ],
+        "backurl": "campaigns.php"
+    }
+}}
 <div class="qualiscope-campaign-dashboard container-fluid py-4">
     <div class="row mb-4">
         <div class="col-12 d-flex justify-content-between align-items-center">
@@ -18,7 +107,7 @@
                 </a>
                 {{#hasresults}}
                 <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="campaignExportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="campaignExportDropdown" data-toggle="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa fa-download me-1" aria-hidden="true"></i> {{#str}} campaign_export_report, local_qualiscope {{/str}}
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="campaignExportDropdown">
@@ -80,23 +169,23 @@
     {{#hasresults}}
     <ul class="nav nav-tabs mb-4" id="campaignTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="courses-tab" data-bs-toggle="tab" data-bs-target="#courses-content" type="button" role="tab" aria-controls="courses-content" aria-selected="true">
+            <button class="nav-link active" id="courses-tab" data-bs-toggle="tab" data-bs-target="#courses-content" data-toggle="tab" data-target="#courses-content" type="button" role="tab" aria-controls="courses-content" aria-selected="true">
                 <i class="fa fa-graduation-cap me-1" aria-hidden="true"></i> {{#str}} campaign_tab_courses, local_qualiscope {{/str}}
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="macro-tab" data-bs-toggle="tab" data-bs-target="#macro-content" type="button" role="tab" aria-controls="macro-content" aria-selected="false">
+            <button class="nav-link" id="macro-tab" data-bs-toggle="tab" data-bs-target="#macro-content" data-toggle="tab" data-target="#macro-content" type="button" role="tab" aria-controls="macro-content" aria-selected="false">
                 <i class="fa fa-bar-chart me-1" aria-hidden="true"></i> {{#str}} campaign_tab_macro, local_qualiscope {{/str}}
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="weakpoints-tab" data-bs-toggle="tab" data-bs-target="#weakpoints-content" type="button" role="tab" aria-controls="weakpoints-content" aria-selected="false">
+            <button class="nav-link" id="weakpoints-tab" data-bs-toggle="tab" data-bs-target="#weakpoints-content" data-toggle="tab" data-target="#weakpoints-content" type="button" role="tab" aria-controls="weakpoints-content" aria-selected="false">
                 <i class="fa fa-exclamation-triangle me-1" aria-hidden="true"></i> {{#str}} campaign_tab_weakpoints, local_qualiscope {{/str}}
                 {{#hasweakpoints}}<span class="badge bg-danger ms-1">{{weakpoints.length}}</span>{{/hasweakpoints}}
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="capa-tab" data-bs-toggle="tab" data-bs-target="#capa-content" type="button" role="tab" aria-controls="capa-content" aria-selected="false">
+            <button class="nav-link" id="capa-tab" data-bs-toggle="tab" data-bs-target="#capa-content" data-toggle="tab" data-target="#capa-content" type="button" role="tab" aria-controls="capa-content" aria-selected="false">
                 <i class="fa fa-tasks me-1" aria-hidden="true"></i> {{#str}} campaign_tab_actions, local_qualiscope {{/str}}
                 <span class="badge bg-secondary ms-1">{{actionstotal}}</span>
             </button>
@@ -290,7 +379,7 @@
                     <p class="text-muted small mb-0">{{#str}} campaign_actions_desc, local_qualiscope {{/str}}</p>
                 </div>
                 <div>
-                    <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#bulkActionForm" aria-expanded="false" aria-controls="bulkActionForm">
+                    <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#bulkActionForm" data-toggle="collapse" data-target="#bulkActionForm" aria-expanded="false" aria-controls="bulkActionForm">
                         <i class="fa fa-plus-circle me-1" aria-hidden="true"></i> {{#str}} campaign_bulk_action_create, local_qualiscope {{/str}}
                     </button>
                 </div>

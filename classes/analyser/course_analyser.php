@@ -1,17 +1,59 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * QualiScope Course Analyser class.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 
 namespace local_qualiscope\analyser;
 
-defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Orchestrates the audit of a single Moodle course against an active referential.
+ *
+ * @package local_qualiscope
+ */
 class course_analyser {
-
+    /** @var int The course id being analysed. */
     private $courseid;
+
+    /** @var \stdClass The course record. */
     private $course;
+
+    /** @var array The latest analysis results for each automatic check. */
     private $results = [];
+
+    /** @var int Campaign id used when saving results, 0 for a standalone audit. */
     private $campaignid;
+
+    /** @var int|null Referential id driving the list of checks to run. */
     private $referentialid;
 
+    /**
+     * Constructor.
+     *
+     * @param int $courseid The course id to audit.
+     * @param int $campaignid Optional campaign id the audit belongs to.
+     * @param int|null $referentialid Optional referential id, defaults to the first active referential.
+     */
     public function __construct(int $courseid, int $campaignid = 0, ?int $referentialid = null) {
         global $DB;
         $this->courseid = $courseid;
@@ -27,11 +69,11 @@ class course_analyser {
         global $DB;
 
         $cfg = (int) get_config('local_qualiscope', 'defaultreferential');
-        if ($cfg && $DB->record_exists('local_qualiopi_referentials', ['id' => $cfg, 'active' => 1])) {
+        if ($cfg && $DB->record_exists('local_qualiscope_referentials', ['id' => $cfg, 'active' => 1])) {
             return $cfg;
         }
 
-        $ref = $DB->get_records('local_qualiopi_referentials', ['active' => 1], 'id ASC', 'id', 0, 1);
+        $ref = $DB->get_records('local_qualiscope_referentials', ['active' => 1], 'id ASC', 'id', 0, 1);
         if ($ref) {
             $first = reset($ref);
             return (int) $first->id;
@@ -39,6 +81,11 @@ class course_analyser {
         return null;
     }
 
+    /**
+     * Returns the id of the referential used for the audit, or null if none.
+     *
+     * @return int|null
+     */
     public function get_referentialid(): ?int {
         return $this->referentialid;
     }
@@ -61,7 +108,7 @@ class course_analyser {
                 if (!$scopeids) {
                     return [];
                 }
-                list($insql, $inparams) = $DB->get_in_or_equal($scopeids, SQL_PARAMS_NAMED, 'cat');
+                [$insql, $inparams] = $DB->get_in_or_equal($scopeids, SQL_PARAMS_NAMED, 'cat');
                 $inparams['siteid'] = $siteid;
                 return $DB->get_fieldset_sql(
                     "SELECT id FROM {course} WHERE visible = 1 AND id <> :siteid AND category $insql ORDER BY id ASC",
@@ -72,7 +119,7 @@ class course_analyser {
                 if (!$scopeids) {
                     return [];
                 }
-                list($insql, $inparams) = $DB->get_in_or_equal($scopeids, SQL_PARAMS_NAMED, 'cid');
+                [$insql, $inparams] = $DB->get_in_or_equal($scopeids, SQL_PARAMS_NAMED, 'cid');
                 $inparams['siteid'] = $siteid;
                 return $DB->get_fieldset_sql(
                     "SELECT id FROM {course} WHERE visible = 1 AND id <> :siteid AND id $insql ORDER BY id ASC",
@@ -86,6 +133,11 @@ class course_analyser {
         }
     }
 
+    /**
+     * Runs every automatic check of the referential against the course.
+     *
+     * @return array List of results, each containing the check and indicator records.
+     */
     public function run(): array {
         global $DB;
 
@@ -94,16 +146,16 @@ class course_analyser {
         }
 
         $checks = $DB->get_records_sql(
-            "SELECT c.* FROM {local_qualiopi_checks} c
-             JOIN {local_qualiopi_indicators} i ON i.id = c.indicator_id
-             JOIN {local_qualiopi_criteria} cr ON cr.id = i.criterion_id
+            "SELECT c.* FROM {local_qualiscope_checks} c
+             JOIN {local_qualiscope_indicators} i ON i.id = c.indicator_id
+             JOIN {local_qualiscope_criteria} cr ON cr.id = i.criterion_id
              WHERE c.automatic = 1 AND cr.referential_id = :refid",
             ['refid' => $this->referentialid]
         );
         $results = [];
 
         foreach ($checks as $check) {
-            $indicator = $DB->get_record('local_qualiopi_indicators', ['id' => $check->indicator_id]);
+            $indicator = $DB->get_record('local_qualiscope_indicators', ['id' => $check->indicator_id]);
             $analyser = $this->get_check_analyser($check->type);
             if ($analyser) {
                 $result = $analyser->execute($this->courseid, $check);
@@ -117,6 +169,11 @@ class course_analyser {
         return $results;
     }
 
+    /**
+     * Aggregates the latest results into a global compliance summary.
+     *
+     * @return array Summary with total/detected/verify/missing/na counts and a percentage.
+     */
     public function get_summary(): array {
         $summary = [
             'total' => 0,
@@ -159,6 +216,11 @@ class course_analyser {
         return $summary;
     }
 
+    /**
+     * Builds a per-criterion summary of the latest results.
+     *
+     * @return array Keyed by criterion id, each entry holding counts, weighted score and results.
+     */
     public function get_criteria_summary(): array {
         global $DB;
 
@@ -166,7 +228,7 @@ class course_analyser {
             return [];
         }
 
-        $criteria = $DB->get_records('local_qualiopi_criteria', ['referential_id' => $this->referentialid], 'number ASC');
+        $criteria = $DB->get_records('local_qualiscope_criteria', ['referential_id' => $this->referentialid], 'number ASC');
         $criteriasummary = [];
         foreach ($criteria as $c) {
             $criteriasummary[$c->id] = [
@@ -187,7 +249,7 @@ class course_analyser {
         foreach ($this->results as $result) {
             $cid = $result['indicator']->criterion_id;
             if (!isset($criteriasummary[$cid])) {
-                $criteria = $DB->get_record('local_qualiopi_criteria', ['id' => $cid]);
+                $criteria = $DB->get_record('local_qualiscope_criteria', ['id' => $cid]);
                 $criteriasummary[$cid] = [
                     'criteria' => $criteria,
                     'id' => $cid,
@@ -239,10 +301,16 @@ class course_analyser {
         return $criteriasummary;
     }
 
+    /**
+     * Persists a single result for the current course, updating it if it already exists.
+     *
+     * @param array $result Result array produced by a check analyser.
+     * @return int The id of the saved or updated result record.
+     */
     public function save_result(array $result): int {
         global $DB;
 
-        $existing = $DB->get_record('local_qualiopi_results', [
+        $existing = $DB->get_record('local_qualiscope_results', [
             'campaign_id' => $this->campaignid,
             'courseid' => $this->courseid,
             'check_id' => $result['check']->id,
@@ -252,7 +320,7 @@ class course_analyser {
             $existing->detail = $result['detail'] ?? '';
             $existing->ratio = $result['ratio'] ?? ($result['status'] === 'detected' ? 1.0 : 0.0);
             $existing->timemodified = time();
-            $DB->update_record('local_qualiopi_results', $existing);
+            $DB->update_record('local_qualiscope_results', $existing);
             return (int) $existing->id;
         }
 
@@ -267,9 +335,14 @@ class course_analyser {
         $record->evidence_count = 0;
         $record->timecreated = time();
         $record->timemodified = time();
-        return (int) $DB->insert_record('local_qualiopi_results', $record);
+        return (int) $DB->insert_record('local_qualiscope_results', $record);
     }
 
+    /**
+     * Saves all collected results under the given campaign id.
+     *
+     * @param int $campaignid The campaign id the results belong to.
+     */
     public function save_results(int $campaignid): void {
         $this->campaignid = $campaignid;
         foreach ($this->results as $result) {
@@ -277,6 +350,12 @@ class course_analyser {
         }
     }
 
+    /**
+     * Instantiates the check analyser matching a check type, or null when unknown.
+     *
+     * @param string $type The check type identifier.
+     * @return \local_qualiscope\checks\base_check|null
+     */
     private function get_check_analyser(string $type) {
         $map = [
             'activity_exists'    => new \local_qualiscope\checks\activity_check(),

@@ -1,4 +1,27 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * QualiScope Compare Campaigns page.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 
 require_once('../../config.php');
 require_once($CFG->dirroot . '/local/qualiscope/lib.php');
@@ -17,13 +40,14 @@ $PAGE->set_context($context);
 
 $output = $PAGE->get_renderer('local_qualiscope');
 
-$allcampaigns = $DB->get_records('local_qualiopi_campaigns', [], 'timecreated DESC');
+$allcampaigns = $DB->get_records('local_qualiscope_campaigns', [], 'timecreated DESC');
 
 $campaignsoptionsa = [];
 $campaignsoptionsb = [];
 foreach ($allcampaigns as $c) {
-    $ref = $DB->get_record('local_qualiopi_referentials', ['id' => $c->referential_id]);
-    $label = $c->name . ' (' . ($ref ? $ref->name . ' ' . $ref->version : '') . ' - ' . userdate($c->timecreated, get_string('strftimedateshort', 'langconfig')) . ')';
+    $ref = $DB->get_record('local_qualiscope_referentials', ['id' => $c->referential_id]);
+    $label = $c->name . ' (' . ($ref ? \local_qualiscope\helper::localized($ref, 'name') . ' ' . $ref->version : '') . ' - ' .
+    userdate($c->timecreated, get_string('strftimedateshort', 'langconfig')) . ')';
     $campaignsoptionsa[] = [
         'id' => $c->id,
         'name' => $label,
@@ -38,8 +62,8 @@ foreach ($allcampaigns as $c) {
 
 $hascomparison = false;
 $comparisonerror = '';
-$campaigndata_a = null;
-$campaigndata_b = null;
+$campaignadata = null;
+$campaignbdata = null;
 $deltaglobal = 0;
 $deltaglobalclass = '';
 $deltaglobalsign = '';
@@ -51,15 +75,15 @@ if ($ida && $idb) {
     if ($ida == $idb) {
         $comparisonerror = get_string('campaign_same_campaign_warning', 'local_qualiscope');
     } else {
-        $campaigna = $DB->get_record('local_qualiopi_campaigns', ['id' => $ida]);
-        $campaignb = $DB->get_record('local_qualiopi_campaigns', ['id' => $idb]);
+        $campaigna = $DB->get_record('local_qualiscope_campaigns', ['id' => $ida]);
+        $campaignb = $DB->get_record('local_qualiscope_campaigns', ['id' => $idb]);
 
         if ($campaigna && $campaignb) {
             $hascomparison = true;
 
-            $process_campaign_stats = function($campaign) use ($DB) {
-                $ref = $DB->get_record('local_qualiopi_referentials', ['id' => $campaign->referential_id]);
-                $results = $DB->get_records('local_qualiopi_results', ['campaign_id' => $campaign->id], 'courseid ASC');
+            $processcampaignstats = function ($campaign) use ($DB) {
+                $ref = $DB->get_record('local_qualiscope_referentials', ['id' => $campaign->referential_id]);
+                $results = $DB->get_records('local_qualiscope_results', ['campaign_id' => $campaign->id], 'courseid ASC');
 
                 $bycourse = [];
                 $byindicator = [];
@@ -83,10 +107,18 @@ if ($ida && $idb) {
                     }
                     $bycourse[$r->courseid]['total']++;
                     switch ($r->status) {
-                        case 'detected': $bycourse[$r->courseid]['detected']++; break;
-                        case 'verify':   $bycourse[$r->courseid]['verify']++; break;
-                        case 'missing':  $bycourse[$r->courseid]['missing']++; break;
-                        case 'na':       $bycourse[$r->courseid]['na']++; break;
+                        case 'detected':
+                            $bycourse[$r->courseid]['detected']++;
+                            break;
+                        case 'verify':
+                            $bycourse[$r->courseid]['verify']++;
+                            break;
+                        case 'missing':
+                            $bycourse[$r->courseid]['missing']++;
+                            break;
+                        case 'na':
+                            $bycourse[$r->courseid]['na']++;
+                            break;
                     }
                     if ($r->status !== 'na') {
                         $bycourse[$r->courseid]['weighted'] += (float) $r->ratio > 0
@@ -98,10 +130,18 @@ if ($ida && $idb) {
 
                     $totals['total']++;
                     switch ($r->status) {
-                        case 'detected': $totals['detected']++; break;
-                        case 'verify':   $totals['verify']++; break;
-                        case 'missing':  $totals['missing']++; break;
-                        case 'na':       $totals['na']++; break;
+                        case 'detected':
+                            $totals['detected']++;
+                            break;
+                        case 'verify':
+                            $totals['verify']++;
+                            break;
+                        case 'missing':
+                            $totals['missing']++;
+                            break;
+                        case 'na':
+                            $totals['na']++;
+                            break;
                     }
                     if ($r->status !== 'na') {
                         $totals['weighted'] += (float) $r->ratio > 0
@@ -124,11 +164,13 @@ if ($ida && $idb) {
                 $applicable = $totals['total'] - $totals['na'];
                 $globalpct = $applicable > 0 ? (int) round(($totals['weighted'] * 100) / $applicable) : 0;
 
-                // Indicators & Criteria
-                $criteria = $DB->get_records('local_qualiopi_criteria', ['referential_id' => $campaign->referential_id], 'number ASC');
+                // Indicators & Criteria.
+                $criteria = $DB->get_records('local_qualiscope_criteria', [
+                    'referential_id' => $campaign->referential_id,
+                ], 'number ASC');
                 $indicators = $DB->get_records_sql(
-                    "SELECT i.* FROM {local_qualiopi_indicators} i
-                     JOIN {local_qualiopi_criteria} c ON c.id = i.criterion_id
+                    "SELECT i.* FROM {local_qualiscope_indicators} i
+                     JOIN {local_qualiscope_criteria} c ON c.id = i.criterion_id
                      WHERE c.referential_id = :refid ORDER BY c.number ASC, i.number ASC",
                     ['refid' => $campaign->referential_id]
                 );
@@ -140,7 +182,7 @@ if ($ida && $idb) {
                     $critstats[$crit->id] = [
                         'id' => $crit->id,
                         'number' => $crit->number,
-                        'title' => $crit->title,
+                        'title' => \local_qualiscope\helper::localized($crit, 'title'),
                         'total' => 0,
                         'na' => 0,
                         'weighted' => 0.0,
@@ -168,7 +210,7 @@ if ($ida && $idb) {
                     $indstats[$ind->number] = [
                         'id' => $ind->id,
                         'number' => $ind->number,
-                        'title' => $ind->title,
+                        'title' => \local_qualiscope\helper::localized($ind, 'title'),
                         'criterion_id' => $ind->criterion_id,
                         'percentage' => $indpct,
                     ];
@@ -190,7 +232,7 @@ if ($ida && $idb) {
 
                 return [
                     'campaign' => $campaign,
-                    'referential' => $ref ? $ref->name . ' ' . $ref->version : '—',
+                    'referential' => $ref ? \local_qualiscope\helper::localized($ref, 'name') . ' ' . $ref->version : '—',
                     'dateformatted' => userdate($campaign->timecreated, get_string('strftimedateshort', 'langconfig')),
                     'coursescount' => count($coursesdata),
                     'coursesdata' => $coursesdata,
@@ -200,16 +242,16 @@ if ($ida && $idb) {
                 ];
             };
 
-            $campaigndata_a = $process_campaign_stats($campaigna);
-            $campaigndata_b = $process_campaign_stats($campaignb);
+            $campaignadata = $processcampaignstats($campaigna);
+            $campaignbdata = $processcampaignstats($campaignb);
 
-            $deltaglobal = $campaigndata_b['globalpercentage'] - $campaigndata_a['globalpercentage'];
+            $deltaglobal = $campaignbdata['globalpercentage'] - $campaignadata['globalpercentage'];
             $deltaglobalsign = $deltaglobal > 0 ? '+' : '';
             $deltaglobalclass = $deltaglobal > 0 ? 'text-success' : ($deltaglobal < 0 ? 'text-danger' : 'text-muted');
 
-            // Compare criteria
-            foreach ($campaigndata_b['criteria'] as $cid => $critb) {
-                $crita = $campaigndata_a['criteria'][$cid] ?? null;
+            // Compare criteria.
+            foreach ($campaignbdata['criteria'] as $cid => $critb) {
+                $crita = $campaignadata['criteria'][$cid] ?? null;
                 $pcta = $crita && $crita['percentage'] !== null ? $crita['percentage'] : null;
                 $pctb = $critb['percentage'] !== null ? $critb['percentage'] : null;
                 $delta = ($pcta !== null && $pctb !== null) ? ($pctb - $pcta) : null;
@@ -220,15 +262,16 @@ if ($ida && $idb) {
                     'score_a' => $pcta !== null ? $pcta . '%' : '—',
                     'score_b' => $pctb !== null ? $pctb . '%' : '—',
                     'delta' => $delta !== null ? ($delta > 0 ? '+' . $delta . '%' : $delta . '%') : '—',
-                    'deltaclass' => $delta !== null ? ($delta > 0 ? 'text-success' : ($delta < 0 ? 'text-danger' : 'text-muted')) : 'text-muted',
+                    'deltaclass' => $delta !== null ? ($delta > 0 ? 'text-success' :
+                        ($delta < 0 ? 'text-danger' : 'text-muted')) : 'text-muted',
                     'has_progression' => $delta !== null && $delta > 0,
                     'has_regression' => $delta !== null && $delta < 0,
                 ];
             }
 
-            // Compare indicators
-            foreach ($campaigndata_b['indicators'] as $indnum => $indb) {
-                $inda = $campaigndata_a['indicators'][$indnum] ?? null;
+            // Compare indicators.
+            foreach ($campaignbdata['indicators'] as $indnum => $indb) {
+                $inda = $campaignadata['indicators'][$indnum] ?? null;
                 $pcta = $inda && $inda['percentage'] !== null ? $inda['percentage'] : null;
                 $pctb = $indb['percentage'] !== null ? $indb['percentage'] : null;
                 $delta = ($pcta !== null && $pctb !== null) ? ($pctb - $pcta) : null;
@@ -239,21 +282,22 @@ if ($ida && $idb) {
                     'score_a' => $pcta !== null ? $pcta . '%' : '—',
                     'score_b' => $pctb !== null ? $pctb . '%' : '—',
                     'delta' => $delta !== null ? ($delta > 0 ? '+' . $delta . '%' : $delta . '%') : '—',
-                    'deltaclass' => $delta !== null ? ($delta > 0 ? 'text-success' : ($delta < 0 ? 'text-danger' : 'text-muted')) : 'text-muted',
+                    'deltaclass' => $delta !== null ? ($delta > 0 ? 'text-success' :
+                        ($delta < 0 ? 'text-danger' : 'text-muted')) : 'text-muted',
                     'has_progression' => $delta !== null && $delta > 0,
                     'has_regression' => $delta !== null && $delta < 0,
                 ];
             }
 
-            // Compare courses
+            // Compare courses.
             $allcourseids = array_unique(array_merge(
-                array_keys($campaigndata_a['coursesdata']),
-                array_keys($campaigndata_b['coursesdata'])
+                array_keys($campaignadata['coursesdata']),
+                array_keys($campaignbdata['coursesdata'])
             ));
 
             foreach ($allcourseids as $cid) {
-                $ca = $campaigndata_a['coursesdata'][$cid] ?? null;
-                $cb = $campaigndata_b['coursesdata'][$cid] ?? null;
+                $ca = $campaignadata['coursesdata'][$cid] ?? null;
+                $cb = $campaignbdata['coursesdata'][$cid] ?? null;
                 $coursename = $cb['coursename'] ?? ($ca['coursename'] ?? 'Course #' . $cid);
                 $pcta = $ca ? $ca['percentage'] : null;
                 $pctb = $cb ? $cb['percentage'] : null;
@@ -264,7 +308,8 @@ if ($ida && $idb) {
                     'score_a' => $pcta !== null ? $pcta . '%' : '—',
                     'score_b' => $pctb !== null ? $pctb . '%' : '—',
                     'delta' => $delta !== null ? ($delta > 0 ? '+' . $delta . '%' : $delta . '%') : '—',
-                    'deltaclass' => $delta !== null ? ($delta > 0 ? 'text-success' : ($delta < 0 ? 'text-danger' : 'text-muted')) : 'text-muted',
+                    'deltaclass' => $delta !== null ? ($delta > 0 ? 'text-success' :
+                        ($delta < 0 ? 'text-danger' : 'text-muted')) : 'text-muted',
                     'has_progression' => $delta !== null && $delta > 0,
                     'has_regression' => $delta !== null && $delta < 0,
                 ];
@@ -279,8 +324,8 @@ echo $output->render_compare_campaigns([
     'campaignsoptionsb' => $campaignsoptionsb,
     'hascomparison' => $hascomparison,
     'comparisonerror' => $comparisonerror,
-    'campaigndata_a' => $campaigndata_a,
-    'campaigndata_b' => $campaigndata_b,
+    'campaigndata_a' => $campaignadata,
+    'campaigndata_b' => $campaignbdata,
     'deltaglobal' => $deltaglobalsign . $deltaglobal . '%',
     'deltaglobalclass' => $deltaglobalclass,
     'has_global_progression' => $deltaglobal > 0,

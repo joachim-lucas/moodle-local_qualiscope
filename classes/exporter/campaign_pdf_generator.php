@@ -1,4 +1,27 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * QualiScope Campaign Pdf Generator class.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 
 namespace local_qualiscope\exporter;
 
@@ -9,9 +32,10 @@ require_once($CFG->libdir . '/pdflib.php');
 
 /**
  * High-definition PDF audit report generator for QualiScope campaigns.
+ *
+ * @package local_qualiscope
  */
 class campaign_pdf_generator {
-
     /** @var \pdf */
     private $pdf;
 
@@ -33,6 +57,16 @@ class campaign_pdf_generator {
     /** @var array Weak points data */
     private $weakpoints;
 
+    /**
+     * Constructor.
+     *
+     * @param object $campaign The campaign record.
+     * @param object $referential The referential record.
+     * @param array $summary Global campaign summary statistics.
+     * @param array $courses Per-course compliance data.
+     * @param array $criteria Per-criterion/indicator compliance data.
+     * @param array $weakpoints Weak points priority list.
+     */
     public function __construct(
         object $campaign,
         object $referential,
@@ -81,12 +115,15 @@ class campaign_pdf_generator {
         $html = '
         <style>
             h1 { color: ' . $primarycolor . '; font-size: 18pt; font-weight: bold; margin-bottom: 2px; }
-            h2 { color: ' . $accentcolor . '; font-size: 13pt; font-weight: bold; margin-top: 14px; margin-bottom: 6px; border-bottom: 1px solid ' . $bordercolor . '; }
+            h2 { color: ' . $accentcolor . '; font-size: 13pt; font-weight: bold; margin-top: 14px;
+                margin-bottom: 6px; border-bottom: 1px solid ' . $bordercolor . '; }
             h3 { color: #1e293b; font-size: 10.5pt; font-weight: bold; margin-top: 10px; margin-bottom: 4px; }
-            .meta-box { background-color: ' . $graybg . '; border: 1px solid ' . $bordercolor . '; padding: 10px; border-radius: 6px; margin-bottom: 12px; }
+            .meta-box { background-color: ' . $graybg . '; border: 1px solid ' . $bordercolor . ';
+                padding: 10px; border-radius: 6px; margin-bottom: 12px; }
             .badge-score { font-size: 16pt; font-weight: bold; color: ' . $primarycolor . '; }
             table.grid { width: 100%; border-collapse: collapse; margin-top: 6px; margin-bottom: 10px; }
-            table.grid th { background-color: #f1f5f9; color: #334155; font-weight: bold; font-size: 8.5pt; padding: 5px; border: 1px solid ' . $bordercolor . '; }
+            table.grid th { background-color: #f1f5f9; color: #334155; font-weight: bold; font-size: 8.5pt;
+                padding: 5px; border: 1px solid ' . $bordercolor . '; }
             table.grid td { font-size: 8pt; padding: 4px; border: 1px solid ' . $bordercolor . '; vertical-align: middle; }
             .status-detected { color: #15803d; font-weight: bold; }
             .status-verify { color: #b45309; font-weight: bold; }
@@ -98,11 +135,20 @@ class campaign_pdf_generator {
             <tr>
                 <td width="70%">
                     <h1>QualiScope</h1>
-                    <div style="font-size: 11pt; color: #475569;">' . s(get_string('campaign_report_subtitle', 'local_qualiscope')) . '</div>
+                    <div style="font-size: 11pt; color: #475569;">' . s(get_string(
+                'campaign_report_subtitle',
+                'local_qualiscope'
+            )) . '</div>
                 </td>
                 <td width="30%" align="right">
-                    <div style="font-size: 8.5pt; color: #64748b;">' . s(get_string('export_generated', 'local_qualiscope')) . '</div>
-                    <div style="font-size: 9.5pt; font-weight: bold; color: #1e293b;">' . userdate(time(), get_string('strftimedateshort', 'langconfig')) . '</div>
+                    <div style="font-size: 8.5pt; color: #64748b;">' . s(get_string(
+                'export_generated',
+                'local_qualiscope'
+            )) . '</div>
+                    <div style="font-size: 9.5pt; font-weight: bold; color: #1e293b;">' . userdate(
+                time(),
+                get_string('strftimedateshort', 'langconfig')
+            ) . '</div>
                 </td>
             </tr>
         </table>
@@ -112,17 +158,34 @@ class campaign_pdf_generator {
             <table width="100%" cellpadding="3" cellspacing="0">
                 <tr>
                     <td width="65%">
-                        <strong>' . s(get_string('campaign_name', 'local_qualiscope')) . ' :</strong> ' . s($this->campaign->name) . '<br/>
-                        <strong>' . s(get_string('campaign_referential', 'local_qualiscope')) . ' :</strong> ' . s($this->referential->name) . ' ' . s($this->referential->version) . '<br/>
+                        <strong>' . s(get_string('campaign_name', 'local_qualiscope')) . ' :</strong> ' .
+                            s($this->campaign->name) . '<br/>
+                        <strong>' . s(get_string('campaign_referential', 'local_qualiscope')) . ' :</strong> ' .
+                            s(\local_qualiscope\helper::localized($this->referential, 'name')) . ' ' .
+                            s($this->referential->version) . '<br/>
                         <strong>' . s(get_string('campaign_scope', 'local_qualiscope')) . ' :</strong> ' . s($scopestr) . '<br/>
-                        <strong>' . s(get_string('export_global_rate', 'local_qualiscope')) . '</strong> <span class="badge-score">' . (int) $this->summary['score'] . ' %</span>
+                        <strong>' . s(get_string('export_global_rate', 'local_qualiscope')) . '</strong>
+                            <span class="badge-score">' . (int) $this->summary['score'] . ' %</span>
                     </td>
                     <td width="35%" style="border-left: 1px solid #cbd5e1; padding-left: 8px;">
-                        <strong>' . s(get_string('campaign_courses_analysed', 'local_qualiscope')) . ' :</strong> ' . count($this->courses) . '<br/>
-                        <span class="status-detected">● ' . s(get_string('dashboard_detected', 'local_qualiscope')) . ' : ' . (int) $this->summary['detected'] . '</span><br/>
-                        <span class="status-verify">● ' . s(get_string('dashboard_verify', 'local_qualiscope')) . ' : ' . (int) $this->summary['verify'] . '</span><br/>
-                        <span class="status-missing">● ' . s(get_string('dashboard_missing', 'local_qualiscope')) . ' : ' . (int) $this->summary['missing'] . '</span><br/>
-                        <span class="status-na">● ' . s(get_string('dashboard_na', 'local_qualiscope')) . ' : ' . (int) $this->summary['na'] . '</span>
+                        <strong>' . s(get_string('campaign_courses_analysed', 'local_qualiscope')) . ' :</strong> ' .
+                            count($this->courses) . '<br/>
+                        <span class="status-detected">● ' . s(get_string(
+                                'dashboard_detected',
+                                'local_qualiscope'
+                            )) . ' : ' . (int) $this->summary['detected'] . '</span><br/>
+                        <span class="status-verify">● ' . s(get_string(
+                                'dashboard_verify',
+                                'local_qualiscope'
+                            )) . ' : ' . (int) $this->summary['verify'] . '</span><br/>
+                        <span class="status-missing">● ' . s(get_string(
+                                'dashboard_missing',
+                                'local_qualiscope'
+                            )) . ' : ' . (int) $this->summary['missing'] . '</span><br/>
+                        <span class="status-na">● ' . s(get_string(
+                                'dashboard_na',
+                                'local_qualiscope'
+                            )) . ' : ' . (int) $this->summary['na'] . '</span>
                     </td>
                 </tr>
             </table>
@@ -161,7 +224,8 @@ class campaign_pdf_generator {
         <h2>' . s(get_string('campaign_tab_macro', 'local_qualiscope')) . '</h2>';
 
         foreach ($this->criteria as $criterion) {
-            $critpct = $criterion['percentage'] !== null ? $criterion['percentage'] . ' %' : get_string('dashboard_manual_only', 'local_qualiscope');
+            $critpct = $criterion['percentage'] !== null ? $criterion['percentage'] . ' %' :
+                get_string('dashboard_manual_only', 'local_qualiscope');
             $html .= '
             <h3>C' . (int) $criterion['number'] . ' — ' . s($criterion['title']) . ' (' . s($critpct) . ')</h3>
             <table class="grid" cellpadding="4" cellspacing="0">
@@ -206,7 +270,10 @@ class campaign_pdf_generator {
                         <th width="12%">' . s(get_string('campaign_indicator', 'local_qualiscope')) . '</th>
                         <th width="48%">' . s(get_string('description', 'core')) . '</th>
                         <th width="18%" align="center">' . s(get_string('campaign_compliance_rate', 'local_qualiscope')) . '</th>
-                        <th width="22%" align="center">' . s(get_string('campaign_non_compliant_count', 'local_qualiscope')) . '</th>
+                        <th width="22%" align="center">' . s(get_string(
+                            'campaign_non_compliant_count',
+                            'local_qualiscope'
+                        )) . '</th>
                     </tr>
                 </thead>
                 <tbody>';

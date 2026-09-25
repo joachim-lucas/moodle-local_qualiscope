@@ -1,4 +1,27 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * QualiScope Zip Generator class.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 
 namespace local_qualiscope\exporter;
 
@@ -10,9 +33,10 @@ require_once($CFG->libdir . '/filestorage/zip_packer.php');
 /**
  * Auditor Evidence Dossier ZIP archive generator.
  * Creates an organized folder structure: Critere_01/.../Indicateur_01/... with evidence summaries and PDF report.
+ *
+ * @package local_qualiscope
  */
 class zip_generator {
-
     /** @var object Course record */
     private $course;
 
@@ -28,6 +52,15 @@ class zip_generator {
     /** @var array Results list */
     private $results;
 
+    /**
+     * Constructor.
+     *
+     * @param object $course The course record.
+     * @param object $referential The referential record.
+     * @param array $summary Global summary statistics.
+     * @param array $criteriasummary Per-criterion summary data.
+     * @param array $results List of check results.
+     */
     public function __construct(object $course, object $referential, array $summary, array $criteriasummary, array $results) {
         $this->course = $course;
         $this->referential = $referential;
@@ -60,7 +93,8 @@ class zip_generator {
         // 2. Generate a main README / Index for the auditor
         $readme = "# DOSSIER DE PREUVES QUALIOPI - QUALISCOPE\n\n";
         $readme .= "Formation / Cours : " . $this->course->fullname . " (" . $this->course->shortname . ")\n";
-        $readme .= "Référentiel : " . $this->referential->name . " " . $this->referential->version . "\n";
+        $readme .= "Référentiel : " . \local_qualiscope\helper::localized($this->referential, 'name') . " " .
+            $this->referential->version . "\n";
         $readme .= "Date d'audit : " . userdate(time(), get_string('strftimedatetime', 'langconfig')) . "\n";
         $readme .= "Niveau de conformité global Moodle : " . $this->summary['percentage'] . " %\n\n";
         $readme .= "## SYNTHÈSE DES CRITÈRES\n";
@@ -68,28 +102,30 @@ class zip_generator {
         foreach ($this->criteriasummary as $c) {
             $critobj = $c['criteria'];
             $pctstr = $c['percentage'] !== null ? $c['percentage'] . ' %' : 'Preuves manuelles / Externes uniquement';
-            $readme .= "- Critère " . (int) $critobj->number . " : " . $critobj->title . " => " . $pctstr . "\n";
+            $readme .= "- Critère " . (int) $critobj->number . " : " .
+                \local_qualiscope\helper::localized($critobj, 'title') . " => " . $pctstr . "\n";
         }
-        $readme .= "\nCe dossier classe les indicateurs par sous-dossiers Critere_XX / Indicateur_YY avec les fiches de preuves et données Moodle.\n";
+        $readme .= "\nCe dossier classe les indicateurs par sous-dossiers Critere_XX / " .
+            "Indicateur_YY avec les fiches de preuves et données Moodle.\n";
         $files['00_INDEX_AUDITEUR.txt'] = $readme;
 
-        // Map results by check ID
+        // Map results by check ID.
         $resultmap = [];
         foreach ($this->results as $res) {
             $resultmap[$res['check']->id] = $res;
         }
 
-        $criteria = $DB->get_records('local_qualiopi_criteria', ['referential_id' => $this->referential->id], 'number ASC');
+        $criteria = $DB->get_records('local_qualiscope_criteria', ['referential_id' => $this->referential->id], 'number ASC');
         $indicators = $DB->get_records_sql(
-            "SELECT i.* FROM {local_qualiopi_indicators} i
-             JOIN {local_qualiopi_criteria} c ON c.id = i.criterion_id
+            "SELECT i.* FROM {local_qualiscope_indicators} i
+             JOIN {local_qualiscope_criteria} c ON c.id = i.criterion_id
              WHERE c.referential_id = :refid ORDER BY c.number ASC, i.number ASC",
             ['refid' => $this->referential->id]
         );
         $checks = $DB->get_records_sql(
-            "SELECT ch.* FROM {local_qualiopi_checks} ch
-             JOIN {local_qualiopi_indicators} i ON i.id = ch.indicator_id
-             JOIN {local_qualiopi_criteria} c ON c.id = i.criterion_id
+            "SELECT ch.* FROM {local_qualiscope_checks} ch
+             JOIN {local_qualiscope_indicators} i ON i.id = ch.indicator_id
+             JOIN {local_qualiscope_criteria} c ON c.id = i.criterion_id
              WHERE c.referential_id = :refid ORDER BY c.number ASC, i.number ASC, ch.id ASC",
             ['refid' => $this->referential->id]
         );
@@ -111,8 +147,8 @@ class zip_generator {
                 $indchecks = $checksbyindicator[$indicator->id] ?? [];
 
                 $inddoc = "# FICHE DE PREUVE - INDICATEUR " . (int) $indicator->number . "\n";
-                $inddoc .= "Titre : " . $indicator->title . "\n";
-                $inddoc .= "Exigence : " . $indicator->description . "\n";
+                $inddoc .= "Titre : " . \local_qualiscope\helper::localized($indicator, 'title') . "\n";
+                $inddoc .= "Exigence : " . \local_qualiscope\helper::localized($indicator, 'description') . "\n";
                 $inddoc .= "Scope : " . $indicator->scope . "\n\n";
                 $inddoc .= "## CONTRÔLES QUALISCOPE MOODLE\n\n";
 
@@ -121,8 +157,8 @@ class zip_generator {
                 } else {
                     foreach ($indchecks as $check) {
                         $res = $resultmap[$check->id] ?? null;
-                        $inddoc .= "### " . $check->name . "\n";
-                        $inddoc .= "- Description : " . $check->description . "\n";
+                        $inddoc .= "### " . \local_qualiscope\helper::localized($check, 'name') . "\n";
+                        $inddoc .= "- Description : " . \local_qualiscope\helper::localized($check, 'description') . "\n";
                         if ($check->automatic && $res) {
                             $inddoc .= "- Statut Moodle : " . get_string('status_' . $res['status'], 'local_qualiscope') . "\n";
                             $ratio = $res['ratio'] ?? ($res['status'] === 'detected' ? 1.0 : 0.0);
@@ -138,12 +174,12 @@ class zip_generator {
             }
         }
 
-        // Package into ZIP using Moodle zip_packer
+        // Package into ZIP using Moodle zip_packer.
         $zipper = new \zip_packer();
         $tempdir = make_temp_directory('qualiscope_dossier');
         $tempzip = $tempdir . '/dossier_' . uniqid('', true) . '.zip';
 
-        // Convert virtual array into filesystem items or pass directly
+        // Convert virtual array into filesystem items or pass directly.
         $fileentries = [];
         foreach ($files as $relpath => $content) {
             $temppath = $tempdir . '/' . md5($relpath);
@@ -153,7 +189,7 @@ class zip_generator {
 
         $zipper->archive_to_pathname($fileentries, $tempzip);
 
-        // Cleanup individual temp files
+        // Cleanup individual temp files.
         foreach ($fileentries as $tmp) {
             @unlink($tmp);
         }

@@ -1,3 +1,36 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_qualiscope/compare_campaigns
+
+    Comparison of two campaigns across criteria, indicators and courses.
+
+    Example context (json):
+    {
+        "backurl": "campaigns.php",
+        "campaignsoptionsa": [
+            {"id": 1, "name": "Campaign A", "selected": true}
+        ],
+        "campaignsoptionsb": [
+            {"id": 2, "name": "Campaign B", "selected": true}
+        ],
+        "hascomparison": false
+    }
+}}
 <div class="qualiscope-compare container-fluid py-4">
     <div class="row mb-4">
         <div class="col-12 d-flex justify-content-between align-items-center">
@@ -14,7 +47,7 @@
     <!-- Campaign Selection Form -->
     <div class="card mb-4 border shadow-none">
         <div class="card-body">
-            <form method="get" action="" class="row g-3 align-items-end">
+            <form method="get" class="row g-3 align-items-end">
                 <div class="col-md-5">
                     <label class="form-label fw-bold">{{#str}} campaign_base, local_qualiscope {{/str}}</label>
                     <select name="id_a" class="form-select" required>
@@ -102,17 +135,17 @@
     <!-- Detailed Comparison Tabs -->
     <ul class="nav nav-tabs mb-4" id="compareTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="criteria-tab" data-bs-toggle="tab" data-bs-target="#criteria-content" type="button" role="tab" aria-controls="criteria-content" aria-selected="true">
+            <button class="nav-link active" id="criteria-tab" data-bs-toggle="tab" data-bs-target="#criteria-content" data-toggle="tab" data-target="#criteria-content" type="button" role="tab" aria-controls="criteria-content" aria-selected="true">
                 <i class="fa fa-list-alt me-1" aria-hidden="true"></i> {{#str}} campaign_compare_criteria, local_qualiscope {{/str}}
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="indicators-tab" data-bs-toggle="tab" data-bs-target="#indicators-content" type="button" role="tab" aria-controls="indicators-content" aria-selected="false">
+            <button class="nav-link" id="indicators-tab" data-bs-toggle="tab" data-bs-target="#indicators-content" data-toggle="tab" data-target="#indicators-content" type="button" role="tab" aria-controls="indicators-content" aria-selected="false">
                 <i class="fa fa-bar-chart me-1" aria-hidden="true"></i> {{#str}} campaign_compare_indicators, local_qualiscope {{/str}}
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="courses-tab" data-bs-toggle="tab" data-bs-target="#courses-content" type="button" role="tab" aria-controls="courses-content" aria-selected="false">
+            <button class="nav-link" id="courses-tab" data-bs-toggle="tab" data-bs-target="#courses-content" data-toggle="tab" data-target="#courses-content" type="button" role="tab" aria-controls="courses-content" aria-selected="false">
                 <i class="fa fa-graduation-cap me-1" aria-hidden="true"></i> {{#str}} campaign_compare_courses, local_qualiscope {{/str}}
             </button>
         </li>

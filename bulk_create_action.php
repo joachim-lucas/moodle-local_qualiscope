@@ -1,4 +1,27 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * QualiScope Bulk Create Action page.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 
 require_once('../../config.php');
 require_once($CFG->dirroot . '/local/qualiscope/lib.php');
@@ -15,13 +38,13 @@ require_sesskey();
 $context = context_system::instance();
 require_capability('local/qualiscope:managecampaigns', $context);
 
-$campaign = $DB->get_record('local_qualiopi_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
+$campaign = $DB->get_record('local_qualiscope_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
 
 $parsedduedate = $duedate ? strtotime($duedate) : 0;
 $createdcount = 0;
 
 if ($indicatorid > 0) {
-    $results = $DB->get_records('local_qualiopi_results', [
+    $results = $DB->get_records('local_qualiscope_results', [
         'campaign_id' => $campaignid,
         'indicator_id' => $indicatorid,
     ]);
@@ -40,12 +63,12 @@ if ($indicatorid > 0) {
             $action->userid = $USER->id;
             $action->timecreated = time();
             $action->timemodified = time();
-            $DB->insert_record('local_qualiopi_actions', $action);
+            $DB->insert_record('local_qualiscope_actions', $action);
             $createdcount++;
         }
     }
 } else {
-    $results = $DB->get_records('local_qualiopi_results', ['campaign_id' => $campaignid]);
+    $results = $DB->get_records('local_qualiscope_results', ['campaign_id' => $campaignid]);
     $courseids = [];
     foreach ($results as $res) {
         $courseids[$res->courseid] = $res->courseid;
@@ -63,7 +86,7 @@ if ($indicatorid > 0) {
         $action->userid = $USER->id;
         $action->timecreated = time();
         $action->timemodified = time();
-        $DB->insert_record('local_qualiopi_actions', $action);
+        $DB->insert_record('local_qualiscope_actions', $action);
         $createdcount++;
     }
 }

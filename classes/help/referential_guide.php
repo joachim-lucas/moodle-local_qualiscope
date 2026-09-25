@@ -1,15 +1,36 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * QualiScope Referential Guide class.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 
 namespace local_qualiscope\help;
 
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Helper class providing comprehensive methodological and auditing documentation
  * for each referential, criterion, indicator and check type in QualiScope.
  */
 class referential_guide {
-
     /**
      * Get detailed explanation of how a specific check type operates in Moodle.
      *
@@ -145,13 +166,13 @@ class referential_guide {
     public static function get_referential_guide_data(int $referentialid): array {
         global $DB;
 
-        $referential = $DB->get_record('local_qualiopi_referentials', ['id' => $referentialid], '*', MUST_EXIST);
-        $criteria = $DB->get_records('local_qualiopi_criteria', ['referential_id' => $referentialid], 'number ASC');
+        $referential = $DB->get_record('local_qualiscope_referentials', ['id' => $referentialid], '*', MUST_EXIST);
+        $criteria = $DB->get_records('local_qualiscope_criteria', ['referential_id' => $referentialid], 'number ASC');
 
         $criteriadata = [];
 
         foreach ($criteria as $criterion) {
-            $indicators = $DB->get_records('local_qualiopi_indicators', ['criterion_id' => $criterion->id], 'number ASC');
+            $indicators = $DB->get_records('local_qualiscope_indicators', ['criterion_id' => $criterion->id], 'number ASC');
             $indicatorsdata = [];
 
             $criteriontotalweight = 0;
@@ -159,7 +180,7 @@ class referential_guide {
             $criterionmanualcount = 0;
 
             foreach ($indicators as $indicator) {
-                $checks = $DB->get_records('local_qualiopi_checks', ['indicator_id' => $indicator->id], 'id ASC');
+                $checks = $DB->get_records('local_qualiscope_checks', ['indicator_id' => $indicator->id], 'id ASC');
                 $checksdata = [];
 
                 $indicatortotalweight = 0;
@@ -183,8 +204,8 @@ class referential_guide {
 
                     $checksdata[] = [
                         'id' => $check->id,
-                        'name' => $check->name,
-                        'description' => $check->description,
+                        'name' => \local_qualiscope\helper::localized($check, 'name'),
+                        'description' => \local_qualiscope\helper::localized($check, 'description'),
                         'type' => $check->type,
                         'weight' => $weight,
                         'isautomatic' => $isautomatic,
@@ -212,13 +233,14 @@ class referential_guide {
                 }
 
                 $scope = $indicator->scope ?? 'course';
-                $scopelabel = $scope === 'course' ? get_string('scope_course', 'local_qualiscope') : get_string('scope_organisation', 'local_qualiscope');
+                $scopelabel = $scope === 'course' ? get_string('scope_course', 'local_qualiscope') :
+                get_string('scope_organisation', 'local_qualiscope');
 
                 $indicatorsdata[] = [
                     'id' => $indicator->id,
                     'number' => $indicator->number,
-                    'title' => $indicator->title,
-                    'description' => $indicator->description,
+                    'title' => \local_qualiscope\helper::localized($indicator, 'title'),
+                    'description' => \local_qualiscope\helper::localized($indicator, 'description'),
                     'scope' => $scope,
                     'scopelabel' => $scopelabel,
                     'moodle_level' => $moodlelevel,
@@ -237,8 +259,8 @@ class referential_guide {
             $criteriadata[] = [
                 'id' => $criterion->id,
                 'number' => $criterion->number,
-                'title' => $criterion->title,
-                'description' => $criterion->description,
+                'title' => \local_qualiscope\helper::localized($criterion, 'title'),
+                'description' => \local_qualiscope\helper::localized($criterion, 'description'),
                 'indicators' => $indicatorsdata,
                 'indicatorscount' => count($indicatorsdata),
                 'autocheckcount' => $criterionautocheckcount,

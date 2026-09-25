@@ -1,0 +1,293 @@
+/* QualiScope - Bootstrap 4 (Moodle 4.5) compatibility fallbacks.
+ *
+ * These rules mirror the Bootstrap 5 utility classes used by the QualiScope
+ * templates so the plugin keeps its look on Moodle 4.5 (Bootstrap 4). The
+ * values are identical to the Bootstrap 5.3 defaults, so they have no effect
+ * on Moodle 5.x sites where the original utilities already apply.
+ *
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+/* Badges using background utilities keep a readable white text on both
+ * Bootstrap 4 (badges inherit the dark text color) and Bootstrap 5.3 (which
+ * recommends the text-bg-* helpers instead of plain bg-*). */
+.badge.bg-primary,
+.badge.bg-secondary,
+.badge.bg-success,
+.badge.bg-danger,
+.badge.bg-warning,
+.badge.bg-info,
+.badge.bg-dark {
+    color: #fff;
+}
+
+/* Subtle backgrounds (Bootstrap 5.3 only).
+ *
+ * The compound selector raises specificity above the Bootstrap 4 .card/.badge
+ * rules (same specificity, emitted later in the cascade on Moodle 4.5) so the
+ * background colour cannot be overridden back to white on Moodle 4.5. On
+ * Moodle 5.x the Bootstrap 5.3 utilities already apply and the duplicate
+ * selector has no visible effect. */
+.bg-primary-subtle.bg-primary-subtle {
+    background-color: #cfe2ff;
+}
+
+.bg-secondary-subtle.bg-secondary-subtle {
+    background-color: #e9ecef;
+}
+
+.bg-success-subtle.bg-success-subtle {
+    background-color: #d1e7dd;
+}
+
+.bg-danger-subtle.bg-danger-subtle {
+    background-color: #f8d7da;
+}
+
+.bg-warning-subtle.bg-warning-subtle {
+    background-color: #fff3cd;
+}
+
+.bg-info-subtle.bg-info-subtle {
+    background-color: #cff4fc;
+}
+
+.bg-light-subtle.bg-light-subtle {
+    background-color: #fcfcfd;
+}
+
+.bg-dark-subtle.bg-dark-subtle {
+    background-color: #ced4da;
+}
+
+/* Font sizes (Bootstrap 5.3 only). */
+.fs-1 {
+    font-size: 2.5rem;
+}
+
+.fs-2 {
+    font-size: 2rem;
+}
+
+.fs-3 {
+    font-size: 1.75rem;
+}
+
+.fs-4 {
+    font-size: 1.5rem;
+}
+
+.fs-5 {
+    font-size: 1.25rem;
+}
+
+.fs-6 {
+    font-size: 1rem;
+}
+
+/* Font weights (Bootstrap 5 only). */
+.fw-bold {
+    font-weight: 700;
+}
+
+.fw-semibold {
+    font-weight: 600;
+}
+
+/* Display sizes available in Bootstrap 5 only. */
+.display-5 {
+    font-size: 3rem;
+    font-weight: 300;
+    line-height: 1.2;
+}
+
+.display-6 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    line-height: 1.2;
+}
+
+/* Line height helper. */
+.lh-1 {
+    line-height: 1;
+}
+
+/* Flex gap (Bootstrap 5 only). */
+.gap-0 {
+    gap: 0;
+}
+
+.gap-1 {
+    gap: .25rem;
+}
+
+.gap-2 {
+    gap: .5rem;
+}
+
+.gap-3 {
+    gap: 1rem;
+}
+
+.gap-4 {
+    gap: 1.5rem;
+}
+
+.gap-5 {
+    gap: 3rem;
+}
+
+/* Grid gutters (Bootstrap 5 only). */
+.row.g-1 {
+    margin-right: -.125rem;
+    margin-left: -.125rem;
+}
+
+.row.g-1 > * {
+    padding-right: .125rem;
+    padding-left: .125rem;
+}
+
+.row.g-2 {
+    margin-right: -.25rem;
+    margin-left: -.25rem;
+}
+
+.row.g-2 > * {
+    padding-right: .25rem;
+    padding-left: .25rem;
+}
+
+.row.g-3 {
+    margin-right: -.5rem;
+    margin-left: -.5rem;
+}
+
+.row.g-3 > * {
+    padding-right: .5rem;
+    padding-left: .5rem;
+}
+
+.row.g-4 {
+    margin-right: -.75rem;
+    margin-left: -.75rem;
+}
+
+.row.g-4 > * {
+    padding-right: .75rem;
+    padding-left: .75rem;
+}
+
+/* Margin inline-end/start (Bootstrap 5 only). */
+.me-0 {
+    margin-right: 0;
+}
+
+.me-1 {
+    margin-right: .25rem;
+}
+
+.me-2 {
+    margin-right: .5rem;
+}
+
+.me-3 {
+    margin-right: 1rem;
+}
+
+.ms-0 {
+    margin-left: 0;
+}
+
+.ms-1 {
+    margin-left: .25rem;
+}
+
+.ms-2 {
+    margin-left: .5rem;
+}
+
+.ms-3 {
+    margin-left: 1rem;
+}
+
+/* Padding inline-start (Bootstrap 5 only). */
+.ps-0 {
+    padding-left: 0;
+}
+
+.ps-1 {
+    padding-left: .25rem;
+}
+
+.ps-2 {
+    padding-left: .5rem;
+}
+
+.ps-3 {
+    padding-left: 1rem;
+}
+
+/* Text helpers (Bootstrap 5 only). */
+.text-end {
+    text-align: right;
+}
+
+@media (min-width: 768px) {
+    .text-md-end {
+        text-align: right;
+    }
+}
+
+.font-monospace {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* Dropdown alignment alias (Bootstrap 5 uses .dropdown-menu-end). */
+.dropdown-menu-end {
+    right: 0;
+    left: auto;
+}
+
+/* Form selects (Bootstrap 5 only; Bootstrap 4 uses .custom-select). */
+.form-select {
+    --bs-form-select-bg-img: url("/local/qualiscope/pix/select-chevron.svg");
+    display: block;
+    width: 100%;
+    padding: .375rem 2.25rem .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-image: var(--bs-form-select-bg-img);
+    background-repeat: no-repeat;
+    background-position: right .75rem center;
+    background-size: 16px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: .375rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    appearance: none;
+}
+
+.form-select:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .25);
+}
+
+.form-select-sm {
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+    padding-left: .5rem;
+    font-size: .875rem;
+    border-radius: .25rem;
+}
+
+/* .w-auto already provides width:auto on both Bootstrap 4 and 5. */
+
+/* Form label helper (Bootstrap 5 only). */
+.form-label {
+    margin-bottom: .5rem;
+}

@@ -1,17 +1,40 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * QualiScope Xlsx Writer class.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 
 namespace local_qualiscope\exporter;
 
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Minimal XLSX workbook writer (OGC OOXML) using ZipArchive.
  *
  * Generates a valid .xlsx file without any third-party dependency.
  * Strings are written as inline strings, numbers as numeric cells.
+ *
+ * @package local_qualiscope
  */
 class xlsx_writer {
-
     /** @var string Sheet title. */
     private $title;
 
@@ -67,24 +90,43 @@ class xlsx_writer {
         return $bytes;
     }
 
+    /**
+     * Builds the [Content_Types].xml part.
+     *
+     * @return string
+     */
     private function content_types_xml(): string {
         return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
             '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' .
             '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' .
             '<Default Extension="xml" ContentType="application/xml"/>' .
-            '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' .
-            '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>' .
-            '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' .
+            '<Override PartName="/xl/workbook.xml" ContentType="application/' .
+            'vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' .
+            '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/' .
+            'vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>' .
+            '<Override PartName="/xl/styles.xml" ContentType="application/' .
+            'vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' .
             '</Types>';
     }
 
+    /**
+     * Builds the package root relationships part.
+     *
+     * @return string
+     */
     private function rels_xml(): string {
         return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
             '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' .
-            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>' .
+            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/' .
+            'relationships/officeDocument" Target="xl/workbook.xml"/>' .
             '</Relationships>';
     }
 
+    /**
+     * Builds the workbook.xml part.
+     *
+     * @return string
+     */
     private function workbook_xml(): string {
         return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
             '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ' .
@@ -93,14 +135,26 @@ class xlsx_writer {
             '</workbook>';
     }
 
+    /**
+     * Builds the workbook relationships part.
+     *
+     * @return string
+     */
     private function workbook_rels_xml(): string {
         return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
             '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' .
-            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>' .
-            '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>' .
+            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/' .
+            'relationships/worksheet" Target="worksheets/sheet1.xml"/>' .
+            '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/' .
+            'relationships/styles" Target="styles.xml"/>' .
             '</Relationships>';
     }
 
+    /**
+     * Builds the styles.xml part (normal and bold header styles).
+     *
+     * @return string
+     */
     private function styles_xml(): string {
         return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
             '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' .
@@ -119,6 +173,11 @@ class xlsx_writer {
             '</styleSheet>';
     }
 
+    /**
+     * Builds the worksheet part with all collected rows.
+     *
+     * @return string
+     */
     private function sheet_xml(): string {
         $xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
             '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' .
@@ -163,6 +222,12 @@ class xlsx_writer {
         return $xml;
     }
 
+    /**
+     * Cleans a sheet title for XLSX constraints (max 31 chars, no forbidden characters).
+     *
+     * @param string $title Raw title.
+     * @return string
+     */
     private static function clean_sheet_title(string $title): string {
         $title = preg_replace('/[\[\]:*?\/\\\\]/', ' ', $title);
         $title = preg_replace('/\s+/', ' ', $title);
@@ -170,6 +235,12 @@ class xlsx_writer {
         return $title === '' ? 'Rapport' : $title;
     }
 
+    /**
+     * Converts a 1-based column index to its Excel letter label (A, B, ..., Z, AA, ...).
+     *
+     * @param int $index 1-based column index.
+     * @return string
+     */
     private static function col_letter(int $index): string {
         $result = '';
         while ($index > 0) {
@@ -180,6 +251,12 @@ class xlsx_writer {
         return $result;
     }
 
+    /**
+     * Escapes a string for XML, stripping invalid XML characters.
+     *
+     * @param string $value Raw string.
+     * @return string
+     */
     private static function xml_escape(string $value): string {
         $value = preg_replace('/[^\x09\x0A\x0D\x20-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', '', $value);
         return htmlspecialchars($value, ENT_XML1 | ENT_QUOTES, 'UTF-8');

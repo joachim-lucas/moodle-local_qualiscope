@@ -1,4 +1,27 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * QualiScope Export page.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 
 require_once('../../config.php');
 require_once($CFG->dirroot . '/local/qualiscope/lib.php');
@@ -17,10 +40,10 @@ if ($campaignid) {
     $context = context_system::instance();
     require_capability('local/qualiscope:managecampaigns', $context);
 
-    $campaign = $DB->get_record('local_qualiopi_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
-    $referential = $DB->get_record('local_qualiopi_referentials', ['id' => $campaign->referential_id], '*', MUST_EXIST);
+    $campaign = $DB->get_record('local_qualiscope_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
+    $referential = $DB->get_record('local_qualiscope_referentials', ['id' => $campaign->referential_id], '*', MUST_EXIST);
 
-    $results = $DB->get_records('local_qualiopi_results', ['campaign_id' => $campaignid], 'courseid ASC');
+    $results = $DB->get_records('local_qualiscope_results', ['campaign_id' => $campaignid], 'courseid ASC');
 
     $bycourse = [];
     foreach ($results as $r) {
@@ -41,10 +64,18 @@ if ($campaignid) {
         }
         $bycourse[$r->courseid]['total']++;
         switch ($r->status) {
-            case 'detected': $bycourse[$r->courseid]['detected']++; break;
-            case 'verify':   $bycourse[$r->courseid]['verify']++; break;
-            case 'missing':  $bycourse[$r->courseid]['missing']++; break;
-            case 'na':       $bycourse[$r->courseid]['na']++; break;
+            case 'detected':
+                $bycourse[$r->courseid]['detected']++;
+                break;
+            case 'verify':
+                $bycourse[$r->courseid]['verify']++;
+                break;
+            case 'missing':
+                $bycourse[$r->courseid]['missing']++;
+                break;
+            case 'na':
+                $bycourse[$r->courseid]['na']++;
+                break;
         }
         if ($r->status !== 'na') {
             $bycourse[$r->courseid]['weighted'] += (float) $r->ratio > 0
@@ -84,28 +115,30 @@ if ($campaignid) {
     $totals['score'] = $globalpercentage;
 
     // Criteria & Indicators.
-    $criteria_records = $DB->get_records('local_qualiopi_criteria', ['referential_id' => $campaign->referential_id], 'number ASC');
-    $indicators_records = $DB->get_records_sql(
-        "SELECT i.* FROM {local_qualiopi_indicators} i
-         JOIN {local_qualiopi_criteria} c ON c.id = i.criterion_id
+    $criteriarecords = $DB->get_records('local_qualiscope_criteria', [
+        'referential_id' => $campaign->referential_id,
+    ], 'number ASC');
+    $indicatorsrecords = $DB->get_records_sql(
+        "SELECT i.* FROM {local_qualiscope_indicators} i
+         JOIN {local_qualiscope_criteria} c ON c.id = i.criterion_id
          WHERE c.referential_id = :refid
          ORDER BY c.number ASC, i.number ASC",
         ['refid' => $campaign->referential_id]
     );
 
-    $results_by_indicator = [];
+    $resultsbyindicator = [];
     foreach ($results as $r) {
-        $results_by_indicator[$r->indicator_id][] = $r;
+        $resultsbyindicator[$r->indicator_id][] = $r;
     }
 
     $criteriadata = [];
     $weakpoints = [];
 
-    foreach ($criteria_records as $crit) {
+    foreach ($criteriarecords as $crit) {
         $criteriadata[$crit->id] = [
             'id' => $crit->id,
             'number' => $crit->number,
-            'title' => $crit->title,
+            'title' => \local_qualiscope\helper::localized($crit, 'title'),
             'indicators' => [],
             'total' => 0,
             'detected' => 0,
@@ -118,21 +151,29 @@ if ($campaignid) {
         ];
     }
 
-    foreach ($indicators_records as $ind) {
-        $ind_results = $results_by_indicator[$ind->id] ?? [];
-        $total = count($ind_results);
+    foreach ($indicatorsrecords as $ind) {
+        $indicatorresults = $resultsbyindicator[$ind->id] ?? [];
+        $total = count($indicatorresults);
         $detected = 0;
         $verify = 0;
         $missing = 0;
         $na = 0;
         $weighted = 0.0;
 
-        foreach ($ind_results as $r) {
+        foreach ($indicatorresults as $r) {
             switch ($r->status) {
-                case 'detected': $detected++; break;
-                case 'verify':   $verify++; break;
-                case 'missing':  $missing++; break;
-                case 'na':       $na++; break;
+                case 'detected':
+                    $detected++;
+                    break;
+                case 'verify':
+                    $verify++;
+                    break;
+                case 'missing':
+                    $missing++;
+                    break;
+                case 'na':
+                    $na++;
+                    break;
             }
             if ($r->status !== 'na') {
                 $weighted += (float) $r->ratio > 0 ? (float) $r->ratio : ($r->status === 'detected' ? 1.0 : 0.0);
@@ -141,12 +182,12 @@ if ($campaignid) {
 
         $app = $total - $na;
         $percentage = $app > 0 ? (int) round(($weighted * 100) / $app) : null;
-        $failing_courses = $missing + $verify;
+        $failingcourses = $missing + $verify;
 
-        $ind_item = [
+        $indicatoritem = [
             'id' => $ind->id,
             'number' => $ind->number,
-            'title' => $ind->title,
+            'title' => \local_qualiscope\helper::localized($ind, 'title'),
             'total' => $total,
             'detected' => $detected,
             'verify' => $verify,
@@ -155,13 +196,14 @@ if ($campaignid) {
             'applicable' => $app,
             'percentage' => $percentage !== null ? $percentage : 0,
             'haspercentage' => $percentage !== null,
-            'failingcourses' => $failing_courses,
-            'criterion_number' => $criteria_records[$ind->criterion_id]->number ?? '',
-            'criterion_title' => $criteria_records[$ind->criterion_id]->title ?? '',
+            'failingcourses' => $failingcourses,
+            'criterion_number' => $criteriarecords[$ind->criterion_id]->number ?? '',
+            'criterion_title' => isset($criteriarecords[$ind->criterion_id]) ?
+                \local_qualiscope\helper::localized($criteriarecords[$ind->criterion_id], 'title') : '',
         ];
 
         if (isset($criteriadata[$ind->criterion_id])) {
-            $criteriadata[$ind->criterion_id]['indicators'][] = $ind_item;
+            $criteriadata[$ind->criterion_id]['indicators'][] = $indicatoritem;
             if ($total > 0) {
                 $criteriadata[$ind->criterion_id]['manualonly'] = false;
             }
@@ -174,7 +216,7 @@ if ($campaignid) {
         }
 
         if ($app > 0) {
-            $weakpoints[] = $ind_item;
+            $weakpoints[] = $indicatoritem;
         }
     }
 
@@ -186,14 +228,14 @@ if ($campaignid) {
     }
     unset($cdata);
 
-    usort($weakpoints, function($a, $b) {
+    usort($weakpoints, function ($a, $b) {
         if ($a['percentage'] === $b['percentage']) {
             return $b['failingcourses'] <=> $a['failingcourses'];
         }
         return $a['percentage'] <=> $b['percentage'];
     });
 
-    $weakpoints_filtered = array_values(array_filter($weakpoints, function($item) {
+    $weakpointsfiltered = array_values(array_filter($weakpoints, function ($item) {
         return $item['percentage'] < 100;
     }));
 
@@ -208,7 +250,7 @@ if ($campaignid) {
             $totals,
             $coursesdata,
             array_values($criteriadata),
-            $weakpoints_filtered
+            $weakpointsfiltered
         );
         $pdfbytes = $pdfgen->generate();
         $filename = $basefilename . '.pdf';
@@ -226,18 +268,19 @@ if ($campaignid) {
         header('Content-Disposition: attachment; filename="' . $filename . '"');
 
         $out = fopen('php://output', 'w');
-        fprintf($out, chr(0xEF).chr(0xBB).chr(0xBF));
+        fprintf($out, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
         fputcsv($out, [get_string('campaign_report_subtitle', 'local_qualiscope')]);
         fputcsv($out, [get_string('campaign_name', 'local_qualiscope'), $campaign->name]);
-        fputcsv($out, [get_string('campaign_referential', 'local_qualiscope'), $referential->name . ' ' . $referential->version]);
+        fputcsv($out, [get_string('campaign_referential', 'local_qualiscope'),
+            \local_qualiscope\helper::localized($referential, 'name') . ' ' . $referential->version]);
         fputcsv($out, [get_string('export_generated', 'local_qualiscope'), userdate(time())]);
         fputcsv($out, [get_string('export_global_rate', 'local_qualiscope'), $globalpercentage . ' %']);
         fputcsv($out, [
             get_string('dashboard_detected', 'local_qualiscope') . ': ' . $totals['detected'],
             get_string('dashboard_verify', 'local_qualiscope') . ': ' . $totals['verify'],
             get_string('dashboard_missing', 'local_qualiscope') . ': ' . $totals['missing'],
-            get_string('dashboard_na', 'local_qualiscope') . ': ' . $totals['na']
+            get_string('dashboard_na', 'local_qualiscope') . ': ' . $totals['na'],
         ]);
         fputcsv($out, []);
 
@@ -301,8 +344,10 @@ if ($campaignid) {
 
     $writer->add_row([get_string('campaign_report_subtitle', 'local_qualiscope')], true);
     $writer->add_row([get_string('campaign_name', 'local_qualiscope') . ' : ' . $campaign->name]);
-    $writer->add_row([get_string('campaign_referential', 'local_qualiscope') . ' : ' . $referential->name . ' ' . $referential->version]);
-    $writer->add_row([get_string('export_generated', 'local_qualiscope') . ' : ' . userdate(time(), get_string('strftimedatetime', 'langconfig'))]);
+    $writer->add_row([get_string('campaign_referential', 'local_qualiscope') .
+        ' : ' . \local_qualiscope\helper::localized($referential, 'name') . ' ' . $referential->version]);
+    $writer->add_row([get_string('export_generated', 'local_qualiscope') . ' : ' .
+        userdate(time(), get_string('strftimedatetime', 'langconfig'))]);
     $writer->add_row([get_string('export_global_rate', 'local_qualiscope') . ' ' . $globalpercentage . ' %']);
     $writer->add_row([get_string('export_breakdown', 'local_qualiscope') . ' ' .
         get_string('dashboard_detected', 'local_qualiscope') . ' ' . $totals['detected'] . ' • ' .
@@ -382,7 +427,7 @@ $course = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 if (!$referentialid) {
     $referentialid = \local_qualiscope\analyser\course_analyser::get_default_referential_id() ?? 0;
 }
-$referential = $referentialid ? $DB->get_record('local_qualiopi_referentials', ['id' => $referentialid]) : null;
+$referential = $referentialid ? $DB->get_record('local_qualiscope_referentials', ['id' => $referentialid]) : null;
 if (!$referential) {
     throw new moodle_exception('invalidreferential', 'local_qualiscope');
 }
@@ -417,23 +462,23 @@ if ($format === 'zip') {
     exit;
 }
 
-// Default: XLSX export
+// Default: XLSX export.
 $resultmap = [];
 foreach ($results as $result) {
     $resultmap[$result['check']->id] = $result;
 }
 
-$criteria = $DB->get_records('local_qualiopi_criteria', ['referential_id' => $referentialid], 'number ASC');
+$criteria = $DB->get_records('local_qualiscope_criteria', ['referential_id' => $referentialid], 'number ASC');
 $indicators = $DB->get_records_sql(
-    "SELECT i.* FROM {local_qualiopi_indicators} i
-     JOIN {local_qualiopi_criteria} c ON c.id = i.criterion_id
+    "SELECT i.* FROM {local_qualiscope_indicators} i
+     JOIN {local_qualiscope_criteria} c ON c.id = i.criterion_id
      WHERE c.referential_id = :refid ORDER BY c.number ASC, i.number ASC",
     ['refid' => $referentialid]
 );
 $checks = $DB->get_records_sql(
-    "SELECT ch.* FROM {local_qualiopi_checks} ch
-     JOIN {local_qualiopi_indicators} i ON i.id = ch.indicator_id
-     JOIN {local_qualiopi_criteria} c ON c.id = i.criterion_id
+    "SELECT ch.* FROM {local_qualiscope_checks} ch
+     JOIN {local_qualiscope_indicators} i ON i.id = ch.indicator_id
+     JOIN {local_qualiscope_criteria} c ON c.id = i.criterion_id
      WHERE c.referential_id = :refid ORDER BY c.number ASC, i.number ASC, ch.id ASC",
     ['refid' => $referentialid]
 );
@@ -454,8 +499,10 @@ $writer = new \local_qualiscope\exporter\xlsx_writer(
 
 $writer->add_row([get_string('export_report_title', 'local_qualiscope')], true);
 $writer->add_row([get_string('export_course', 'local_qualiscope') . ' ' . $course->fullname]);
-$writer->add_row([get_string('export_referential', 'local_qualiscope') . ' ' . $referential->name . ' ' . $referential->version]);
-$writer->add_row([get_string('export_generated', 'local_qualiscope') . ' ' . userdate(time(), get_string('strftimedatetime', 'langconfig'))]);
+$writer->add_row([get_string('export_referential', 'local_qualiscope') . ' ' .
+    \local_qualiscope\helper::localized($referential, 'name') . ' ' . $referential->version]);
+$writer->add_row([get_string('export_generated', 'local_qualiscope') . ' ' .
+        userdate(time(), get_string('strftimedatetime', 'langconfig'))]);
 $writer->add_row([get_string('export_global_rate', 'local_qualiscope') . ' ' . $summary['percentage'] . ' %']);
 $writer->add_row([get_string('export_breakdown', 'local_qualiscope') . ' ' .
     get_string('dashboard_detected', 'local_qualiscope') . ' ' . $summary['detected'] . ' • ' .
@@ -475,8 +522,9 @@ $writer->add_row([
 $hasstatus = false;
 foreach ($criteria as $criterion) {
     foreach ($indicatorsbycriterion[$criterion->id] ?? [] as $indicator) {
-        $criterionlabel = (int) $criterion->number . ' — ' . $criterion->title;
-        $indicatorlabel = (int) $criterion->number . '.' . (int) $indicator->number . ' — ' . $indicator->title;
+        $criterionlabel = (int) $criterion->number . ' — ' . \local_qualiscope\helper::localized($criterion, 'title');
+        $indicatorlabel = (int) $criterion->number . '.' . (int) $indicator->number .
+            ' — ' . \local_qualiscope\helper::localized($indicator, 'title');
         $indicatorchecks = $checksbyindicator[$indicator->id] ?? [];
 
         if (!$indicatorchecks) {
@@ -505,16 +553,16 @@ foreach ($criteria as $criterion) {
             } else if ($check->automatic) {
                 $status = '—';
                 $compliance = '—';
-                $detail = $check->description ?? '';
+                $detail = \local_qualiscope\helper::localized($check, 'description');
             } else {
                 $status = get_string('dashboard_manual_only', 'local_qualiscope');
                 $compliance = '—';
-                $detail = $check->description ?? '';
+                $detail = \local_qualiscope\helper::localized($check, 'description');
             }
             $writer->add_row([
                 $criterionlabel,
                 $indicatorlabel,
-                $check->name,
+                \local_qualiscope\helper::localized($check, 'name'),
                 $status,
                 $compliance,
                 $detail,

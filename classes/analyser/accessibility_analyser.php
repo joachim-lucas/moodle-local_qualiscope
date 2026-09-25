@@ -1,8 +1,30 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * QualiScope Accessibility Analyser class.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 
 namespace local_qualiscope\analyser;
 
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Helper class for automated WCAG 2.1 / RGAA accessibility checks.
@@ -14,9 +36,10 @@ defined('MOODLE_INTERNAL') || die();
  * 4. Color contrast ratio in rich-text contents (WCAG AA >= 4.5:1).
  */
 class accessibility_analyser {
-
     /**
      * Standard color map for CSS named colors.
+     *
+     * @var array
      */
     private static $namedcolors = [
         'black' => [0, 0, 0],
@@ -170,9 +193,10 @@ class accessibility_analyser {
         $nonpertinent = 0;
         $details = [];
 
-        // Regex pattern for image file names and generic non-descriptive placeholders
+        // Regex pattern for image file names and generic non-descriptive placeholders.
         $filenamepattern = '/\.(png|jpe?g|gif|webp|svg|bmp|tiff|ico)$/i';
-        $genericpattern = '/^(image|photo|capture|screenshot|sans titre|untitled|dessin|visuel|figure|img|dsc|pic|picture|icon|icone)[_\s\-\d]*$/iu';
+        $genericpattern = '/^(image|photo|capture|screenshot|sans titre|untitled|dessin|visuel|' .
+            'figure|img|dsc|pic|picture|icon|icone)[_\s\-\d]*$/iu';
         $punctpattern = '/^[\s\.\-_*#\?\/\\:;!~+=]+$/u';
 
         foreach ($contents as $item) {
@@ -185,13 +209,16 @@ class accessibility_analyser {
                 $totalimages++;
                 $attrstring = $match[1];
 
-                // Check for alt attribute
+                // Check for alt attribute.
                 if (preg_match('/\balt\s*=\s*(["\'])(.*?)\1/i', $attrstring, $altmatch)) {
                     $alttext = trim($altmatch[2]);
                     if ($alttext === '') {
-                        // Empty alt="" is valid for decorative images according to WCAG
+                        // Empty alt="" is valid for decorative images according to WCAG.
                         $decorative++;
-                    } else if (preg_match($filenamepattern, $alttext) || preg_match($genericpattern, $alttext) || preg_match($punctpattern, $alttext) || mb_strlen($alttext) < 2) {
+                    } else if (
+                        preg_match($filenamepattern, $alttext) || preg_match($genericpattern, $alttext)
+                            || preg_match($punctpattern, $alttext) || mb_strlen($alttext) < 2
+                    ) {
                         $nonpertinent++;
                         $details[] = get_string('wcag_image_alt_nonpertinent_item', 'local_qualiscope', [
                             'source' => $item['title'],
@@ -276,7 +303,7 @@ class accessibility_analyser {
         foreach ($contents as $item) {
             $html = $item['html'] ?? '';
 
-            // Check <video> tags
+            // Check <video> tags.
             if (preg_match_all('/<video\b([^>]*)>(.*?)<\/video>/is', $html, $videomatches, PREG_SET_ORDER)) {
                 foreach ($videomatches as $vm) {
                     $totalvideos++;
@@ -295,21 +322,24 @@ class accessibility_analyser {
                 }
             }
 
-            // Check embedded iframes (e.g. YouTube, Vimeo, Peertube)
+            // Check embedded iframes (e.g. YouTube, Vimeo, Peertube).
             if (preg_match_all('/<iframe\b([^>]*)>/i', $html, $iframematches, PREG_SET_ORDER)) {
                 foreach ($iframematches as $im) {
                     $attrs = $im[1];
-                    if (preg_match('/src=["\']([^"\']*(?:youtube|youtu\.be|vimeo|dailymotion|peertube|kaltura|panopto)[^"\']*)["\']/i', $attrs, $srcmatch)) {
+                    if (
+                        preg_match('/src=["\']([^"\']*(?:youtube|youtu\.be|vimeo|dailymotion|peertube|' .
+                            'kaltura|panopto)[^"\']*)["\']/i', $attrs, $srcmatch)
+                    ) {
                         $totalvideos++;
                         $url = $srcmatch[1];
                         $hascaption = false;
 
-                        // Check URL params like cc_load_policy=1
+                        // Check URL params like cc_load_policy=1.
                         if (stripos($url, 'cc_load_policy=1') !== false || stripos($url, 'subtitles') !== false) {
                             $hascaption = true;
                         }
 
-                        // Check if surrounding content in the same block mentions transcripts / sous-titres
+                        // Check if surrounding content in the same block mentions transcripts / subtitles.
                         if (!$hascaption && preg_match('/(sous-titre|transcription|transcript|vtt|audiodescription)/i', $html)) {
                             $hascaption = true;
                         }
@@ -354,6 +384,7 @@ class accessibility_analyser {
                 }
             } catch (\Throwable $e) {
                 // Ignore context lookup issues in edge cases or standalone runs.
+                unset($e);
             }
         }
 
@@ -427,7 +458,7 @@ class accessibility_analyser {
                 }
 
                 if ($previouslevel !== null) {
-                    // Check if level skipped downwards (e.g. H1 to H3 skipping H2, H2 to H4 skipping H3)
+                    // Check if level skipped downwards (e.g. H1 to H3 skipping H2, H2 to H4 skipping H3).
                     if ($level > $previouslevel + 1) {
                         $skips++;
                         $details[] = get_string('wcag_heading_skip_item', 'local_qualiscope', [
@@ -506,7 +537,7 @@ class accessibility_analyser {
                 foreach ($matches as $m) {
                     $style = $m[2];
                     $fgcolor = null;
-                    $bgcolor = [255, 255, 255]; // default background is white in standard Moodle themes
+                    $bgcolor = [255, 255, 255]; // Default background is white in standard Moodle themes.
 
                     if (preg_match('/(?<![a-z\-])color\s*:\s*([^;]+)/i', $style, $cm)) {
                         $fgcolor = self::parse_css_color(trim($cm[1]));
@@ -612,7 +643,7 @@ class accessibility_analyser {
         $headings = self::analyse_headings($contents);
         $contrast = self::analyse_contrast($contents);
 
-        // Calculate weighted score across the 4 checks
+        // Calculate weighted score across the 4 checks.
         $overallratio = round(
             ($images['ratio'] * 0.30) +
             ($videos['ratio'] * 0.25) +
@@ -657,7 +688,7 @@ class accessibility_analyser {
     public static function parse_css_color(string $colorstr): ?array {
         $c = strtolower(trim($colorstr));
 
-        // Hex #RGB or #RRGGBB
+        // Hex #RGB or #RRGGBB.
         if (preg_match('/^#([0-9a-f]{3,8})$/i', $c, $m)) {
             $hex = $m[1];
             if (strlen($hex) === 3) {
@@ -675,12 +706,12 @@ class accessibility_analyser {
             }
         }
 
-        // rgb(r, g, b) or rgba(r, g, b, a)
+        // RGB or RGBA notation: rgb(r, g, b) or rgba(r, g, b, a).
         if (preg_match('/rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i', $c, $m)) {
             return [(int) $m[1], (int) $m[2], (int) $m[3]];
         }
 
-        // Named colors
+        // Named colors.
         if (isset(self::$namedcolors[$c])) {
             return self::$namedcolors[$c];
         }

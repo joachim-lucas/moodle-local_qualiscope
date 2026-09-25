@@ -1,16 +1,49 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * QualiScope Evidence Analyser class.
+ *
+ * @package    local_qualiscope
+ * @copyright  2026 QualiScope contributors
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 
 namespace local_qualiscope\analyser;
 
-defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Collects evidence items for an indicator from Moodle course data.
+ *
+ * @package local_qualiscope
+ */
 class evidence_analyser {
-
+    /**
+     * Gathers automatic evidence from the course for every check of an indicator.
+     *
+     * @param int $courseid The course id.
+     * @param int $indicatorid The indicator id.
+     * @return array List of evidence arrays.
+     */
     public static function get_moodle_evidences(int $courseid, int $indicatorid): array {
         global $DB;
 
         $evidences = [];
-        $checks = $DB->get_records('local_qualiopi_checks', ['indicator_id' => $indicatorid, 'automatic' => 1]);
+        $checks = $DB->get_records('local_qualiscope_checks', ['indicator_id' => $indicatorid, 'automatic' => 1]);
 
         foreach ($checks as $check) {
             $moodlevidence = self::collect_moodle_evidence($courseid, $check);
@@ -20,15 +53,28 @@ class evidence_analyser {
         return $evidences;
     }
 
+    /**
+     * Lists the manual (external) evidences attached to an analysis result.
+     *
+     * @param int $resultid The result record id.
+     * @return array Records from local_qualiscope_evidences.
+     */
     public static function get_external_evidences(int $resultid): array {
         global $DB;
 
-        return $DB->get_records('local_qualiopi_evidences', [
+        return $DB->get_records('local_qualiscope_evidences', [
             'result_id' => $resultid,
             'type' => 'external',
         ], 'timecreated DESC');
     }
 
+    /**
+     * Collects evidence rows matching a single automatic check type.
+     *
+     * @param int $courseid The course id.
+     * @param object $check The check record.
+     * @return array List of evidence arrays.
+     */
     private static function collect_moodle_evidence(int $courseid, object $check): array {
         global $DB;
 
@@ -41,7 +87,9 @@ class evidence_analyser {
                     "SELECT cm.*, m.name AS modname
                      FROM {course_modules} cm
                      JOIN {modules} m ON m.id = cm.module
-                     WHERE cm.course = :courseid AND cm.visible = 1 AND m.name IN ('assign','quiz','workshop','feedback','choice','data','lesson','lti','survey','bigbluebuttonbn','jitsi')
+                     WHERE cm.course = :courseid AND cm.visible = 1
+                       AND m.name IN ('assign','quiz','workshop','feedback','choice',
+                                      'data','lesson','lti','survey','bigbluebuttonbn','jitsi')
                      ORDER BY cm.id ASC",
                     ['courseid' => $courseid]
                 );
@@ -62,7 +110,8 @@ class evidence_analyser {
                     "SELECT cm.*, m.name AS modname
                      FROM {course_modules} cm
                      JOIN {modules} m ON m.id = cm.module
-                     WHERE cm.course = :courseid AND cm.visible = 1 AND m.name IN ('url','folder','file','page','imscp','book','wiki')
+                     WHERE cm.course = :courseid AND cm.visible = 1
+                       AND m.name IN ('url','folder','file','page','imscp','book','wiki')
                      ORDER BY cm.id ASC",
                     ['courseid' => $courseid]
                 );
@@ -143,8 +192,10 @@ class evidence_analyser {
                         'description' => get_string('evidence_feedback_found', 'local_qualiscope'),
                     ];
                 }
-                $fids = array_map(function ($fb) { return $fb->fid; }, $feedbacks);
-                list($fidsql, $fidparams) = $DB->get_in_or_equal($fids, SQL_PARAMS_NAMED, 'fid');
+                $fids = array_map(function ($fb) {
+                    return $fb->fid;
+                }, $feedbacks);
+                [$fidsql, $fidparams] = $DB->get_in_or_equal($fids, SQL_PARAMS_NAMED, 'fid');
                 $itemcount = $DB->get_field_sql(
                     "SELECT COUNT(*) FROM {feedback_item} WHERE feedback $fidsql",
                     $fidparams
@@ -163,8 +214,10 @@ class evidence_analyser {
                          WHERE feedback $fidsql",
                         $fidparams
                     );
-                    $fids2 = array_map(function ($r) { return (int) $r->feedback; }, $fidswithitems);
-                    list($fidsql2, $fidparams2) = $DB->get_in_or_equal($fids2, SQL_PARAMS_NAMED, 'fid');
+                    $fids2 = array_map(function ($r) {
+                        return (int) $r->feedback;
+                    }, $fidswithitems);
+                    [$fidsql2, $fidparams2] = $DB->get_in_or_equal($fids2, SQL_PARAMS_NAMED, 'fid');
                     $responsecount = $DB->get_field_sql(
                         "SELECT COUNT(DISTINCT fc.id)
                          FROM {feedback_completed} fc
@@ -173,7 +226,10 @@ class evidence_analyser {
                     );
                     if ($responsecount == 0) {
                         $evidences[] = [
-                            'title' => get_string('check_feedback_no_responses', 'local_qualiscope', ['count' => $itemcount, 'activities' => count($feedbacks)]),
+                            'title' => get_string('check_feedback_no_responses', 'local_qualiscope', [
+                                'count' => $itemcount,
+                                'activities' => count($feedbacks),
+                            ]),
                             'source' => 'qualiscope',
                             'description' => '',
                             'issue' => true,
@@ -216,7 +272,11 @@ class evidence_analyser {
                     $evidences[] = [
                         'title' => get_string('evidence_course_summary', 'local_qualiscope'),
                         'source' => 'course',
-                        'description' => mb_substr($course->summary, 0, 200),
+                        'description' => format_text(
+                            mb_substr(html_to_text($course->summary, 0, false), 0, 200),
+                            FORMAT_MOODLE,
+                            ['context' => \context_course::instance($courseid)]
+                        ),
                     ];
                 }
                 break;
@@ -225,6 +285,12 @@ class evidence_analyser {
         return $evidences;
     }
 
+    /**
+     * Returns the module instance record for a course module, or null for unsupported modules.
+     *
+     * @param object $cm A course_modules record with the modname property.
+     * @return object|null
+     */
     private static function get_activity_instance(object $cm) {
         global $DB;
 
