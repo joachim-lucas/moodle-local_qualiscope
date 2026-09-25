@@ -22,36 +22,42 @@
     color: #fff;
 }
 
-/* Subtle backgrounds (Bootstrap 5.3 only). */
-.bg-primary-subtle {
+/* Subtle backgrounds (Bootstrap 5.3 only).
+ *
+ * The compound selector raises specificity above the Bootstrap 4 .card/.badge
+ * rules (same specificity, emitted later in the cascade on Moodle 4.5) so the
+ * background colour cannot be overridden back to white on Moodle 4.5. On
+ * Moodle 5.x the Bootstrap 5.3 utilities already apply and the duplicate
+ * selector has no visible effect. */
+.bg-primary-subtle.bg-primary-subtle {
     background-color: #cfe2ff;
 }
 
-.bg-secondary-subtle {
+.bg-secondary-subtle.bg-secondary-subtle {
     background-color: #e9ecef;
 }
 
-.bg-success-subtle {
+.bg-success-subtle.bg-success-subtle {
     background-color: #d1e7dd;
 }
 
-.bg-danger-subtle {
+.bg-danger-subtle.bg-danger-subtle {
     background-color: #f8d7da;
 }
 
-.bg-warning-subtle {
+.bg-warning-subtle.bg-warning-subtle {
     background-color: #fff3cd;
 }
 
-.bg-info-subtle {
+.bg-info-subtle.bg-info-subtle {
     background-color: #cff4fc;
 }
 
-.bg-light-subtle {
+.bg-light-subtle.bg-light-subtle {
     background-color: #fcfcfd;
 }
 
-.bg-dark-subtle {
+.bg-dark-subtle.bg-dark-subtle {
     background-color: #ced4da;
 }
 
