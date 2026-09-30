@@ -101,7 +101,7 @@ define(['local_qualiscope/api'], function(Api) {
                  *
                  * @return {void}
                  */
-                var next = function() {
+                var advance = function() {
                     currentIndex++;
                     var nextPct = Math.round((currentIndex / total) * 100);
                     progressBar.style.width = nextPct + '%';
@@ -111,8 +111,12 @@ define(['local_qualiscope/api'], function(Api) {
 
                 // A failing course must not abort the whole campaign.
                 Api.runCampaignCourse(config.campaignid, course.id, isFinish)
-                    .then(next)
-                    .catch(next);
+                    .then(function() {
+                        return advance();
+                    })
+                    .catch(function() {
+                        return advance();
+                    });
             };
 
             setTimeout(processNext, 200);
