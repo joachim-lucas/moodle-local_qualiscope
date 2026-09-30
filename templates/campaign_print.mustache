@@ -17,13 +17,11 @@
 {{!
     @template local_qualiscope/campaign_print
 
-    Standalone printable campaign report. It deliberately does not use the Moodle theme so that
-    the browser print dialog produces a clean document.
+    Printable campaign report, rendered inside the theme by print_campaign.php with the print
+    page layout. The report styling lives in styles.css under .qualiscope-print-report.
 
     Example context (json):
     {
-        "lang": "en",
-        "pagetitle": "Spring audit 2026 — QualiScope campaign audit summary report",
         "pluginname": "QualiScope",
         "subtitle": "QualiScope campaign audit summary report",
         "printlabel": "Print report",
@@ -82,132 +80,100 @@
         }
     }
 }}
-<!DOCTYPE html>
-<html lang="{{lang}}">
-<head>
-    <meta charset="utf-8">
-    <title>{{pagetitle}}</title>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-            sans-serif; color: #1e293b; background: #fff; margin: 20px 40px; font-size: 14px; line-height: 1.5; }
-        .no-print { margin-bottom: 20px; }
-        .btn { display: inline-block; padding: 8px 16px; background: #2563eb; color: #fff; text-decoration: none;
-            border-radius: 4px; font-weight: bold; border: none; cursor: pointer; }
-        .btn-outline { background: #fff; color: #475569; border: 1px solid #cbd5e1; }
-        .header { border-bottom: 3px solid #1e3a8a; padding-bottom: 12px; margin-bottom: 20px; display: flex;
-            justify-content: space-between; align-items: flex-start; }
-        .header h1 { margin: 0 0 4px; color: #1e3a8a; font-size: 24px; }
-        .header .subtitle { color: #64748b; font-size: 14px; }
-        .meta-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; background: #f8fafc;
-            border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 25px; }
-        .score-box { font-size: 28px; font-weight: bold; color: #1e3a8a; }
-        h2 { color: #2563eb; font-size: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;
-            margin-top: 30px; margin-bottom: 12px; }
-        h3 { color: #334155; font-size: 15px; margin-top: 15px; margin-bottom: 8px; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th { background: #f1f5f9; color: #334155; text-align: left; padding: 8px; border: 1px solid #e2e8f0;
-            font-size: 13px; }
-        td { padding: 6px 8px; border: 1px solid #e2e8f0; font-size: 13px; vertical-align: top; }
-        .text-center { text-align: center; }
-        .text-success { color: #15803d; font-weight: bold; }
-        .text-warning { color: #b45309; font-weight: bold; }
-        .text-danger { color: #b91c1c; font-weight: bold; }
-        .muted { color: #64748b; }
-        @media print {
-            .no-print { display: none !important; }
-            body { margin: 0; font-size: 12px; }
-            h2 { page-break-before: auto; }
-            tr { page-break-inside: avoid; }
-        }
-    </style>
-</head>
-<body>
-    <div class="no-print">
-        <button class="btn" onclick="window.print()">&#128424; {{printlabel}}</button>
-        <a class="btn btn-outline" href="{{backurl}}">&larr; {{backlabel}}</a>
+<div class="qualiscope-print-report">
+    <div class="qualiscope-print-toolbar no-print">
+        <button class="btn btn-primary" onclick="window.print()">&#128424; {{printlabel}}</button>
+        <a class="btn btn-outline-secondary" href="{{backurl}}">&larr; {{backlabel}}</a>
     </div>
 
-    <div class="header">
-        <div>
-            <h1>{{pluginname}}</h1>
-            <div class="subtitle">{{subtitle}}</div>
-        </div>
-        <div style="text-align: right; color: #64748b; font-size: 13px;">
-            <div>{{generatedlabel}}</div>
-            <strong>{{generateddate}}</strong>
-        </div>
+    <div class="qualiscope-print-header">
+        <h1>{{pluginname}}</h1>
+        <p class="qualiscope-print-subtitle">{{subtitle}}</p>
+        <p class="qualiscope-print-generated">{{generatedlabel}} <strong>{{generateddate}}</strong></p>
     </div>
 
-    <div class="meta-grid">
+    <div class="qualiscope-print-meta">
         <div>
             <div><strong>{{namelabel}} :</strong> {{campaignname}}</div>
             <div><strong>{{referentiallabel}} :</strong> {{referential}}</div>
             <div><strong>{{scopelabel}} :</strong> {{scope}}</div>
-            <div style="margin-top: 8px;">
+            <div class="qualiscope-print-score">
                 <strong>{{globalratelabel}}</strong>
-                <span class="score-box">{{globalpercentage}} %</span>
+                <span class="qualiscope-print-score-value">{{globalpercentage}} %</span>
             </div>
         </div>
-        <div style="border-left: 1px solid #cbd5e1; padding-left: 15px;">
-            <div><strong>{{coursesanalysedlabel}} :</strong> {{coursecount}}</div>
-            <div class="text-success">&bull; {{detectedlabel}} : {{detected}}</div>
-            <div class="text-warning">&bull; {{verifylabel}} : {{verify}}</div>
-            <div class="text-danger">&bull; {{missinglabel}} : {{missing}}</div>
-            <div class="muted">&bull; {{nalabel}} : {{na}}</div>
-        </div>
+        <ul class="qualiscope-print-counts">
+            <li><strong>{{coursesanalysedlabel}} :</strong> {{coursecount}}</li>
+            <li class="qualiscope-print-detected">{{detectedlabel}} : {{detected}}</li>
+            <li class="qualiscope-print-verify">{{verifylabel}} : {{verify}}</li>
+            <li class="qualiscope-print-missing">{{missinglabel}} : {{missing}}</li>
+            <li class="qualiscope-print-na">{{nalabel}} : {{na}}</li>
+        </ul>
     </div>
 
-    <h2>{{coursestable.title}}</h2>
-    <table>
+    <h2 class="qualiscope-print-heading">{{coursestable.title}}</h2>
+    <table class="qualiscope-print-table">
+        <colgroup>
+            <col class="qualiscope-col-50">
+            <col class="qualiscope-col-15">
+            <col class="qualiscope-col-8" span="4">
+        </colgroup>
         <thead>
             <tr>
-                <th style="width: 50%;">{{coursestable.courselabel}}</th>
-                <th class="text-center" style="width: 15%;">{{coursestable.scorelabel}}</th>
-                <th class="text-center" style="width: 8%;">&check;</th>
-                <th class="text-center" style="width: 8%;">&#9888;</th>
-                <th class="text-center" style="width: 8%;">&times;</th>
-                <th class="text-center" style="width: 8%;">&mdash;</th>
+                <th>{{coursestable.courselabel}}</th>
+                <th class="qualiscope-print-center">{{coursestable.scorelabel}}</th>
+                <th class="qualiscope-print-center">&check;</th>
+                <th class="qualiscope-print-center">&#9888;</th>
+                <th class="qualiscope-print-center">&times;</th>
+                <th class="qualiscope-print-center">&mdash;</th>
             </tr>
         </thead>
         <tbody>
             {{#coursestable.rows}}
             <tr>
                 <td><strong>{{coursename}}</strong></td>
-                <td class="text-center"><strong>{{percentage}} %</strong></td>
-                <td class="text-center text-success">{{detected}}</td>
-                <td class="text-center text-warning">{{verify}}</td>
-                <td class="text-center text-danger">{{missing}}</td>
-                <td class="text-center" style="color: #64748b;">{{na}}</td>
+                <td class="qualiscope-print-center"><strong>{{percentage}} %</strong></td>
+                <td class="qualiscope-print-center qualiscope-print-detected">{{detected}}</td>
+                <td class="qualiscope-print-center qualiscope-print-verify">{{verify}}</td>
+                <td class="qualiscope-print-center qualiscope-print-missing">{{missing}}</td>
+                <td class="qualiscope-print-center qualiscope-print-na">{{na}}</td>
             </tr>
             {{/coursestable.rows}}
         </tbody>
     </table>
 
-    <h2>{{macrotitle}}</h2>
+    <h2 class="qualiscope-print-heading">{{macrotitle}}</h2>
     {{#criteriatables}}
-    <h3>{{title}} ({{percentagelabel}})</h3>
-    <table>
+    <h3 class="qualiscope-print-subheading">{{title}} ({{percentagelabel}})</h3>
+    <table class="qualiscope-print-table">
+        <colgroup>
+            <col class="qualiscope-col-10">
+            <col class="qualiscope-col-45">
+            <col class="qualiscope-col-15">
+            <col class="qualiscope-col-8" span="3">
+            <col class="qualiscope-col-7">
+        </colgroup>
         <thead>
             <tr>
-                <th style="width: 10%;">{{indicatorlabel}}</th>
-                <th style="width: 45%;">{{descriptionlabel}}</th>
-                <th class="text-center" style="width: 15%;">{{compliancelabel}}</th>
-                <th class="text-center" style="width: 7%;">&check;</th>
-                <th class="text-center" style="width: 7%;">&#9888;</th>
-                <th class="text-center" style="width: 8%;">&times;</th>
-                <th class="text-center" style="width: 8%;">&mdash;</th>
+                <th>{{indicatorlabel}}</th>
+                <th>{{descriptionlabel}}</th>
+                <th class="qualiscope-print-center">{{compliancelabel}}</th>
+                <th class="qualiscope-print-center">&check;</th>
+                <th class="qualiscope-print-center">&#9888;</th>
+                <th class="qualiscope-print-center">&times;</th>
+                <th class="qualiscope-print-center">&mdash;</th>
             </tr>
         </thead>
         <tbody>
             {{#rows}}
             <tr>
-                <td class="text-center"><strong>I{{number}}</strong></td>
+                <td class="qualiscope-print-center"><strong>I{{number}}</strong></td>
                 <td>{{title}}</td>
-                <td class="text-center"><strong>{{percentagelabel}}</strong></td>
-                <td class="text-center text-success">{{detected}}</td>
-                <td class="text-center text-warning">{{verify}}</td>
-                <td class="text-center text-danger">{{missing}}</td>
-                <td class="text-center" style="color: #64748b;">{{na}}</td>
+                <td class="qualiscope-print-center"><strong>{{percentagelabel}}</strong></td>
+                <td class="qualiscope-print-center qualiscope-print-detected">{{detected}}</td>
+                <td class="qualiscope-print-center qualiscope-print-verify">{{verify}}</td>
+                <td class="qualiscope-print-center qualiscope-print-missing">{{missing}}</td>
+                <td class="qualiscope-print-center qualiscope-print-na">{{na}}</td>
             </tr>
             {{/rows}}
         </tbody>
@@ -215,27 +181,32 @@
     {{/criteriatables}}
 
     {{#weakpointstable}}
-    <h2>{{title}}</h2>
-    <table>
+    <h2 class="qualiscope-print-heading">{{title}}</h2>
+    <table class="qualiscope-print-table">
+        <colgroup>
+            <col class="qualiscope-col-12">
+            <col class="qualiscope-col-48">
+            <col class="qualiscope-col-18">
+            <col class="qualiscope-col-22">
+        </colgroup>
         <thead>
             <tr>
-                <th style="width: 12%;">{{indicatorlabel}}</th>
-                <th style="width: 48%;">{{descriptionlabel}}</th>
-                <th class="text-center" style="width: 18%;">{{compliancelabel}}</th>
-                <th class="text-center" style="width: 22%;">{{failingcourseslabel}}</th>
+                <th>{{indicatorlabel}}</th>
+                <th>{{descriptionlabel}}</th>
+                <th class="qualiscope-print-center">{{compliancelabel}}</th>
+                <th class="qualiscope-print-center">{{failingcourseslabel}}</th>
             </tr>
         </thead>
         <tbody>
             {{#rows}}
             <tr>
-                <td class="text-center"><strong>{{label}}</strong></td>
+                <td class="qualiscope-print-center"><strong>{{label}}</strong></td>
                 <td>{{title}}</td>
-                <td class="text-center text-danger"><strong>{{percentage}} %</strong></td>
-                <td class="text-center text-danger">{{failingcourses}}</td>
+                <td class="qualiscope-print-center qualiscope-print-missing"><strong>{{percentage}} %</strong></td>
+                <td class="qualiscope-print-center qualiscope-print-missing">{{failingcourses}}</td>
             </tr>
             {{/rows}}
         </tbody>
     </table>
     {{/weakpointstable}}
-</body>
-</html>
+</div>

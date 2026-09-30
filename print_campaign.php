@@ -36,6 +36,7 @@ $referential = $DB->get_record('local_qualiscope_referentials', ['id' => $campai
 
 $PAGE->set_url(new moodle_url('/local/qualiscope/print_campaign.php', ['id' => $campaignid]));
 $PAGE->set_context($context);
+$PAGE->set_pagelayout('print');
 $PAGE->set_title($campaign->name);
 $PAGE->set_heading($campaign->name);
 
@@ -290,9 +291,9 @@ $subtitlelabel = get_string('campaign_report_subtitle', 'local_qualiscope');
 $descriptionlabel = get_string('description', 'core');
 $compliancelabel = get_string('campaign_compliance_rate', 'local_qualiscope');
 
+echo $OUTPUT->header();
+
 echo $output->render_campaign_print([
-    'lang' => current_language(),
-    'pagetitle' => $campaign->name . ' — ' . $subtitlelabel,
     'pluginname' => get_string('pluginname', 'local_qualiscope'),
     'subtitle' => $subtitlelabel,
     'printlabel' => get_string('campaign_print_btn', 'local_qualiscope'),
@@ -335,3 +336,5 @@ echo $output->render_campaign_print([
         'rows' => $weakpointrows,
     ],
 ]);
+
+echo $OUTPUT->footer();
