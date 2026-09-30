@@ -43,6 +43,25 @@ define(['core/ajax'], function(Ajax) {
         },
 
         /**
+         * Analyse a single course of a campaign, as the progress page does.
+         *
+         * @param {number} campaignid
+         * @param {number} courseid
+         * @param {number} finish
+         * @return {Promise}
+         */
+        runCampaignCourse: function(campaignid, courseid, finish) {
+            return Ajax.call([{
+                methodname: 'local_qualiscope_run_campaign_course',
+                args: {
+                    campaignid: campaignid,
+                    courseid: courseid,
+                    finish: finish
+                }
+            }])[0];
+        },
+
+        /**
          * Attach an evidence annotation to an analysis result.
          *
          * @param {number} resultid

@@ -28,6 +28,7 @@ namespace local_qualiscope\tests;
 use local_qualiscope\external\add_evidence;
 use local_qualiscope\external\create_action;
 use local_qualiscope\external\run_analysis;
+use local_qualiscope\external\run_campaign_course;
 
 /**
  * External function testcase.
@@ -98,6 +99,7 @@ final class external_functions_test extends \advanced_testcase {
      * @covers \local_qualiscope\external\create_action
      * @covers \local_qualiscope\external\add_evidence
      * @covers \local_qualiscope\external\run_analysis
+     * @covers \local_qualiscope\external\run_campaign_course
      * @return void
      */
     public function test_execute_parameter_order_matches_declaration(): void {
@@ -105,6 +107,7 @@ final class external_functions_test extends \advanced_testcase {
             add_evidence::class,
             create_action::class,
             run_analysis::class,
+            run_campaign_course::class,
         ];
 
         foreach ($classes as $classname) {
@@ -179,5 +182,55 @@ final class external_functions_test extends \advanced_testcase {
 
         $this->assertTrue($return['success']);
         $this->assertNotEmpty($return['message']);
+    }
+
+    /**
+     * Test run_campaign_course stores the results of the course and closes the campaign on the
+     * last course, which is what the progress page relies on.
+     *
+     * @covers \local_qualiscope\external\run_campaign_course
+     * @return void
+     */
+    public function test_run_campaign_course_saves_results_and_closes_campaign(): void {
+        global $DB;
+
+        $course = $this->getDataGenerator()->create_course();
+        $campaignid = $this->insertresult($course->id, get_admin()->id)['campaign'];
+
+        $return = run_campaign_course::execute($campaignid, $course->id, 1);
+
+        $this->assertTrue($return['success']);
+        $this->assertEquals('ok', $return['status']);
+        $this->assertEquals($course->id, $return['courseid']);
+        $this->assertTrue($return['finished']);
+
+        $this->assertGreaterThan(
+            0,
+            $DB->count_records('local_qualiscope_results', ['campaign_id' => $campaignid, 'courseid' => $course->id])
+        );
+
+        $campaign = $DB->get_record('local_qualiscope_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
+        $this->assertGreaterThan(0, $campaign->timecompleted);
+    }
+
+    /**
+     * Test run_campaign_course keeps the campaign open while courses are still to be analysed.
+     *
+     * @covers \local_qualiscope\external\run_campaign_course
+     * @return void
+     */
+    public function test_run_campaign_course_keeps_campaign_open_midway(): void {
+        global $DB;
+
+        $course = $this->getDataGenerator()->create_course();
+        $campaignid = $this->insertresult($course->id, get_admin()->id)['campaign'];
+
+        $return = run_campaign_course::execute($campaignid, $course->id, 0);
+
+        $this->assertTrue($return['success']);
+        $this->assertFalse($return['finished']);
+
+        $campaign = $DB->get_record('local_qualiscope_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
+        $this->assertEquals(0, $campaign->timecompleted);
     }
 }
