@@ -25,55 +25,63 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$ADMIN->add('localplugins', new admin_category('local_qualiscope', get_string('pluginname', 'local_qualiscope')));
+// The admin tree is rebuilt on every page load, so the licence check and the
+// referentials query below only run for users who can reach this page.
+if ($hassiteconfig) {
+    $ADMIN->add('localplugins', new admin_category('local_qualiscope', get_string('pluginname', 'local_qualiscope')));
 
-$settings = new admin_settingpage('local_qualiscope_settings', get_string('settings', 'local_qualiscope'));
+    $settings = new admin_settingpage('local_qualiscope_settings', get_string('settings', 'local_qualiscope'));
 
-$licencestatus = \local_qualiscope\license::validate(\local_qualiscope\license::stored_key());
-if ($licencestatus['valid']) {
-    $licencestatuslabel = get_string('licence_status_ok', 'local_qualiscope', [
-        'expiry' => userdate((int) $licencestatus['expiry']),
-    ]);
-} else {
-    $licencestatuslabel = get_string('licence_status_' . $licencestatus['code'], 'local_qualiscope');
-    if ($licencestatus['code'] === 'expired' && $licencestatus['expiry']) {
-        $licencestatuslabel .= ' ' . get_string('licence_expired_on', 'local_qualiscope', userdate((int) $licencestatus['expiry']));
+    $licencestatus = \local_qualiscope\license::validate(\local_qualiscope\license::stored_key());
+    if ($licencestatus['valid']) {
+        $licencestatuslabel = get_string('licence_status_ok', 'local_qualiscope', [
+            'expiry' => userdate((int) $licencestatus['expiry']),
+        ]);
+    } else {
+        $licencestatuslabel = get_string('licence_status_' . $licencestatus['code'], 'local_qualiscope');
+        if ($licencestatus['code'] === 'expired' && $licencestatus['expiry']) {
+            $licencestatuslabel .= ' ' . get_string(
+                'licence_expired_on',
+                'local_qualiscope',
+                userdate((int) $licencestatus['expiry'])
+            );
+        }
     }
-}
-$licencestatusdesc = get_string('licencekey_desc', 'local_qualiscope', ['max' => \local_qualiscope\quota::FREE_COURSES]);
-$licencestatusdesc .= ' ' . $licencestatuslabel;
-$licencestatusdesc .= ' ' . get_string('licence_sitehash', 'local_qualiscope', \local_qualiscope\license::site_hash());
+    $licencestatusdesc = get_string('licencekey_desc', 'local_qualiscope', ['max' => \local_qualiscope\quota::FREE_COURSES]);
+    $licencestatusdesc .= ' ' . $licencestatuslabel;
+    $licencestatusdesc .= ' ' . get_string('licence_sitehash', 'local_qualiscope', \local_qualiscope\license::site_hash());
 
-$settings->add(new admin_setting_configtext(
-    'local_qualiscope/licensekey',
-    get_string('licencekey', 'local_qualiscope'),
-    $licencestatusdesc,
-    '',
-    PARAM_RAW,
-    80
-));
+    $settings->add(new admin_setting_configtext(
+        'local_qualiscope/licensekey',
+        get_string('licencekey', 'local_qualiscope'),
+        $licencestatusdesc,
+        '',
+        PARAM_RAW,
+        80
+    ));
 
-$settings->add(new admin_setting_configcheckbox(
-    'local_qualiscope/autorefresh',
-    get_string('autorefresh', 'local_qualiscope'),
-    get_string('autorefresh_desc', 'local_qualiscope'),
-    0
-));
+    $settings->add(new admin_setting_configcheckbox(
+        'local_qualiscope/autorefresh',
+        get_string('autorefresh', 'local_qualiscope'),
+        get_string('autorefresh_desc', 'local_qualiscope'),
+        0
+    ));
 
-$referentialoptions = [0 => get_string('defaultreferential_first', 'local_qualiscope')];
-if ($DB->get_manager()->table_exists('local_qualiscope_referentials')) {
-    $refs = $DB->get_records('local_qualiscope_referentials', ['active' => 1], 'id ASC');
-    foreach ($refs as $ref) {
-        $referentialoptions[$ref->id] = \local_qualiscope\helper::localized($ref, 'name') . ' ' . $ref->version;
+    $referentialoptions = [0 => get_string('defaultreferential_first', 'local_qualiscope')];
+    if ($DB->get_manager()->table_exists('local_qualiscope_referentials')) {
+        $refs = $DB->get_records('local_qualiscope_referentials', ['active' => 1], 'id ASC');
+        foreach ($refs as $ref) {
+            $referentialoptions[$ref->id] = \local_qualiscope\helper::localized($ref, 'name') . ' ' . $ref->version;
+        }
     }
+
+    $settings->add(new admin_setting_configselect(
+        'local_qualiscope/defaultreferential',
+        get_string('defaultreferential', 'local_qualiscope'),
+        get_string('defaultreferential_desc', 'local_qualiscope'),
+        0,
+        $referentialoptions
+    ));
+
+    $ADMIN->add('local_qualiscope', $settings);
 }
-
-$settings->add(new admin_setting_configselect(
-    'local_qualiscope/defaultreferential',
-    get_string('defaultreferential', 'local_qualiscope'),
-    get_string('defaultreferential_desc', 'local_qualiscope'),
-    0,
-    $referentialoptions
-));
-
-$ADMIN->add('local_qualiscope', $settings);
