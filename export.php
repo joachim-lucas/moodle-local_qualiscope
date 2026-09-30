@@ -30,13 +30,11 @@ $campaignid = optional_param('campaignid', 0, PARAM_INT);
 $courseid = optional_param('courseid', 0, PARAM_INT);
 $referentialid = optional_param('referentialid', 0, PARAM_INT);
 $format = optional_param('format', 'xlsx', PARAM_ALPHA);
-$sesskey = optional_param('sesskey', '', PARAM_RAW);
-if ($sesskey !== '') {
-    require_sesskey($sesskey);
-}
+
+require_login();
+require_sesskey();
 
 if ($campaignid) {
-    require_login();
     $context = context_system::instance();
     require_capability('local/qualiscope:managecampaigns', $context);
 

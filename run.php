@@ -29,11 +29,8 @@ $courseid = optional_param('courseid', 0, PARAM_INT);
 $campaignid = optional_param('campaignid', 0, PARAM_INT);
 $referentialid = optional_param('referentialid', 0, PARAM_INT);
 
-if ($sesskey = optional_param('sesskey', '', PARAM_RAW)) {
-    require_sesskey($sesskey);
-}
-
 require_login();
+require_sesskey();
 
 if ($campaignid) {
     $campaign = $DB->get_record('local_qualiscope_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
@@ -202,14 +199,15 @@ if ($campaignid) {
         progressText.textContent = 'Traitement du cours ' + (currentIndex + 1) + ' sur ' + total + ' (' + pct + ' %)';
         currentCourseEl.textContent = course.fullname;
 
-        var url = 'run.php?campaignid=' + campaignId +
-                  '&singlecourseid=' + course.id +
-                  '&ajax=1' +
-                  '&finish=' + isFinish +
-                  '&sesskey=' + encodeURIComponent(sesskey);
+        var params = 'campaignid=' + campaignId +
+                     '&singlecourseid=' + course.id +
+                     '&ajax=1' +
+                     '&finish=' + isFinish +
+                     '&sesskey=' + encodeURIComponent(sesskey);
 
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
+        xhr.open('POST', 'run.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onload = function() {
             currentIndex++;
             var nextPct = Math.round((currentIndex / total) * 100);
@@ -222,7 +220,7 @@ if ($campaignid) {
             currentIndex++;
             processNext();
         };
-        xhr.send();
+        xhr.send(params);
     }
 
     // Start processing.
