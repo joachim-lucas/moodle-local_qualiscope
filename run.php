@@ -58,6 +58,8 @@ if ($campaignid) {
     }
 
     // Interactive Real-time Progress Page.
+    $output = $PAGE->get_renderer('local_qualiscope');
+
     $courseids = \local_qualiscope\analyser\course_analyser::get_campaign_course_ids($campaign);
     $coursesinfo = [];
     if (!empty($courseids)) {
@@ -93,40 +95,13 @@ if ($campaignid) {
     ]]);
 
     echo $OUTPUT->header();
-
-    $coursecount = count($coursesinfo);
-
-    echo '
-    <div class="qualiscope-run-progress container py-5">
-        <div class="card shadow-sm border-0 mx-auto" style="max-width: 700px;">
-            <div class="card-body p-4 text-center">
-                <div class="mb-3">
-                    <span class="spinner-border text-primary" role="status" id="runSpinner"
-                        style="width: 3rem; height: 3rem;"></span>
-                </div>
-                <h4 class="mb-2" id="runTitle">' .
-                    s(get_string('campaign_running_progress_title', 'local_qualiscope')) . '</h4>
-                <p class="text-muted mb-4">' . s($campaign->name) . ' &bull; <strong>' . $coursecount . '</strong> ' .
-                    s(get_string('campaign_courses_analysed', 'local_qualiscope')) . '</p>
-
-                <div class="progress mb-3" style="height: 26px; border-radius: 13px;">
-                    <div id="runProgressBar"
-                        class="progress-bar progress-bar-striped progress-bar-animated bg-primary font-weight-bold"
-                        role="progressbar" style="width: 0%; font-size: 13px;">0%</div>
-                </div>
-
-                <div id="runProgressText" class="text-muted small mb-3">
-                    ' . s(get_string('campaign_running_wait', 'local_qualiscope')) . '
-                </div>
-
-                <div id="runCurrentCourse" class="alert alert-light border py-2 small text-truncate">
-                    ...
-                </div>
-            </div>
-        </div>
-    </div>
-    ';
-
+    echo $output->render_campaign_run_progress([
+        'campaignname' => $campaign->name,
+        'coursecount' => count($coursesinfo),
+        'runningtitle' => get_string('campaign_running_progress_title', 'local_qualiscope'),
+        'progresslabel' => get_string('campaign_courses_analysed', 'local_qualiscope'),
+        'waitlabel' => get_string('campaign_running_wait', 'local_qualiscope'),
+    ]);
     echo $OUTPUT->footer();
     exit;
 }

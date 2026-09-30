@@ -40,6 +40,8 @@ $PAGE->set_title(get_string('action_title', 'local_qualiscope'));
 $PAGE->set_heading(get_string('action_title', 'local_qualiscope'));
 $PAGE->set_context($context);
 
+$output = $PAGE->get_renderer('local_qualiscope');
+
 if (data_submitted() && confirm_sesskey()) {
     $action->title = required_param('title', PARAM_TEXT);
     $action->responsible = optional_param('responsible', '', PARAM_RAW);
@@ -68,40 +70,52 @@ if (data_submitted() && confirm_sesskey()) {
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('action_title', 'local_qualiscope'));
 
-$formhtml = '<form method="post">';
-$formhtml .= '<input type="hidden" name="sesskey" value="' . sesskey() . '">';
-$formhtml .= '<input type="hidden" name="return" value="' . s($return) . '">';
+$prioritylabels = [
+    'high' => get_string('action_priority_high', 'local_qualiscope'),
+    'medium' => get_string('action_priority_medium', 'local_qualiscope'),
+    'low' => get_string('action_priority_low', 'local_qualiscope'),
+];
 
-$formhtml .= '<div class="mb-3"><label class="form-label">' . get_string('action_name', 'local_qualiscope') . '</label>';
-$formhtml .= '<input type="text" class="form-control" name="title" value="' . s($action->title) . '" required></div>';
+$statuslabels = [
+    'todo' => get_string('action_status_todo', 'local_qualiscope'),
+    'inprogress' => get_string('action_status_inprogress', 'local_qualiscope'),
+    'proved' => get_string('action_status_proved', 'local_qualiscope'),
+    'verified' => get_string('action_status_verified', 'local_qualiscope'),
+    'closed' => get_string('action_status_closed', 'local_qualiscope'),
+];
 
-$formhtml .= '<div class="mb-3"><label class="form-label">' . get_string('action_responsible', 'local_qualiscope') . '</label>';
-$formhtml .= '<input type="text" class="form-control" name="responsible" value="' . s($action->responsible) . '"></div>';
-
-$formhtml .= '<div class="mb-3"><label class="form-label">' . get_string('action_duedate', 'local_qualiscope') . '</label>';
-$formhtml .= '<input type="date" class="form-control" name="duedate" value="' .
-    ($action->duedate ? date('Y-m-d', $action->duedate) : '') . '"></div>';
-
-$formhtml .= '<div class="mb-3"><label class="form-label">' . get_string('action_priority', 'local_qualiscope') . '</label>';
-$formhtml .= '<select class="form-select" name="priority">';
-foreach (['high', 'medium', 'low'] as $p) {
-    $sel = $action->priority === $p ? ' selected' : '';
-    $label = get_string('action_priority_' . $p, 'local_qualiscope');
-    $formhtml .= '<option value="' . $p . '"' . $sel . '>' . $label . '</option>';
+$priorities = [];
+foreach ($prioritylabels as $value => $label) {
+    $priorities[] = [
+        'value' => $value,
+        'label' => $label,
+        'selected' => $action->priority === $value,
+    ];
 }
-$formhtml .= '</select></div>';
 
-$formhtml .= '<div class="mb-3"><label class="form-label">' . get_string('action_status', 'local_qualiscope') . '</label>';
-$formhtml .= '<select class="form-select" name="status">';
-foreach (['todo', 'inprogress', 'proved', 'verified', 'closed'] as $s) {
-    $sel = $action->status === $s ? ' selected' : '';
-    $label = get_string('action_status_' . $s, 'local_qualiscope');
-    $formhtml .= '<option value="' . $s . '"' . $sel . '>' . $label . '</option>';
+$statuses = [];
+foreach ($statuslabels as $value => $label) {
+    $statuses[] = [
+        'value' => $value,
+        'label' => $label,
+        'selected' => $action->status === $value,
+    ];
 }
-$formhtml .= '</select></div>';
 
-$formhtml .= '<button type="submit" class="btn btn-primary">' . get_string('action_submit', 'local_qualiscope') . '</button>';
-$formhtml .= '</form>';
+echo $output->render_action_edit_form([
+    'sesskey' => sesskey(),
+    'return' => $return,
+    'title' => $action->title,
+    'responsible' => $action->responsible,
+    'duedate' => $action->duedate ? date('Y-m-d', $action->duedate) : '',
+    'priorities' => $priorities,
+    'statuses' => $statuses,
+    'title_label' => get_string('action_name', 'local_qualiscope'),
+    'responsible_label' => get_string('action_responsible', 'local_qualiscope'),
+    'duedate_label' => get_string('action_duedate', 'local_qualiscope'),
+    'priority_label' => get_string('action_priority', 'local_qualiscope'),
+    'status_label' => get_string('action_status', 'local_qualiscope'),
+    'submitlabel' => get_string('action_submit', 'local_qualiscope'),
+]);
 
-echo $formhtml;
 echo $OUTPUT->footer();

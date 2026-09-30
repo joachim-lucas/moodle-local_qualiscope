@@ -73,6 +73,36 @@ class renderer extends \plugin_renderer_base {
     }
 
     /**
+     * Renders the edit form of a single corrective action.
+     *
+     * @param array $data Template context.
+     * @return string
+     */
+    public function render_action_edit_form(array $data): string {
+        return $this->render_from_template('local_qualiscope/action_edit', $data);
+    }
+
+    /**
+     * Renders the progress panel of a running campaign.
+     *
+     * @param array $data Template context.
+     * @return string
+     */
+    public function render_campaign_run_progress(array $data): string {
+        return $this->render_from_template('local_qualiscope/campaign_run', $data);
+    }
+
+    /**
+     * Renders the standalone printable campaign report.
+     *
+     * @param array $data Template context.
+     * @return string
+     */
+    public function render_campaign_print(array $data): string {
+        return $this->render_from_template('local_qualiscope/campaign_print', $data);
+    }
+
+    /**
      * Renders the campaign list.
      *
      * @param array $data Template context.
