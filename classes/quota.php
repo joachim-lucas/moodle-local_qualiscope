@@ -30,9 +30,11 @@ namespace local_qualiscope;
  * Tracks the free plan quota of audited courses.
  *
  * The free plan allows a fixed number of distinct courses to be audited
- * across the whole site, forever (records are never purged). An active
- * licence removes the limit. A course that has already been audited is
+ * across the whole site, forever. A course that has already been audited is
  * always re-auditable for free (the quota only counts distinct courses).
+ * The record of a course is dropped when that course is deleted, so it cannot
+ * consume a slot for a course that no longer exists. An active licence removes
+ * the limit.
  *
  * @package local_qualiscope
  */

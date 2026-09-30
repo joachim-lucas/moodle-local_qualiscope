@@ -30,4 +30,8 @@ $callbacks = [
         'hook' => \core\hook\navigation\primary_extend::class,
         'callback' => \local_qualiscope\hooks\primary_navigation::class . '::extend',
     ],
+    [
+        'hook' => \core_course\hook\before_course_deleted::class,
+        'callback' => \local_qualiscope\hooks\before_course_deleted::class . '::delete_course',
+    ],
 ];
