@@ -64,27 +64,39 @@ class create_action extends \external_api {
     /**
      * Creates the corrective action record.
      *
+     * @param int $resultid Optional linked analysis result id.
      * @param int $campaignid The campaign id.
      * @param int $courseid The course id.
      * @param string $title Title of the action.
      * @param string $responsible Responsible person (free text).
      * @param string $duedate Due date as timestamp string.
      * @param string $priority Priority (low, medium, high).
-     * @param int $resultid Optional linked analysis result id.
      * @return array Success status and created action id.
      */
     public static function execute(
+        int $resultid,
         int $campaignid,
         int $courseid,
         string $title,
         string $responsible = '',
         string $duedate = '0',
-        string $priority = 'medium',
-        int $resultid = 0
+        string $priority = 'medium'
     ): array {
         global $DB, $USER;
 
         $context = \context_course::instance($courseid);
+
+        self::validate_parameters(self::execute_parameters(), [
+            'resultid' => $resultid,
+            'campaignid' => $campaignid,
+            'courseid' => $courseid,
+            'title' => $title,
+            'responsible' => $responsible,
+            'duedate' => $duedate,
+            'priority' => $priority,
+        ]);
+        self::validate_context($context);
+
         require_capability('local/qualiscope:manageactions', $context);
 
         $action = new \stdClass();

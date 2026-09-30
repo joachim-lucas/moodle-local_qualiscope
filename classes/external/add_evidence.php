@@ -72,6 +72,15 @@ class add_evidence extends \external_api {
 
         $result = $DB->get_record('local_qualiscope_results', ['id' => $resultid], '*', MUST_EXIST);
         $context = \context_course::instance($result->courseid);
+
+        self::validate_parameters(self::execute_parameters(), [
+            'resultid' => $resultid,
+            'title' => $title,
+            'annotation' => $annotation,
+            'externalurl' => $externalurl,
+        ]);
+        self::validate_context($context);
+
         require_capability('local/qualiscope:editproofs', $context);
 
         $record = new \stdClass();
