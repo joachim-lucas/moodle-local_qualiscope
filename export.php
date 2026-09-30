@@ -404,11 +404,7 @@ if ($campaignid) {
     }
 
     $filename = $basefilename . '.xlsx';
-    $bytes = $writer->get_bytes();
-    send_headers('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', true);
-    header('Content-Disposition: attachment; filename="' . $filename . '"');
-    header('Content-Length: ' . strlen($bytes));
-    echo $bytes;
+    $writer->send($filename);
     exit;
 }
 
@@ -573,9 +569,5 @@ $rawfilename = 'qualiscope_' . clean_filename($course->shortname) . '_' . date('
 $rawfilename = preg_replace('/[\r\n\t]+/', '', $rawfilename);
 $filename = \core_text::substr($rawfilename, 0, 60) . '.xlsx';
 
-$bytes = $writer->get_bytes();
-send_headers('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', true);
-header('Content-Disposition: attachment; filename="' . $filename . '"');
-header('Content-Length: ' . strlen($bytes));
-echo $bytes;
+$writer->send($filename);
 exit;

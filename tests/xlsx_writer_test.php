@@ -44,18 +44,23 @@ final class xlsx_writer_test extends \advanced_testcase {
     }
 
     /**
-     * Test get_bytes produces a readable xlsx archive with the row values.
+     * Test send produces a readable xlsx archive with the row values.
      *
-     * @covers \local_qualiscope\exporter\xlsx_writer::get_bytes
+     * @covers \local_qualiscope\exporter\xlsx_writer::send
      * @covers \local_qualiscope\exporter\xlsx_writer::add_row
      * @return void
      */
-    public function test_get_bytes_valid_workbook(): void {
+    public function test_send_valid_workbook(): void {
         $writer = new xlsx_writer('Rapport', [30, 50]);
         $writer->add_row(['Titre', 'Description'], true);
         $writer->add_row(['Cours A', 'Un cours de test']);
 
-        $bytes = $writer->get_bytes();
+        // Core streams the workbook to php://output, so capture it. The
+        // suppression is for the header() calls core makes in close(), which
+        // warn once PHPUnit has already written to the output.
+        ob_start();
+        @$writer->send('rapport.xlsx');
+        $bytes = ob_get_clean();
 
         $this->assertNotEmpty($bytes);
 
@@ -66,11 +71,14 @@ final class xlsx_writer_test extends \advanced_testcase {
         $zip = new \ZipArchive();
         $this->assertTrue($zip->open($file));
         $this->assertNotFalse($zip->getStream('[Content_Types].xml'));
+        // PhpSpreadsheet keeps the text in the shared strings table.
+        $shared = $zip->getFromName('xl/sharedStrings.xml');
         $sheet = $zip->getFromName('xl/worksheets/sheet1.xml');
         $zip->close();
         unlink($file);
 
-        $this->assertStringContainsString('Un cours de test', $sheet);
+        $this->assertStringContainsString('Un cours de test', $shared . $sheet);
+        $this->assertStringContainsString('Cours A', $shared . $sheet);
     }
 
     /**
@@ -81,8 +89,14 @@ final class xlsx_writer_test extends \advanced_testcase {
      */
     public function test_constructor_sanitises_title(): void {
         $writer = new xlsx_writer('Bad:title*with?chars', []);
+        $writer->add_row(['Une valeur']);
 
-        $bytes = $writer->get_bytes();
+        // PhpSpreadsheet rejects an illegal sheet title, so this only passes
+        // when the title has been sanitised. Suppressed for the same reason as
+        // in test_send_valid_workbook().
+        ob_start();
+        @$writer->send('rapport.xlsx');
+        $bytes = ob_get_clean();
 
         $this->assertNotEmpty($bytes);
     }
