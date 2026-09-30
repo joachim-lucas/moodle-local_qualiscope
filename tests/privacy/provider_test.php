@@ -220,11 +220,10 @@ final class provider_test extends \advanced_testcase {
         $path = [get_string('privacy:metadata:evidences', 'local_qualiscope'), '#' . $ids['evidence']];
 
         $exported = $writer->get_data($path);
-        $this->assertCount(1, $exported);
-        $record = reset($exported);
-        $this->assertEquals('Proof', $record->title);
-        $this->assertEquals('https://example.com/proof', $record->externalurl);
-        $this->assertEquals('proof.txt', $record->filename);
+        $this->assertEquals('Proof', $exported->title);
+        $this->assertEquals('https://example.com/proof', $exported->externalurl);
+        $this->assertEquals('proof.txt', $exported->filename);
+        $this->assertEquals('Annotation', $exported->annotation);
 
         $files = $writer->get_files($path);
         $this->assertCount(1, $files);
@@ -233,9 +232,7 @@ final class provider_test extends \advanced_testcase {
         $this->assertEquals('proof.txt', $file->get_filename());
 
         $actionpath = [get_string('privacy:metadata:actions', 'local_qualiscope'), '#' . $ids['action']];
-        $actions = $writer->get_data($actionpath);
-        $this->assertCount(1, $actions);
-        $action = reset($actions);
+        $action = $writer->get_data($actionpath);
         $this->assertEquals('Action description', $action->description);
         $this->assertEquals('Jane Doe', $action->responsible);
     }
