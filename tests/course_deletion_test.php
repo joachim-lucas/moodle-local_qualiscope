@@ -140,8 +140,6 @@ final class course_deletion_test extends \advanced_testcase {
     public function test_course_deletion_removes_course_data(): void {
         global $DB;
 
-        require_once($GLOBALS['CFG']->dirroot . '/course/lib.php');
-
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
         $other = $this->getDataGenerator()->create_course();
@@ -159,6 +157,7 @@ final class course_deletion_test extends \advanced_testcase {
         );
 
         $this->setAdminUser();
+        // The second argument keeps core quiet: it is $showfeedback on 5.x and $async on 4.x.
         delete_course($courseid, false);
 
         // The course scope is gone: results, actions, evidences and quota row.
@@ -183,8 +182,6 @@ final class course_deletion_test extends \advanced_testcase {
      * @return void
      */
     public function test_quota_slot_is_released(): void {
-        require_once($GLOBALS['CFG']->dirroot . '/course/lib.php');
-
         $user = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
 
@@ -192,6 +189,7 @@ final class course_deletion_test extends \advanced_testcase {
         $this->assertEquals(1, quota::used());
 
         $this->setAdminUser();
+        // The second argument keeps core quiet: it is $showfeedback on 5.x and $async on 4.x.
         delete_course((int) $course->id, false);
 
         $this->assertEquals(0, quota::used());
