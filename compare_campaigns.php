@@ -298,7 +298,8 @@ if ($ida && $idb) {
             foreach ($allcourseids as $cid) {
                 $ca = $campaignadata['coursesdata'][$cid] ?? null;
                 $cb = $campaignbdata['coursesdata'][$cid] ?? null;
-                $coursename = $cb['coursename'] ?? ($ca['coursename'] ?? 'Course #' . $cid);
+                $coursename = $cb['coursename'] ?? ($ca['coursename'] ??
+                    get_string('course_fallback_name', 'local_qualiscope', $cid));
                 $pcta = $ca ? $ca['percentage'] : null;
                 $pctb = $cb ? $cb['percentage'] : null;
                 $delta = ($pcta !== null && $pctb !== null) ? ($pctb - $pcta) : null;

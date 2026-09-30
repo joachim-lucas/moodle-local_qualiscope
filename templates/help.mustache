@@ -132,9 +132,9 @@
                         {{#str}} help_calc_how_it_works_desc, local_qualiscope {{/str}}
                     </p>
                     <ul class="small mb-0 ps-3">
-                        <li class="mb-1"><strong>{{#str}} status_detected, local_qualiscope {{/str}} (100% ou ratio &ge; 0.75) :</strong> {{#str}} help_status_detected_desc, local_qualiscope {{/str}}</li>
-                        <li class="mb-1"><strong>{{#str}} status_verify, local_qualiscope {{/str}} (ratio partiel) :</strong> {{#str}} help_status_verify_desc, local_qualiscope {{/str}}</li>
-                        <li class="mb-1"><strong>{{#str}} status_missing, local_qualiscope {{/str}} (ratio 0%) :</strong> {{#str}} help_status_missing_desc, local_qualiscope {{/str}}</li>
+                        <li class="mb-1"><strong>{{#str}} status_detected, local_qualiscope {{/str}} {{#str}} help_ratio_detected, local_qualiscope {{/str}}:</strong> {{#str}} help_status_detected_desc, local_qualiscope {{/str}}</li>
+                        <li class="mb-1"><strong>{{#str}} status_verify, local_qualiscope {{/str}} {{#str}} help_ratio_partial, local_qualiscope {{/str}}:</strong> {{#str}} help_status_verify_desc, local_qualiscope {{/str}}</li>
+                        <li class="mb-1"><strong>{{#str}} status_missing, local_qualiscope {{/str}} {{#str}} help_ratio_missing, local_qualiscope {{/str}}:</strong> {{#str}} help_status_missing_desc, local_qualiscope {{/str}}</li>
                         <li><strong>{{#str}} status_na, local_qualiscope {{/str}} :</strong> {{#str}} help_status_na_desc, local_qualiscope {{/str}}</li>
                     </ul>
                 </div>
@@ -145,10 +145,10 @@
                         {{#str}} help_calc_formula_desc, local_qualiscope {{/str}}
                     </p>
                     <div class="p-3 bg-light rounded border border-light font-monospace small mb-2">
-                        <strong>{{#str}} help_formula_criterion, local_qualiscope {{/str}} :</strong><br>
-                        &nbsp;&nbsp;Score(C) = (&sum; [Ratio_i &times; Poids_i] / &sum; Poids_i) &times; 100%<br><br>
-                        <strong>{{#str}} help_formula_global, local_qualiscope {{/str}} :</strong><br>
-                        &nbsp;&nbsp;Score Global = Moyenne des scores des critères audités
+                        <strong>{{#str}} help_formula_criterion, local_qualiscope {{/str}}:</strong><br>
+                        &nbsp;&nbsp;{{#str}} help_formula_criterion_expr, local_qualiscope {{/str}}<br><br>
+                        <strong>{{#str}} help_formula_global, local_qualiscope {{/str}}:</strong><br>
+                        &nbsp;&nbsp;{{#str}} help_formula_global_expr, local_qualiscope {{/str}}
                     </div>
                     <p class="small text-muted mb-0">
                         <i class="fa fa-info-circle text-info"></i> {{#str}} help_manual_only_note, local_qualiscope {{/str}}

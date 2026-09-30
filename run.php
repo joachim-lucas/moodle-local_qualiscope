@@ -121,6 +121,13 @@ if ($campaignid) {
     $targeturljson = json_encode(
         (new moodle_url('/local/qualiscope/view_campaign.php', ['id' => $campaignid]))->out(false)
     );
+    $finishedjson = json_encode(get_string('campaign_run_finished', 'local_qualiscope'));
+    $redirectingjson = json_encode(get_string('campaign_run_redirecting', 'local_qualiscope'));
+    $courseprogressjson = json_encode(get_string('campaign_run_progress_course', 'local_qualiscope', [
+        'current' => '{$current}',
+        'total' => '{$total}',
+        'percentage' => '{$percentage}',
+    ]));
     $coursecount = count($coursesinfo);
 
     echo '
@@ -163,6 +170,9 @@ if ($campaignid) {
     var total = courses.length;
     var currentIndex = 0;
     var targetUrl = {$targeturljson};
+    var finishedText = {$finishedjson};
+    var redirectingText = {$redirectingjson};
+    var courseProgressText = {$courseprogressjson};
 
     var progressBar = document.getElementById('runProgressBar');
     var progressText = document.getElementById('runProgressText');
@@ -182,8 +192,8 @@ if ($campaignid) {
             progressBar.classList.remove('progress-bar-animated');
             progressBar.classList.add('bg-success');
             if (spinner) spinner.style.display = 'none';
-            if (titleEl) titleEl.textContent = 'Analyse terminée avec succès !';
-            currentCourseEl.textContent = 'Redirection vers les résultats...';
+            if (titleEl) titleEl.textContent = finishedText;
+            currentCourseEl.textContent = redirectingText;
             setTimeout(function() {
                 window.location.href = targetUrl;
             }, 600);
@@ -196,7 +206,10 @@ if ($campaignid) {
 
         progressBar.style.width = pct + '%';
         progressBar.textContent = pct + '%';
-        progressText.textContent = 'Traitement du cours ' + (currentIndex + 1) + ' sur ' + total + ' (' + pct + ' %)';
+        progressText.textContent = courseProgressText
+            .replace('{$current}', currentIndex + 1)
+            .replace('{$total}', total)
+            .replace('{$percentage}', pct);
         currentCourseEl.textContent = course.fullname;
 
         var params = 'campaignid=' + campaignId +
