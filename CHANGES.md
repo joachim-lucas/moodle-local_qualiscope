@@ -16,6 +16,10 @@ Corrections issues de la revue de code avant publication sur le Marketplace.
 - Rendu : le rapport imprimable s'affiche dans le thème, ses règles living dans `styles.css`.
 - Internationalisation : plus aucun texte utilisateur codé en dur, y compris en français.
 - En-tête : fichiers de hook conformes à l'en-tête standard Moodle.
+- Paramètres d'entrée : le responsable, l'échéance et l'annotation des preuves utilisent désormais des types précis au lieu de `PARAM_RAW`.
+- Export Excel : réalisé via la bibliothèque Excel de Moodle, sans fichier temporaire hors de `moodledata`.
+- Réglages : la page d'administration n'est plus construite que pour les utilisateurs qui peuvent y accéder.
+- Permissions : la capacité `local/qualiscope:managechecks`, qui ne contrôlait aucune opération, est supprimée.
 
 ### v1.0.1 (2026092500)
 

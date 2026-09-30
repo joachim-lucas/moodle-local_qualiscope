@@ -34,13 +34,6 @@ $capabilities = [
             'manager' => CAP_ALLOW,
         ],
     ],
-    'local/qualiscope:managechecks' => [
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => [
-            'manager' => CAP_ALLOW,
-        ],
-    ],
     'local/qualiscope:managecampaigns' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,

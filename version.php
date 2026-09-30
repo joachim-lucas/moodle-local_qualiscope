@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component    = 'local_qualiscope';
-$plugin->version      = 2026093000;
+$plugin->version      = 2026093001;
 $plugin->requires     = 2024100700; // Moodle 4.5.
 $plugin->release      = '1.0.2';
 $plugin->maturity     = MATURITY_STABLE;

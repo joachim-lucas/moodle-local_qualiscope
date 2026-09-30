@@ -390,7 +390,6 @@ $string['privacy:metadata:userid'] = 'Identifiant de l\'utilisateur';
 $string['qualiscope:editproofs'] = 'Ajouter et modifier les preuves';
 $string['qualiscope:manageactions'] = 'Gérer les actions correctives';
 $string['qualiscope:managecampaigns'] = 'Gérer les campagnes d\'audit';
-$string['qualiscope:managechecks'] = 'Gérer les points de contrôle du référentiel';
 $string['qualiscope:viewaudit'] = 'Consulter les résultats d\'audit';
 $string['quota_exhausted'] = 'Limite du plan gratuit atteinte ({$a->max} cours audités). Auditer de nouveaux cours nécessite une licence.';
 $string['quota_usage'] = 'Plan gratuit : {$a->used} cours audités sur {$a->max}.';
