@@ -32,9 +32,12 @@ use local_qualiscope\external\run_analysis;
 /**
  * External function testcase.
  *
+ * lib/externallib.php refuses to be loaded outside an isolated process. The annotation is used
+ * instead of the PHP attribute because Moodle 4.5 still runs PHPUnit 9, which ignores attributes.
+ *
  * @package local_qualiscope
+ * @runTestsInSeparateProcesses
  */
-#[\PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses]
 final class external_functions_test extends \advanced_testcase {
     /**
      * Set up.
