@@ -94,7 +94,8 @@ foreach ($externalevidences as &$ev) {
             'evidence',
             $ev->result_id,
             $ev->filepath,
-            $ev->filename
+            $ev->filename,
+            true
         );
     }
 }
@@ -106,14 +107,13 @@ echo $output->render_indicator_detail([
     'moodleevidences' => array_values($moodleevidences),
     'externalevidences' => array_values($externalevidences),
     'resultid' => $resultid,
-    'sesskey' => sesskey(),
     'backurl' => new moodle_url('/local/qualiscope/dashboard.php', ['courseid' => $courseid, 'referentialid' => $referentialid]),
     'helpurl' => (new moodle_url('/local/qualiscope/help.php', [
         'courseid' => $courseid,
         'referentialid' => $referentialid,
         'indicatorid' => $indicatorid,
     ]))->out(false) . '#indicator-' . $indicatorid,
-    'uploadurl' => new moodle_url('/local/qualiscope/upload_evidence.php'),
+    'uploadurl' => new moodle_url('/local/qualiscope/upload_evidence.php', ['resultid' => $resultid]),
     'actionurl' => new moodle_url('/local/qualiscope/actions.php', [
         'courseid' => $courseid,
         'campaignid' => $campaignid,

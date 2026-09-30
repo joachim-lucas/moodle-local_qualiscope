@@ -27,7 +27,6 @@ require_once('../../config.php');
 require_once($CFG->dirroot . '/local/qualiscope/lib.php');
 
 require_login();
-require_sesskey();
 
 $resultid = optional_param('resultid', 0, PARAM_INT);
 $campaignid = required_param('campaignid', PARAM_INT);
@@ -36,6 +35,34 @@ $title = required_param('title', PARAM_TEXT);
 $responsible = optional_param('responsible', '', PARAM_TEXT);
 $duedate = optional_param('duedate', '', PARAM_RAW);
 $priority = optional_param('priority', 'medium', PARAM_ALPHA);
+
+// The stored result is the only trustworthy source for the owning course and campaign.
+if ($resultid) {
+    $result = $DB->get_record('local_qualiscope_results', ['id' => $resultid], '*', MUST_EXIST);
+    if ((int) $result->courseid !== $courseid || (int) $result->campaign_id !== $campaignid) {
+        throw new moodle_exception('invaliddata', 'error');
+    }
+    $courseid = (int) $result->courseid;
+    $campaignid = (int) $result->campaign_id;
+}
+
+if (!in_array($priority, ['high', 'medium', 'low'], true)) {
+    throw new moodle_exception('invaliddata', 'error');
+}
+
+$course = get_course($courseid);
+
+$PAGE->set_url(new moodle_url('/local/qualiscope/save_action.php', [
+    'resultid' => $resultid,
+    'campaignid' => $campaignid,
+    'courseid' => $courseid,
+]));
+
+require_login($course);
+
+$context = context_course::instance($course->id);
+require_capability('local/qualiscope:manageactions', $context);
+require_sesskey();
 
 $action = new stdClass();
 $action->result_id = $resultid;

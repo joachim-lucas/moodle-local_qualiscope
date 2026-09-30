@@ -59,10 +59,8 @@
                 "annotation": "Validated"
             }
         ],
-        "uploadurl": "evidence_upload.php",
-        "sesskey": "abc123",
-        "resultid": 4,
-        "actionurl": "action_create.php?resultid=4"
+        "uploadurl": "upload_evidence.php?resultid=4",
+        "actionurl": "actions.php?courseid=2&campaignid=1&indicatorid=4"
     }
 }}
 <div class="qualiscope-indicator container-fluid py-4">
@@ -140,7 +138,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">{{#str}} indicator_evidence_external, local_qualiscope {{/str}}</h5>
-                    <button class="btn btn-sm btn-primary" data-toggle="qualiscope-evidence-form">{{#str}} indicator_add_evidence, local_qualiscope {{/str}}</button>
+                    <a href="{{uploadurl}}" class="btn btn-sm btn-primary">{{#str}} indicator_add_evidence, local_qualiscope {{/str}}</a>
                 </div>
                 <div class="card-body">
                     {{#externalevidences}}
@@ -161,38 +159,6 @@
                     {{/externalevidences}}
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="card mb-4" id="evidence-form" style="display:none;">
-        <div class="card-header"><h5 class="mb-0">{{#str}} upload_evidence, local_qualiscope {{/str}}</h5></div>
-        <div class="card-body">
-            <form method="post" action="{{uploadurl}}" enctype="multipart/form-data">
-                <input type="hidden" name="sesskey" value="{{sesskey}}">
-                <input type="hidden" name="resultid" value="{{resultid}}">
-
-                <div class="mb-3">
-                    <label class="form-label">{{#str}} upload_title, local_qualiscope {{/str}}</label>
-                    <input type="text" class="form-control" name="title" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">{{#str}} upload_file, local_qualiscope {{/str}}</label>
-                    <input type="file" class="form-control" name="evidencefile">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">{{#str}} upload_external_url, local_qualiscope {{/str}}</label>
-                    <input type="url" class="form-control" name="externalurl" placeholder="https://...">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">{{#str}} upload_annotation, local_qualiscope {{/str}}</label>
-                    <textarea class="form-control" name="annotation" rows="3"></textarea>
-                </div>
-
-                <button type="submit" class="btn btn-primary">{{#str}} upload_submit, local_qualiscope {{/str}}</button>
-            </form>
         </div>
     </div>
 

@@ -26,51 +26,19 @@
 require_once('../../config.php');
 require_once($CFG->dirroot . '/local/qualiscope/lib.php');
 
-require_login();
-require_sesskey();
-
 $resultid = required_param('resultid', PARAM_INT);
-$title = required_param('title', PARAM_TEXT);
-$annotation = optional_param('annotation', '', PARAM_TEXT);
-$externalurl = optional_param('externalurl', '', PARAM_URL);
 
-$fs = get_file_storage();
+$PAGE->set_url(new moodle_url('/local/qualiscope/upload_evidence.php', ['resultid' => $resultid]));
 
-$record = new stdClass();
-$record->result_id = $resultid;
-$record->type = 'external';
-$record->title = $title;
-$record->annotation = $annotation;
-$record->externalurl = $externalurl;
-$record->userid = $USER->id;
-$record->timecreated = time();
-$record->timemodified = time();
+require_login();
 
 $result = $DB->get_record('local_qualiscope_results', ['id' => $resultid], '*', MUST_EXIST);
+$course = get_course($result->courseid);
 
-if (isset($_FILES['evidencefile']) && $_FILES['evidencefile']['error'] === UPLOAD_ERR_OK) {
-    $record->type = 'external';
+require_login($course);
 
-    $context = context_course::instance($result->courseid);
-    $fileinfo = [
-        'contextid' => $context->id,
-        'component' => 'local_qualiscope',
-        'filearea' => 'evidence',
-        'itemid' => $resultid,
-        'filepath' => '/',
-        'filename' => $_FILES['evidencefile']['name'],
-    ];
-
-    $file = $fs->create_file_from_pathname($fileinfo, $_FILES['evidencefile']['tmp_name']);
-    $record->filepath = $file->get_filepath();
-    $record->filename = $file->get_filename();
-}
-
-$DB->insert_record('local_qualiscope_evidences', $record);
-
-$result->evidence_count = $DB->count_records('local_qualiscope_evidences', ['result_id' => $resultid]);
-$result->timemodified = time();
-$DB->update_record('local_qualiscope_results', $result);
+$context = context_course::instance($course->id);
+require_capability('local/qualiscope:editproofs', $context);
 
 $referentialid = 0;
 $check = $DB->get_record('local_qualiscope_checks', ['id' => $result->check_id]);
@@ -84,11 +52,84 @@ if ($check) {
     }
 }
 
-$redirecturl = new moodle_url('/local/qualiscope/indicator.php', [
+$returnurl = new moodle_url('/local/qualiscope/indicator.php', [
     'courseid' => $result->courseid,
     'indicatorid' => $result->indicator_id,
     'campaignid' => $result->campaign_id,
     'referentialid' => $referentialid,
 ]);
 
-redirect($redirecturl);
+$PAGE->set_context($context);
+$PAGE->set_title(get_string('upload_evidence', 'local_qualiscope'));
+$PAGE->set_heading(get_string('upload_evidence', 'local_qualiscope'));
+
+$form = new \local_qualiscope\form\evidence_upload($PAGE->url, [
+    'resultid' => $resultid,
+    'maxbytes' => $course->maxbytes,
+]);
+
+if ($form->is_cancelled()) {
+    redirect($returnurl);
+}
+
+if ($data = $form->get_data()) {
+    $fs = get_file_storage();
+    $file = null;
+
+    if (!empty($data->evidencefile)) {
+        $usercontext = context_user::instance($USER->id);
+        $draftfiles = array_filter(
+            $fs->get_area_files($usercontext->id, 'user', 'draft', $data->evidencefile, 'id', false),
+            function ($draftfile) {
+                return !$draftfile->is_directory();
+            }
+        );
+        $draftfile = empty($draftfiles) ? null : reset($draftfiles);
+
+        file_save_draft_area_files(
+            $data->evidencefile,
+            $context->id,
+            'local_qualiscope',
+            'evidence',
+            $resultid,
+            ['subdirs' => 0, 'maxbytes' => $course->maxbytes]
+        );
+
+        if ($draftfile) {
+            foreach ($fs->get_files($context->id, 'local_qualiscope', 'evidence', $resultid, 'id ASC', false) as $candidate) {
+                if ($candidate->get_filename() === $draftfile->get_filename()) {
+                    $file = $candidate;
+                    break;
+                }
+            }
+        }
+    }
+
+    $record = new stdClass();
+    $record->result_id = $resultid;
+    $record->type = 'external';
+    $record->title = $data->title;
+    $record->annotation = $data->annotation;
+    $record->externalurl = $data->externalurl;
+    $record->userid = $USER->id;
+    $record->timecreated = time();
+    $record->timemodified = time();
+
+    if ($file) {
+        $record->filepath = $file->get_filepath();
+        $record->filename = $file->get_filename();
+    }
+
+    $DB->insert_record('local_qualiscope_evidences', $record);
+
+    $result->evidence_count = $DB->count_records('local_qualiscope_evidences', ['result_id' => $resultid]);
+    $result->timemodified = time();
+    $DB->update_record('local_qualiscope_results', $result);
+
+    redirect($returnurl);
+}
+
+echo $OUTPUT->header();
+echo $OUTPUT->heading(get_string('upload_evidence', 'local_qualiscope'));
+$form->display();
+echo $OUTPUT->footer();

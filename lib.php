@@ -121,5 +121,7 @@ function local_qualiscope_pluginfile(
         send_file_not_found();
     }
 
-    send_stored_file($file, 0, 0, $forcedownload, $options);
+    // Evidence is user supplied content: always serve it as an attachment so that an uploaded
+    // HTML or SVG file can never be executed in the Moodle origin.
+    send_stored_file($file, 0, 0, true, $options);
 }
