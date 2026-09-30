@@ -44,9 +44,8 @@ $output = $PAGE->get_renderer('local_qualiscope');
 
 if (data_submitted() && confirm_sesskey()) {
     $action->title = required_param('title', PARAM_TEXT);
-    $action->responsible = optional_param('responsible', '', PARAM_RAW);
-    $action->duedate = optional_param('duedate', '', PARAM_RAW);
-    $action->duedate = $action->duedate ? strtotime($action->duedate) : 0;
+    $action->responsible = optional_param('responsible', '', PARAM_TEXT);
+    $action->duedate = \local_qualiscope\action_duedate::from_input(optional_param('duedate', '', PARAM_RAW));
     $action->priority = optional_param('priority', 'medium', PARAM_ALPHA);
     $action->status = optional_param('status', $action->status, PARAM_ALPHA);
     $action->timemodified = time();

@@ -132,8 +132,9 @@ final class external_functions_test extends \advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course();
         $ids = $this->insertresult($course->id, get_admin()->id);
+        $duedate = make_timestamp(2026, 10, 1);
 
-        $return = create_action::execute($ids['result'], $ids['campaign'], $course->id, 'Write a summary', 'Jane', '0', 'low');
+        $return = create_action::execute($ids['result'], $ids['campaign'], $course->id, 'Write a summary', 'Jane', $duedate, 'low');
 
         $this->assertTrue($return['success']);
 
@@ -144,6 +145,45 @@ final class external_functions_test extends \advanced_testcase {
         $this->assertEquals($course->id, $action->courseid);
         $this->assertEquals($ids['campaign'], $action->campaign_id);
         $this->assertEquals($ids['result'], $action->result_id);
+        $this->assertEquals($duedate, $action->duedate);
+    }
+
+    /**
+     * Test the free text and date parameters declare narrow types.
+     *
+     * @covers \local_qualiscope\external\create_action
+     * @covers \local_qualiscope\external\add_evidence
+     * @return void
+     */
+    public function test_free_text_and_date_parameters_are_narrowed(): void {
+        $action = create_action::execute_parameters()->keys;
+        $this->assertEquals(PARAM_TEXT, $action['responsible']->type);
+        $this->assertEquals(PARAM_INT, $action['duedate']->type);
+
+        $evidence = add_evidence::execute_parameters()->keys;
+        $this->assertEquals(PARAM_TEXT, $evidence['annotation']->type);
+    }
+
+    /**
+     * Test create_action refuses a due date that is not a timestamp.
+     *
+     * The parameter used to be PARAM_RAW, so an ISO date posted by mistake
+     * reached the database as the integer 2026 instead of failing.
+     *
+     * @covers \local_qualiscope\external\create_action
+     * @return void
+     */
+    public function test_create_action_rejects_a_non_integer_due_date(): void {
+        $this->expectException(\invalid_parameter_exception::class);
+        create_action::validate_parameters(create_action::execute_parameters(), [
+            'resultid' => 0,
+            'campaignid' => 1,
+            'courseid' => 2,
+            'title' => 'Write a summary',
+            'responsible' => 'Jane',
+            'duedate' => '2026-10-01',
+            'priority' => 'low',
+        ]);
     }
 
     /**

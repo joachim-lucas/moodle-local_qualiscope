@@ -79,6 +79,7 @@ class evidence_upload extends \moodleform {
             'required' => true,
             'maxlength' => 255,
         ]);
+        $mform->setType('title', PARAM_TEXT);
 
         $mform->addElement(
             'filemanager',
@@ -98,11 +99,15 @@ class evidence_upload extends \moodleform {
             'optional' => true,
             'maxlength' => 1333,
         ]);
+        $mform->setType('externalurl', PARAM_URL);
 
         $mform->addElement('textarea', 'annotation', get_string('upload_annotation', 'local_qualiscope'), [
             'rows' => 3,
             'maxlength' => 1000,
         ]);
+        // A textarea defaults to PARAM_RAW; the annotation is plain text, and
+        // PARAM_TEXT keeps the line breaks while dropping any markup.
+        $mform->setType('annotation', PARAM_TEXT);
 
         $this->add_action_buttons(true, get_string('upload_submit', 'local_qualiscope'));
     }

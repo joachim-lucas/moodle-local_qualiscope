@@ -40,7 +40,8 @@ require_capability('local/qualiscope:managecampaigns', $context);
 
 $campaign = $DB->get_record('local_qualiscope_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
 
-$parsedduedate = $duedate ? strtotime($duedate) : 0;
+// Parsed only once the request has been authenticated and authorised.
+$duedate = \local_qualiscope\action_duedate::from_input($duedate);
 $createdcount = 0;
 
 if ($indicatorid > 0) {
@@ -57,7 +58,7 @@ if ($indicatorid > 0) {
             $action->courseid = $res->courseid;
             $action->title = $title;
             $action->responsible = $responsible;
-            $action->duedate = $parsedduedate;
+            $action->duedate = $duedate;
             $action->priority = $priority;
             $action->status = 'todo';
             $action->userid = $USER->id;
@@ -80,7 +81,7 @@ if ($indicatorid > 0) {
         $action->courseid = $cid;
         $action->title = $title;
         $action->responsible = $responsible;
-        $action->duedate = $parsedduedate;
+        $action->duedate = $duedate;
         $action->priority = $priority;
         $action->status = 'todo';
         $action->userid = $USER->id;

@@ -41,7 +41,7 @@ class add_evidence extends \external_api {
         return new \external_function_parameters([
             'resultid' => new \external_value(PARAM_INT, 'Result ID'),
             'title' => new \external_value(PARAM_TEXT, 'Evidence title'),
-            'annotation' => new \external_value(PARAM_RAW, 'Annotation', VALUE_DEFAULT, ''),
+            'annotation' => new \external_value(PARAM_TEXT, 'Annotation', VALUE_DEFAULT, ''),
             'externalurl' => new \external_value(PARAM_URL, 'External URL', VALUE_DEFAULT, ''),
         ]);
     }
