@@ -85,11 +85,21 @@ class campaign_pdf_generator {
         $this->pdf = new \pdf();
         $this->pdf->SetCreator('QualiScope - Moodle Quality Engine');
         $this->pdf->SetAuthor('QualiScope');
-        $this->pdf->SetTitle(get_string('campaign_title', 'local_qualiscope') . ' - ' . $this->campaign->name);
+        $this->pdf->SetTitle(get_string('campaign_title', 'local_qualiscope') . ' - ' .
+            \local_qualiscope\helper::plain($this->campaign->name, $this->getcontext()));
         $this->pdf->setPrintHeader(false);
         $this->pdf->setPrintFooter(true);
         $this->pdf->SetMargins(15, 15, 15);
         $this->pdf->SetAutoPageBreak(true, 15);
+    }
+
+    /**
+     * Returns the context the campaign report is built for.
+     *
+     * @return \context
+     */
+    private function getcontext(): \context {
+        return \context_system::instance();
     }
 
     /**
@@ -159,7 +169,7 @@ class campaign_pdf_generator {
                 <tr>
                     <td width="65%">
                         <strong>' . s(get_string('campaign_name', 'local_qualiscope')) . ' :</strong> ' .
-                            s($this->campaign->name) . '<br/>
+                            s(\local_qualiscope\helper::plain($this->campaign->name, $this->getcontext())) . '<br/>
                         <strong>' . s(get_string('campaign_referential', 'local_qualiscope')) . ' :</strong> ' .
                             s(\local_qualiscope\helper::localized($this->referential, 'name')) . ' ' .
                             s($this->referential->version) . '<br/>

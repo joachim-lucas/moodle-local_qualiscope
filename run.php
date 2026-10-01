@@ -69,15 +69,17 @@ if ($campaignid) {
             if (isset($coursesrecords[$cid])) {
                 $coursesinfo[] = [
                     'id' => $cid,
-                    'fullname' => $coursesrecords[$cid]->fullname,
+                    'fullname' => \local_qualiscope\helper::plain($coursesrecords[$cid]->fullname, $context),
                 ];
             }
         }
     }
 
+    $campaignname = \local_qualiscope\helper::plain($campaign->name, $context);
+
     $PAGE->set_url(new moodle_url('/local/qualiscope/run.php', ['campaignid' => $campaignid]));
-    $PAGE->set_title(get_string('campaign_running_progress_title', 'local_qualiscope') . ' - ' . $campaign->name);
-    $PAGE->set_heading($campaign->name);
+    $PAGE->set_title(get_string('campaign_running_progress_title', 'local_qualiscope') . ' - ' . $campaignname);
+    $PAGE->set_heading($campaignname);
     $PAGE->set_context($context);
     $PAGE->requires->js_call_amd('local_qualiscope/campaign_run', 'init', [[
         'campaignid' => $campaignid,
@@ -96,7 +98,7 @@ if ($campaignid) {
 
     echo $OUTPUT->header();
     echo $output->render_campaign_run_progress([
-        'campaignname' => $campaign->name,
+        'campaignname' => $campaignname,
         'coursecount' => count($coursesinfo),
         'runningtitle' => get_string('campaign_running_progress_title', 'local_qualiscope'),
         'progresslabel' => get_string('campaign_courses_analysed', 'local_qualiscope'),

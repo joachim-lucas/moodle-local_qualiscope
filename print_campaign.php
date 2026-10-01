@@ -37,8 +37,8 @@ $referential = $DB->get_record('local_qualiscope_referentials', ['id' => $campai
 $PAGE->set_url(new moodle_url('/local/qualiscope/print_campaign.php', ['id' => $campaignid]));
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('print');
-$PAGE->set_title($campaign->name);
-$PAGE->set_heading($campaign->name);
+$PAGE->set_title(\local_qualiscope\helper::plain($campaign->name, $context));
+$PAGE->set_heading(\local_qualiscope\helper::plain($campaign->name, $context));
 
 $scopelabels = [
     'all' => get_string('campaign_scope_all', 'local_qualiscope'),
@@ -101,7 +101,7 @@ foreach ($bycourse as &$entry) {
     $totals['weighted'] += $entry['weighted'];
 
     $coursesdata[] = [
-        'coursename' => $entry['course']->fullname,
+        'coursename' => \local_qualiscope\helper::plain($entry['course']->fullname, $context),
         'percentage' => $entry['percentage'],
         'detected' => $entry['detected'],
         'verify' => $entry['verify'],
@@ -302,7 +302,7 @@ echo $output->render_campaign_print([
     'generatedlabel' => get_string('export_generated', 'local_qualiscope'),
     'generateddate' => userdate(time(), get_string('strftimedateshort', 'langconfig')),
     'namelabel' => get_string('campaign_name', 'local_qualiscope'),
-    'campaignname' => $campaign->name,
+    'campaignname' => \local_qualiscope\helper::plain($campaign->name, $context),
     'referentiallabel' => get_string('campaign_referential', 'local_qualiscope'),
     'referential' => \local_qualiscope\helper::localized($referential, 'name') . ' ' . $referential->version,
     'scopelabel' => get_string('campaign_scope', 'local_qualiscope'),

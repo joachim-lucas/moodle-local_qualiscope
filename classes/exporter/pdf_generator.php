@@ -73,11 +73,25 @@ class pdf_generator {
         $this->pdf = new \pdf();
         $this->pdf->SetCreator('QualiScope - Moodle Quality Engine');
         $this->pdf->SetAuthor('QualiScope');
-        $this->pdf->SetTitle(get_string('export_report_title', 'local_qualiscope') . ' - ' . $this->course->fullname);
+        $this->pdf->SetTitle(get_string('export_report_title', 'local_qualiscope') . ' - ' .
+            \local_qualiscope\helper::plain($this->course->fullname, $this->getcontext()));
         $this->pdf->setPrintHeader(false);
         $this->pdf->setPrintFooter(true);
         $this->pdf->SetMargins(15, 15, 15);
         $this->pdf->SetAutoPageBreak(true, 15);
+    }
+
+    /**
+     * Returns the course context the report is built for.
+     *
+     * The stored course name carries the markup of the filters applied to it, so
+     * every value written to the report has to be filtered in the course context
+     * to resolve the multilang spans.
+     *
+     * @return \context
+     */
+    private function getcontext(): \context {
+        return \context_course::instance($this->course->id);
     }
 
     /**
@@ -139,7 +153,8 @@ class pdf_generator {
                 <tr>
                     <td width="65%">
                         <strong>' . s(get_string('export_course', 'local_qualiscope')) . '</strong>
-                            ' . s($this->course->fullname) . ' (' . s($this->course->shortname) . ')<br/>
+                            ' . s(\local_qualiscope\helper::plain($this->course->fullname, $this->getcontext())) . ' (' .
+                            s(\local_qualiscope\helper::plain($this->course->shortname, $this->getcontext())) . ')<br/>
                         <strong>' . s(get_string('export_referential', 'local_qualiscope')) . '</strong>
                             ' . s(\local_qualiscope\helper::localized($this->referential, 'name')) . ' ' .
                                 s($this->referential->version) . '<br/>
@@ -273,17 +288,23 @@ class pdf_generator {
                             $ratio = $res['ratio'] ?? ($res['status'] === 'detected' ? 1.0 : 0.0);
                             $compliancestr = (int) round($ratio * 100) . ' %';
                         }
-                        $detailstr = s($res['detail'] ?? '');
+                        $detailstr = s(\local_qualiscope\helper::plain($res['detail'] ?? '', $this->getcontext()));
                     } else if ($check->automatic) {
                         $stclass = 'status-verify';
                         $stlabel = '—';
                         $compliancestr = '—';
-                        $detailstr = s(\local_qualiscope\helper::localized($check, 'description'));
+                        $detailstr = s(\local_qualiscope\helper::plain(
+                            \local_qualiscope\helper::localized($check, 'description'),
+                            $this->getcontext()
+                        ));
                     } else {
                         $stclass = 'status-manual';
                         $stlabel = get_string('dashboard_manual_only', 'local_qualiscope');
                         $compliancestr = '—';
-                        $detailstr = s(\local_qualiscope\helper::localized($check, 'description'));
+                        $detailstr = s(\local_qualiscope\helper::plain(
+                            \local_qualiscope\helper::localized($check, 'description'),
+                            $this->getcontext()
+                        ));
                     }
 
                     $html .= '

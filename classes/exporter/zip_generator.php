@@ -90,9 +90,12 @@ class zip_generator {
         $pdfbytes = $pdfgen->generate();
         $files['00_Rapport_Audit_QualiScope.pdf'] = $pdfbytes;
 
+        $context = \context_course::instance($this->course->id);
+
         // 2. Generate a main README / Index for the auditor
         $readme = "# DOSSIER DE PREUVES QUALIOPI - QUALISCOPE\n\n";
-        $readme .= "Formation / Cours : " . $this->course->fullname . " (" . $this->course->shortname . ")\n";
+        $readme .= "Formation / Cours : " . \local_qualiscope\helper::plain($this->course->fullname, $context) .
+            " (" . \local_qualiscope\helper::plain($this->course->shortname, $context) . ")\n";
         $readme .= "Référentiel : " . \local_qualiscope\helper::localized($this->referential, 'name') . " " .
             $this->referential->version . "\n";
         $readme .= "Date d'audit : " . userdate(time(), get_string('strftimedatetime', 'langconfig')) . "\n";

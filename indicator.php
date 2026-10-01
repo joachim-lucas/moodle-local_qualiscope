@@ -62,8 +62,11 @@ $indicatorresults = array_filter($results, function ($r) use ($indicatorid) {
 $checkresults = [];
 foreach ($indicatorresults as $r) {
     $checkresults[] = [
-        'checkname' => \local_qualiscope\helper::localized($r['check'], 'name'),
-        'detail' => $r['detail'] ?? '',
+        'checkname' => \local_qualiscope\helper::plain(
+            \local_qualiscope\helper::localized($r['check'], 'name'),
+            $context
+        ),
+        'detail' => \local_qualiscope\helper::plain($r['detail'] ?? '', $context),
         'status' => $r['status'],
         'statuslabel' => \local_qualiscope\analyser\indicator_analyser::get_status_label($r['status']),
         'statusdetected' => $r['status'] === 'detected',
