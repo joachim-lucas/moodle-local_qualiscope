@@ -1,5 +1,10 @@
 ## QualiScope — ChangeLog
 
+### v1.0.3 (2026093002)
+
+- Rendu : les noms de cours, de campagne et de section sont affichés et exportés en texte brut, dans la langue courante. Un nom enregistré avec le filtre multilingue ne montre plus ses balises `<span lang="…">` dans les classeurs Excel, les PDF, l'archive ZIP et l'interface.
+- Export : le nom du fichier téléchargé est construit à partir du nom de cours résolu, il ne contient plus de balise HTML.
+
 ### v1.0.2 (2026093000)
 
 Corrections issues de la revue de code avant publication sur le Marketplace.
