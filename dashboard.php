@@ -81,8 +81,11 @@ foreach ($criteria as &$entry) {
         $r['statusverify'] = $r['status'] === 'verify';
         $r['statusmissing'] = $r['status'] === 'missing';
         $r['statusna'] = $r['status'] === 'na';
-        $r['checkname'] = \local_qualiscope\helper::localized($r['check'], 'name');
-        $r['detail'] = $r['detail'] ?? '';
+        $r['checkname'] = \local_qualiscope\helper::plain(
+            \local_qualiscope\helper::localized($r['check'], 'name'),
+            $context
+        );
+        $r['detail'] = \local_qualiscope\helper::plain($r['detail'] ?? '', $context);
         $r['indicatorurl'] = new moodle_url('/local/qualiscope/indicator.php', [
             'courseid' => $courseid,
             'campaignid' => 0,
@@ -153,7 +156,7 @@ echo $output->render_dashboard([
         'courseid' => $courseid,
         'referentialid' => $referentialid,
     ]),
-    'coursename' => $course->fullname,
+    'coursename' => \local_qualiscope\helper::plain($course->fullname, $context),
     'courseid' => $courseid,
 ]);
 echo $output->footer();

@@ -30,13 +30,11 @@ $campaignid = optional_param('campaignid', 0, PARAM_INT);
 $courseid = optional_param('courseid', 0, PARAM_INT);
 $referentialid = optional_param('referentialid', 0, PARAM_INT);
 $format = optional_param('format', 'xlsx', PARAM_ALPHA);
-$sesskey = optional_param('sesskey', '', PARAM_RAW);
-if ($sesskey !== '') {
-    require_sesskey($sesskey);
-}
+
+require_login();
+require_sesskey();
 
 if ($campaignid) {
-    require_login();
     $context = context_system::instance();
     require_capability('local/qualiscope:managecampaigns', $context);
 
@@ -99,8 +97,8 @@ if ($campaignid) {
 
         $coursesdata[] = [
             'courseid' => $entry['course']->id,
-            'coursename' => $entry['course']->fullname,
-            'courseshortname' => $entry['course']->shortname,
+            'coursename' => \local_qualiscope\helper::plain($entry['course']->fullname, $context),
+            'courseshortname' => \local_qualiscope\helper::plain($entry['course']->shortname, $context),
             'percentage' => $entry['percentage'],
             'detected' => $entry['detected'],
             'verify' => $entry['verify'],
@@ -239,7 +237,8 @@ if ($campaignid) {
         return $item['percentage'] < 100;
     }));
 
-    $rawfilename = 'qualiscope_campagne_' . clean_filename($campaign->name) . '_' . date('Ymd');
+    $rawfilename = 'qualiscope_campagne_' .
+        clean_filename(\local_qualiscope\helper::plain($campaign->name, $context)) . '_' . date('Ymd');
     $rawfilename = preg_replace('/[\r\n\t]+/', '', $rawfilename);
     $basefilename = \core_text::substr($rawfilename, 0, 60);
 
@@ -271,7 +270,8 @@ if ($campaignid) {
         fprintf($out, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
         fputcsv($out, [get_string('campaign_report_subtitle', 'local_qualiscope')]);
-        fputcsv($out, [get_string('campaign_name', 'local_qualiscope'), $campaign->name]);
+        fputcsv($out, [get_string('campaign_name', 'local_qualiscope'),
+            \local_qualiscope\helper::plain($campaign->name, $context)]);
         fputcsv($out, [get_string('campaign_referential', 'local_qualiscope'),
             \local_qualiscope\helper::localized($referential, 'name') . ' ' . $referential->version]);
         fputcsv($out, [get_string('export_generated', 'local_qualiscope'), userdate(time())]);
@@ -321,9 +321,9 @@ if ($campaignid) {
         foreach ($criteriadata as $crit) {
             foreach ($crit['indicators'] as $ind) {
                 fputcsv($out, [
-                    'C' . $crit['number'] . ' - ' . $crit['title'],
-                    'I' . $ind['number'],
-                    $ind['title'],
+                'C' . $crit['number'] . ' - ' . \local_qualiscope\helper::plain($crit['title'], $context),
+                'I' . $ind['number'],
+                \local_qualiscope\helper::plain($ind['title'], $context),
                     $ind['haspercentage'] ? $ind['percentage'] . ' %' : get_string('dashboard_manual_only', 'local_qualiscope'),
                     $ind['detected'],
                     $ind['verify'],
@@ -343,7 +343,8 @@ if ($campaignid) {
     );
 
     $writer->add_row([get_string('campaign_report_subtitle', 'local_qualiscope')], true);
-    $writer->add_row([get_string('campaign_name', 'local_qualiscope') . ' : ' . $campaign->name]);
+    $writer->add_row([get_string('campaign_name', 'local_qualiscope') . ' : ' .
+        \local_qualiscope\helper::plain($campaign->name, $context)]);
     $writer->add_row([get_string('campaign_referential', 'local_qualiscope') .
         ' : ' . \local_qualiscope\helper::localized($referential, 'name') . ' ' . $referential->version]);
     $writer->add_row([get_string('export_generated', 'local_qualiscope') . ' : ' .
@@ -394,9 +395,9 @@ if ($campaignid) {
     foreach ($criteriadata as $crit) {
         foreach ($crit['indicators'] as $ind) {
             $writer->add_row([
-                'C' . $crit['number'] . ' - ' . $crit['title'],
+                'C' . $crit['number'] . ' - ' . \local_qualiscope\helper::plain($crit['title'], $context),
                 'I' . $ind['number'],
-                $ind['title'],
+                \local_qualiscope\helper::plain($ind['title'], $context),
                 $ind['haspercentage'] ? $ind['percentage'] . ' %' : get_string('dashboard_manual_only', 'local_qualiscope'),
                 (string) $ind['detected'],
                 (string) $ind['verify'],
@@ -406,11 +407,7 @@ if ($campaignid) {
     }
 
     $filename = $basefilename . '.xlsx';
-    $bytes = $writer->get_bytes();
-    send_headers('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', true);
-    header('Content-Disposition: attachment; filename="' . $filename . '"');
-    header('Content-Length: ' . strlen($bytes));
-    echo $bytes;
+    $writer->send($filename);
     exit;
 }
 
@@ -437,7 +434,8 @@ $results = $analyser->run();
 $summary = $analyser->get_summary();
 $criteriasummary = $analyser->get_criteria_summary();
 
-$rawfilename = 'qualiscope_' . clean_filename($course->shortname) . '_' . date('Ymd');
+$rawfilename = 'qualiscope_' . clean_filename(\local_qualiscope\helper::plain($course->shortname, $context)) .
+    '_' . date('Ymd');
 $rawfilename = preg_replace('/[\r\n\t]+/', '', $rawfilename);
 $basefilename = \core_text::substr($rawfilename, 0, 60);
 
@@ -498,7 +496,8 @@ $writer = new \local_qualiscope\exporter\xlsx_writer(
 );
 
 $writer->add_row([get_string('export_report_title', 'local_qualiscope')], true);
-$writer->add_row([get_string('export_course', 'local_qualiscope') . ' ' . $course->fullname]);
+$writer->add_row([get_string('export_course', 'local_qualiscope') . ' ' .
+    \local_qualiscope\helper::plain($course->fullname, $context)]);
 $writer->add_row([get_string('export_referential', 'local_qualiscope') . ' ' .
     \local_qualiscope\helper::localized($referential, 'name') . ' ' . $referential->version]);
 $writer->add_row([get_string('export_generated', 'local_qualiscope') . ' ' .
@@ -522,19 +521,26 @@ $writer->add_row([
 $hasstatus = false;
 foreach ($criteria as $criterion) {
     foreach ($indicatorsbycriterion[$criterion->id] ?? [] as $indicator) {
-        $criterionlabel = (int) $criterion->number . ' — ' . \local_qualiscope\helper::localized($criterion, 'title');
+        $criterionlabel = (int) $criterion->number . ' — ' .
+            \local_qualiscope\helper::plain(
+                \local_qualiscope\helper::localized($criterion, 'title'),
+                $context
+            );
         $indicatorlabel = (int) $criterion->number . '.' . (int) $indicator->number .
-            ' — ' . \local_qualiscope\helper::localized($indicator, 'title');
+            ' — ' . \local_qualiscope\helper::plain(
+                \local_qualiscope\helper::localized($indicator, 'title'),
+                $context
+            );
         $indicatorchecks = $checksbyindicator[$indicator->id] ?? [];
 
         if (!$indicatorchecks) {
             $writer->add_row([
-                $criterionlabel,
-                $indicatorlabel,
-                get_string('criteria_manual_only', 'local_qualiscope'),
-                get_string('dashboard_manual_only', 'local_qualiscope'),
-                '—',
-                '',
+            $criterionlabel,
+            $indicatorlabel,
+            get_string('criteria_manual_only', 'local_qualiscope'),
+            get_string('dashboard_manual_only', 'local_qualiscope'),
+            '—',
+            '',
             ]);
             continue;
         }
@@ -560,24 +566,16 @@ foreach ($criteria as $criterion) {
                 $detail = \local_qualiscope\helper::localized($check, 'description');
             }
             $writer->add_row([
-                $criterionlabel,
-                $indicatorlabel,
-                \local_qualiscope\helper::localized($check, 'name'),
-                $status,
-                $compliance,
-                $detail,
+            $criterionlabel,
+            $indicatorlabel,
+            \local_qualiscope\helper::plain(\local_qualiscope\helper::localized($check, 'name'), $context),
+            $status,
+            $compliance,
+            \local_qualiscope\helper::plain($detail, $context),
             ]);
         }
     }
 }
 
-$rawfilename = 'qualiscope_' . clean_filename($course->shortname) . '_' . date('Ymd');
-$rawfilename = preg_replace('/[\r\n\t]+/', '', $rawfilename);
-$filename = \core_text::substr($rawfilename, 0, 60) . '.xlsx';
-
-$bytes = $writer->get_bytes();
-send_headers('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', true);
-header('Content-Disposition: attachment; filename="' . $filename . '"');
-header('Content-Length: ' . strlen($bytes));
-echo $bytes;
+$writer->send($basefilename . '.xlsx');
 exit;

@@ -46,7 +46,8 @@ $campaignsoptionsa = [];
 $campaignsoptionsb = [];
 foreach ($allcampaigns as $c) {
     $ref = $DB->get_record('local_qualiscope_referentials', ['id' => $c->referential_id]);
-    $label = $c->name . ' (' . ($ref ? \local_qualiscope\helper::localized($ref, 'name') . ' ' . $ref->version : '') . ' - ' .
+    $label = \local_qualiscope\helper::plain($c->name, $context) . ' (' .
+    ($ref ? \local_qualiscope\helper::localized($ref, 'name') . ' ' . $ref->version : '') . ' - ' .
     userdate($c->timecreated, get_string('strftimedateshort', 'langconfig')) . ')';
     $campaignsoptionsa[] = [
         'id' => $c->id,
@@ -156,7 +157,7 @@ if ($ida && $idb) {
                     $pct = $applicable > 0 ? (int) round(($entry['weighted'] * 100) / $applicable) : 0;
                     $coursesdata[$cid] = [
                         'courseid' => $cid,
-                        'coursename' => $entry['course']->fullname,
+                        'coursename' => \local_qualiscope\helper::plain($entry['course']->fullname, $context),
                         'percentage' => $pct,
                     ];
                 }
@@ -298,7 +299,8 @@ if ($ida && $idb) {
             foreach ($allcourseids as $cid) {
                 $ca = $campaignadata['coursesdata'][$cid] ?? null;
                 $cb = $campaignbdata['coursesdata'][$cid] ?? null;
-                $coursename = $cb['coursename'] ?? ($ca['coursename'] ?? 'Course #' . $cid);
+                $coursename = $cb['coursename'] ?? ($ca['coursename'] ??
+                    get_string('course_fallback_name', 'local_qualiscope', $cid));
                 $pcta = $ca ? $ca['percentage'] : null;
                 $pctb = $cb ? $cb['percentage'] : null;
                 $delta = ($pcta !== null && $pctb !== null) ? ($pctb - $pcta) : null;

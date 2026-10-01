@@ -34,9 +34,11 @@ require_login();
 $context = context_system::instance();
 require_capability('local/qualiscope:managecampaigns', $context);
 
+$campaignname = \local_qualiscope\helper::plain($campaign->name, $context);
+
 $PAGE->set_url(new moodle_url('/local/qualiscope/view_campaign.php', ['id' => $campaignid]));
-$PAGE->set_title($campaign->name);
-$PAGE->set_heading($campaign->name);
+$PAGE->set_title($campaignname);
+$PAGE->set_heading($campaignname);
 $PAGE->set_context($context);
 $PAGE->requires->js_call_amd('local_qualiscope/forms', 'init');
 
@@ -110,7 +112,7 @@ foreach ($bycourse as &$entry) {
     $totals['weighted'] += $entry['weighted'];
 
     $coursesdata[] = [
-        'coursename' => $entry['course']->fullname,
+        'coursename' => \local_qualiscope\helper::plain($entry['course']->fullname, $context),
         'percentage' => $entry['percentage'],
         'percentageclass' => $class,
         'detected' => $entry['detected'],
@@ -380,7 +382,7 @@ $summaryitems = [
 echo $output->header();
 echo \local_qualiscope\quota::banner($output);
 echo $output->render_campaign_dashboard([
-    'campaignname' => $campaign->name,
+    'campaignname' => $campaignname,
     'completed' => (bool) $campaign->timecompleted,
     'referential' => $referential ? \local_qualiscope\helper::localized($referential, 'name') . ' ' . $referential->version : '—',
     'scopelabel' => $scopelabels[$campaign->scope] ?? $campaign->scope,

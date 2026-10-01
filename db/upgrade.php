@@ -125,5 +125,19 @@ function xmldb_local_qualiscope_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2026092500, 'local', 'qualiscope');
     }
 
+    if ($oldversion < 2026093001) {
+        // The managechecks capability guarded nothing: no screen lets anyone
+        // manage the referential checks, the seeder only runs at install and
+        // upgrade time, and the referential is picked in the settings page,
+        // which is already reserved to moodle/site:config. Removing it from
+        // db/access.php would leave the row in the database, because
+        // update_capabilities() only ever adds and refreshes capabilities.
+        $DB->delete_records('role_capabilities', ['capability' => 'local/qualiscope:managechecks']);
+        $DB->delete_records('capabilities', ['name' => 'local/qualiscope:managechecks']);
+        \cache_helper::purge_by_definition('core', 'capabilities');
+
+        upgrade_plugin_savepoint(true, 2026093001, 'local', 'qualiscope');
+    }
+
     return true;
 }

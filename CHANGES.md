@@ -1,5 +1,31 @@
 ## QualiScope — ChangeLog
 
+### v1.0.3 (2026093002)
+
+- Rendu : les noms de cours, de campagne et de section sont affichés et exportés en texte brut, dans la langue courante. Un nom enregistré avec le filtre multilingue ne montre plus ses balises `<span lang="…">` dans les classeurs Excel, les PDF, l'archive ZIP et l'interface.
+- Export : le nom du fichier téléchargé est construit à partir du nom de cours résolu, il ne contient plus de balise HTML.
+
+### v1.0.2 (2026093000)
+
+Corrections issues de la revue de code avant publication sur le Marketplace.
+
+- Sécurité : contrôle de la capacité et du cours détenteur de l'enregistrement avant l'enregistrement d'une action corrective et le dépôt d'une preuve.
+- Sécurité : téléversement des preuves via un formulaire Moodle avec types de fichiers et taille limités ; les fichiers ne sont plus servis en ligne.
+- Sécurité : clé de session désormais exigée sur toutes les écritures (analyses de campagne, exports).
+- Sécurité : l'export des fichiers de preuves de l'utilisateur n'inclut plus ceux des autres utilisateurs.
+- Confidentialité : le fournisseur ne supprime plus les données de tout le site à la purge d'un contexte ; il agit uniquement sur le contexte reçu, gère les parcours de contexte et implémente l'interface userlist.
+- Confidentialité : suppression des données d'un cours supprimé (résultats, actions, preuves et quota).
+- Web services : ordre des arguments de `create_action` corrigé, la fonction était inutilisable.
+- Web services : la page de progression d'une campagne utilise un service externe et `core/ajax` au lieu d'un appel XHR artisanal.
+- Rendu : les pages restantes passent par des gabarits Mustache et l'API de sortie.
+- Rendu : le rapport imprimable s'affiche dans le thème, ses règles living dans `styles.css`.
+- Internationalisation : plus aucun texte utilisateur codé en dur, y compris en français.
+- En-tête : fichiers de hook conformes à l'en-tête standard Moodle.
+- Paramètres d'entrée : le responsable, l'échéance et l'annotation des preuves utilisent désormais des types précis au lieu de `PARAM_RAW`.
+- Export Excel : réalisé via la bibliothèque Excel de Moodle, sans fichier temporaire hors de `moodledata`.
+- Réglages : la page d'administration n'est plus construite que pour les utilisateurs qui peuvent y accéder.
+- Permissions : la capacité `local/qualiscope:managechecks`, qui ne contrôlait aucune opération, est supprimée.
+
 ### v1.0.1 (2026092500)
 
 - Gestion des campagnes d'audit : filtres avancés, recherche instantanée, barre de progression temps réel.

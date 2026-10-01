@@ -88,7 +88,8 @@ class accessibility_analyser {
         if ($course && !empty(trim(strip_tags($course->summary)))) {
             $contents[] = [
                 'source' => 'course_summary',
-                'title' => get_string('course') . ' (' . $course->fullname . ')',
+                'title' => get_string('course') . ' (' .
+                    \local_qualiscope\helper::plain($course->fullname) . ')',
                 'html' => $course->summary,
             ];
         }
@@ -135,7 +136,8 @@ class accessibility_analyser {
                 if (!empty($l->intro)) {
                     $contents[] = [
                         'source' => 'label',
-                        'title' => 'Zone de texte : ' . ($l->name ?: 'Label'),
+                        'title' => get_string('evidence_textarea', 'local_qualiscope', $l->name ?:
+                            get_string('evidence_textarea_default', 'local_qualiscope')),
                         'html' => $l->intro,
                     ];
                 }
@@ -151,7 +153,10 @@ class accessibility_analyser {
                     if (!empty($ch->content)) {
                         $contents[] = [
                             'source' => 'book_chapter',
-                            'title' => 'Livre : ' . $b->name . ' - ' . $ch->title,
+                            'title' => get_string('evidence_book_chapter', 'local_qualiscope', [
+                                'book' => $b->name,
+                                'chapter' => $ch->title,
+                            ]),
                             'html' => $ch->content,
                         ];
                     }

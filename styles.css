@@ -291,3 +291,183 @@
 .form-label {
     margin-bottom: .5rem;
 }
+
+/* Printable campaign report (print_campaign.php).
+ *
+ * The report is rendered inside the theme with the print page layout, so every rule is
+ * scoped to .qualiscope-print-report and only applies to that page. */
+.qualiscope-print-report {
+    color: #1e293b;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.qualiscope-print-toolbar {
+    display: flex;
+    gap: .5rem;
+    margin-bottom: 1.5rem;
+}
+
+.qualiscope-print-header {
+    border-bottom: 3px solid #1e3a8a;
+    padding-bottom: .75rem;
+    margin-bottom: 1.25rem;
+}
+
+.qualiscope-print-header h1 {
+    margin: 0 0 .25rem;
+    color: #1e3a8a;
+    font-size: 24px;
+}
+
+.qualiscope-print-subtitle {
+    margin: 0;
+    color: #64748b;
+}
+
+.qualiscope-print-generated {
+    margin: .25rem 0 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.qualiscope-print-meta {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 15px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 1.5rem;
+}
+
+.qualiscope-print-score {
+    margin-top: .5rem;
+}
+
+.qualiscope-print-score-value {
+    color: #1e3a8a;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.qualiscope-print-counts {
+    margin: 0;
+    padding: 0 0 0 15px;
+    border-left: 1px solid #cbd5e1;
+    list-style: none;
+}
+
+.qualiscope-print-heading {
+    color: #2563eb;
+    font-size: 18px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: .375rem;
+    margin-top: 1.875rem;
+    margin-bottom: .75rem;
+}
+
+.qualiscope-print-subheading {
+    color: #334155;
+    font-size: 15px;
+    margin-top: .9375rem;
+    margin-bottom: .5rem;
+}
+
+.qualiscope-print-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.25rem;
+}
+
+.qualiscope-print-table th,
+.qualiscope-print-table td {
+    border: 1px solid #e2e8f0;
+    padding: .375rem .5rem;
+    font-size: 13px;
+    vertical-align: top;
+}
+
+.qualiscope-print-table th {
+    background: #f1f5f9;
+    color: #334155;
+    text-align: left;
+}
+
+.qualiscope-print-center {
+    text-align: center;
+}
+
+.qualiscope-print-detected {
+    color: #15803d;
+    font-weight: bold;
+}
+
+.qualiscope-print-verify {
+    color: #b45309;
+    font-weight: bold;
+}
+
+.qualiscope-print-missing {
+    color: #b91c1c;
+    font-weight: bold;
+}
+
+.qualiscope-print-na {
+    color: #64748b;
+}
+
+.qualiscope-print-table .qualiscope-col-50 {
+    width: 50%;
+}
+
+.qualiscope-print-table .qualiscope-col-48 {
+    width: 48%;
+}
+
+.qualiscope-print-table .qualiscope-col-45 {
+    width: 45%;
+}
+
+.qualiscope-print-table .qualiscope-col-22 {
+    width: 22%;
+}
+
+.qualiscope-print-table .qualiscope-col-18 {
+    width: 18%;
+}
+
+.qualiscope-print-table .qualiscope-col-15 {
+    width: 15%;
+}
+
+.qualiscope-print-table .qualiscope-col-12 {
+    width: 12%;
+}
+
+.qualiscope-print-table .qualiscope-col-10 {
+    width: 10%;
+}
+
+.qualiscope-print-table .qualiscope-col-8 {
+    width: 8%;
+}
+
+.qualiscope-print-table .qualiscope-col-7 {
+    width: 7%;
+}
+
+@media print {
+    .qualiscope-print-report {
+        font-size: 12px;
+    }
+
+    .qualiscope-print-report .no-print {
+        display: none;
+    }
+
+    .qualiscope-print-report tr {
+        page-break-inside: avoid;
+    }
+}

@@ -29,11 +29,8 @@ $courseid = optional_param('courseid', 0, PARAM_INT);
 $campaignid = optional_param('campaignid', 0, PARAM_INT);
 $referentialid = optional_param('referentialid', 0, PARAM_INT);
 
-if ($sesskey = optional_param('sesskey', '', PARAM_RAW)) {
-    require_sesskey($sesskey);
-}
-
 require_login();
+require_sesskey();
 
 if ($campaignid) {
     $campaign = $DB->get_record('local_qualiscope_campaigns', ['id' => $campaignid], '*', MUST_EXIST);
@@ -41,43 +38,7 @@ if ($campaignid) {
     require_capability('local/qualiscope:managecampaigns', $context);
 
     $referentialid = (int) $campaign->referential_id;
-    $ajax = optional_param('ajax', 0, PARAM_INT);
-    $singlecourseid = optional_param('singlecourseid', 0, PARAM_INT);
-    $finish = optional_param('finish', 0, PARAM_INT);
     $direct = optional_param('direct', 0, PARAM_INT);
-
-    if ($ajax && $singlecourseid) {
-        if (!\local_qualiscope\quota::can_audit($singlecourseid)) {
-            if ($finish) {
-                $campaign->timecompleted = time();
-                $campaign->timemodified = time();
-                $DB->update_record('local_qualiscope_campaigns', $campaign);
-            }
-
-            header('Content-Type: application/json; charset=utf-8');
-            echo json_encode([
-                'status' => 'licence_required',
-                'courseid' => $singlecourseid,
-                'finished' => (bool) $finish,
-            ]);
-            exit;
-        }
-
-        $analyser = new \local_qualiscope\analyser\course_analyser($singlecourseid, $campaignid, $referentialid);
-        $analyser->run();
-        $analyser->save_results($campaignid);
-        \local_qualiscope\quota::record($singlecourseid);
-
-        if ($finish) {
-            $campaign->timecompleted = time();
-            $campaign->timemodified = time();
-            $DB->update_record('local_qualiscope_campaigns', $campaign);
-        }
-
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode(['status' => 'ok', 'courseid' => $singlecourseid, 'finished' => (bool) $finish]);
-        exit;
-    }
 
     if ($direct) {
         $courseids = \local_qualiscope\analyser\course_analyser::get_campaign_course_ids($campaign);
@@ -97,6 +58,8 @@ if ($campaignid) {
     }
 
     // Interactive Real-time Progress Page.
+    $output = $PAGE->get_renderer('local_qualiscope');
+
     $courseids = \local_qualiscope\analyser\course_analyser::get_campaign_course_ids($campaign);
     $coursesinfo = [];
     if (!empty($courseids)) {
@@ -106,132 +69,41 @@ if ($campaignid) {
             if (isset($coursesrecords[$cid])) {
                 $coursesinfo[] = [
                     'id' => $cid,
-                    'fullname' => $coursesrecords[$cid]->fullname,
+                    'fullname' => \local_qualiscope\helper::plain($coursesrecords[$cid]->fullname, $context),
                 ];
             }
         }
     }
 
+    $campaignname = \local_qualiscope\helper::plain($campaign->name, $context);
+
     $PAGE->set_url(new moodle_url('/local/qualiscope/run.php', ['campaignid' => $campaignid]));
-    $PAGE->set_title(get_string('campaign_running_progress_title', 'local_qualiscope') . ' - ' . $campaign->name);
-    $PAGE->set_heading($campaign->name);
+    $PAGE->set_title(get_string('campaign_running_progress_title', 'local_qualiscope') . ' - ' . $campaignname);
+    $PAGE->set_heading($campaignname);
     $PAGE->set_context($context);
+    $PAGE->requires->js_call_amd('local_qualiscope/campaign_run', 'init', [[
+        'campaignid' => $campaignid,
+        'courses' => $coursesinfo,
+        'targeturl' => (new moodle_url('/local/qualiscope/view_campaign.php', ['id' => $campaignid]))->out(false),
+        'strings' => [
+            'finished' => get_string('campaign_run_finished', 'local_qualiscope'),
+            'redirecting' => get_string('campaign_run_redirecting', 'local_qualiscope'),
+            'courseprogress' => get_string('campaign_run_progress_course', 'local_qualiscope', [
+                'current' => '{$current}',
+                'total' => '{$total}',
+                'percentage' => '{$percentage}',
+            ]),
+        ],
+    ]]);
 
     echo $OUTPUT->header();
-
-    $coursesjson = json_encode($coursesinfo);
-    $sesskeyjson = json_encode(sesskey());
-    $targeturljson = json_encode(
-        (new moodle_url('/local/qualiscope/view_campaign.php', ['id' => $campaignid]))->out(false)
-    );
-    $coursecount = count($coursesinfo);
-
-    echo '
-    <div class="qualiscope-run-progress container py-5">
-        <div class="card shadow-sm border-0 mx-auto" style="max-width: 700px;">
-            <div class="card-body p-4 text-center">
-                <div class="mb-3">
-                    <span class="spinner-border text-primary" role="status" id="runSpinner"
-                        style="width: 3rem; height: 3rem;"></span>
-                </div>
-                <h4 class="mb-2" id="runTitle">' .
-                    s(get_string('campaign_running_progress_title', 'local_qualiscope')) . '</h4>
-                <p class="text-muted mb-4">' . s($campaign->name) . ' &bull; <strong>' . $coursecount . '</strong> ' .
-                    s(get_string('campaign_courses_analysed', 'local_qualiscope')) . '</p>
-
-                <div class="progress mb-3" style="height: 26px; border-radius: 13px;">
-                    <div id="runProgressBar"
-                        class="progress-bar progress-bar-striped progress-bar-animated bg-primary font-weight-bold"
-                        role="progressbar" style="width: 0%; font-size: 13px;">0%</div>
-                </div>
-
-                <div id="runProgressText" class="text-muted small mb-3">
-                    ' . s(get_string('campaign_running_wait', 'local_qualiscope')) . '
-                </div>
-
-                <div id="runCurrentCourse" class="alert alert-light border py-2 small text-truncate">
-                    ...
-                </div>
-            </div>
-        </div>
-    </div>
-    ';
-
-    $script = <<<JS
-<script>
-(function() {
-    var courses = {$coursesjson};
-    var campaignId = {$campaignid};
-    var sesskey = {$sesskeyjson};
-    var total = courses.length;
-    var currentIndex = 0;
-    var targetUrl = {$targeturljson};
-
-    var progressBar = document.getElementById('runProgressBar');
-    var progressText = document.getElementById('runProgressText');
-    var currentCourseEl = document.getElementById('runCurrentCourse');
-    var spinner = document.getElementById('runSpinner');
-    var titleEl = document.getElementById('runTitle');
-
-    if (total === 0) {
-        window.location.href = targetUrl;
-        return;
-    }
-
-    function processNext() {
-        if (currentIndex >= total) {
-            progressBar.style.width = '100%';
-            progressBar.textContent = '100%';
-            progressBar.classList.remove('progress-bar-animated');
-            progressBar.classList.add('bg-success');
-            if (spinner) spinner.style.display = 'none';
-            if (titleEl) titleEl.textContent = 'Analyse terminée avec succès !';
-            currentCourseEl.textContent = 'Redirection vers les résultats...';
-            setTimeout(function() {
-                window.location.href = targetUrl;
-            }, 600);
-            return;
-        }
-
-        var course = courses[currentIndex];
-        var isFinish = (currentIndex === total - 1) ? 1 : 0;
-        var pct = Math.round(((currentIndex) / total) * 100);
-
-        progressBar.style.width = pct + '%';
-        progressBar.textContent = pct + '%';
-        progressText.textContent = 'Traitement du cours ' + (currentIndex + 1) + ' sur ' + total + ' (' + pct + ' %)';
-        currentCourseEl.textContent = course.fullname;
-
-        var url = 'run.php?campaignid=' + campaignId +
-                  '&singlecourseid=' + course.id +
-                  '&ajax=1' +
-                  '&finish=' + isFinish +
-                  '&sesskey=' + encodeURIComponent(sesskey);
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.onload = function() {
-            currentIndex++;
-            var nextPct = Math.round((currentIndex / total) * 100);
-            progressBar.style.width = nextPct + '%';
-            progressBar.textContent = nextPct + '%';
-            processNext();
-        };
-        xhr.onerror = function() {
-            // Retry or continue on next course.
-            currentIndex++;
-            processNext();
-        };
-        xhr.send();
-    }
-
-    // Start processing.
-    setTimeout(processNext, 200);
-})();
-</script>
-JS;
-
-    echo $script;
+    echo $output->render_campaign_run_progress([
+        'campaignname' => $campaignname,
+        'coursecount' => count($coursesinfo),
+        'runningtitle' => get_string('campaign_running_progress_title', 'local_qualiscope'),
+        'progresslabel' => get_string('campaign_courses_analysed', 'local_qualiscope'),
+        'waitlabel' => get_string('campaign_running_wait', 'local_qualiscope'),
+    ]);
     echo $OUTPUT->footer();
     exit;
 }

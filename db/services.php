@@ -33,6 +33,16 @@ $functions = [
         'type'        => 'write',
         'ajax'        => true,
         'loginrequired' => true,
+        'capabilities' => 'local/qualiscope:managecampaigns',
+    ],
+    'local_qualiscope_run_campaign_course' => [
+        'classname'   => '\local_qualiscope\external\run_campaign_course',
+        'methodname'  => 'execute',
+        'description' => 'Analyse one course of a campaign and report the progress.',
+        'type'        => 'write',
+        'ajax'        => true,
+        'loginrequired' => true,
+        'capabilities' => 'local/qualiscope:managecampaigns',
     ],
     'local_qualiscope_add_evidence' => [
         'classname'   => '\local_qualiscope\external\add_evidence',
@@ -41,6 +51,7 @@ $functions = [
         'type'        => 'write',
         'ajax'        => true,
         'loginrequired' => true,
+        'capabilities' => 'local/qualiscope:editproofs',
     ],
     'local_qualiscope_create_action' => [
         'classname'   => '\local_qualiscope\external\create_action',
@@ -49,6 +60,7 @@ $functions = [
         'type'        => 'write',
         'ajax'        => true,
         'loginrequired' => true,
+        'capabilities' => 'local/qualiscope:manageactions',
     ],
 ];
 
@@ -56,6 +68,7 @@ $services = [
     'Qualiscope web service' => [
         'functions' => [
             'local_qualiscope_run_analysis',
+            'local_qualiscope_run_campaign_course',
             'local_qualiscope_add_evidence',
             'local_qualiscope_create_action',
         ],

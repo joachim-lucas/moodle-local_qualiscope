@@ -64,9 +64,16 @@ class run_analysis extends \external_api {
      * @return array Success status and message.
      */
     public static function execute(int $courseid, int $campaignid = 0): array {
-        global $USER;
-
+        // A campaign analysis spans every course of its scope, so the authorisation is done at
+        // system level: a manager auditing courses they are not enrolled in must not be blocked.
         $context = \context_system::instance();
+
+        self::validate_parameters(self::execute_parameters(), [
+            'courseid' => $courseid,
+            'campaignid' => $campaignid,
+        ]);
+        self::validate_context($context);
+
         require_capability('local/qualiscope:managecampaigns', $context);
 
         if ($campaignid && !\local_qualiscope\quota::can_audit($courseid)) {

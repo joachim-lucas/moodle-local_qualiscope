@@ -1,0 +1,212 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_qualiscope/campaign_print
+
+    Printable campaign report, rendered inside the theme by print_campaign.php with the print
+    page layout. The report styling lives in styles.css under .qualiscope-print-report.
+
+    Example context (json):
+    {
+        "pluginname": "QualiScope",
+        "subtitle": "QualiScope campaign audit summary report",
+        "printlabel": "Print report",
+        "backlabel": "Back to dashboard",
+        "backurl": "view_campaign.php?id=2",
+        "generatedlabel": "Generated:",
+        "generateddate": "30/09/2026",
+        "namelabel": "Campaign name",
+        "campaignname": "Spring audit 2026",
+        "referentiallabel": "Referential",
+        "referential": "RNQ V9",
+        "scopelabel": "Scope",
+        "scope": "All courses",
+        "globalratelabel": "Overall coverage level:",
+        "globalpercentage": 78,
+        "coursesanalysedlabel": "Courses analysed",
+        "coursecount": 12,
+        "detectedlabel": "compliant",
+        "detected": 40,
+        "verifylabel": "to verify",
+        "verify": 10,
+        "missinglabel": "missing",
+        "missing": 4,
+        "nalabel": "not applicable",
+        "na": 2,
+        "coursestable": {
+            "title": "Courses summary",
+            "courselabel": "Course",
+            "scorelabel": "Coverage level",
+            "rows": [
+                {"coursename": "Intro to quality", "percentage": 92, "detected": 9, "verify": 1, "missing": 0, "na": 0}
+            ]
+        },
+        "macrotitle": "Macro analysis by Criteria & Indicators",
+        "criteriatables": [
+            {
+                "title": "Criterion 1",
+                "percentagelabel": "78 %",
+                "indicatorlabel": "Indicator",
+                "descriptionlabel": "Description",
+                "compliancelabel": "Compliance",
+                "rows": [
+                    {"number": 1, "title": "Course summary", "percentagelabel": "100 %", "detected": 3, "verify": 0, "missing": 0, "na": 0}
+                ]
+            }
+        ],
+        "weakpointstable": {
+            "title": "Priority weak points",
+            "indicatorlabel": "Indicator",
+            "descriptionlabel": "Description",
+            "compliancelabel": "Compliance",
+            "failingcourseslabel": "Non-compliant courses count",
+            "rows": [
+                {"label": "I2 (C1)", "title": "Rubrics", "percentage": 40, "failingcourses": 7}
+            ]
+        }
+    }
+}}
+<div class="qualiscope-print-report">
+    <div class="qualiscope-print-toolbar no-print">
+        <button class="btn btn-primary" onclick="window.print()">&#128424; {{printlabel}}</button>
+        <a class="btn btn-outline-secondary" href="{{backurl}}">&larr; {{backlabel}}</a>
+    </div>
+
+    <div class="qualiscope-print-header">
+        <h1>{{pluginname}}</h1>
+        <p class="qualiscope-print-subtitle">{{subtitle}}</p>
+        <p class="qualiscope-print-generated">{{generatedlabel}} <strong>{{generateddate}}</strong></p>
+    </div>
+
+    <div class="qualiscope-print-meta">
+        <div>
+            <div><strong>{{namelabel}} :</strong> {{campaignname}}</div>
+            <div><strong>{{referentiallabel}} :</strong> {{referential}}</div>
+            <div><strong>{{scopelabel}} :</strong> {{scope}}</div>
+            <div class="qualiscope-print-score">
+                <strong>{{globalratelabel}}</strong>
+                <span class="qualiscope-print-score-value">{{globalpercentage}} %</span>
+            </div>
+        </div>
+        <ul class="qualiscope-print-counts">
+            <li><strong>{{coursesanalysedlabel}} :</strong> {{coursecount}}</li>
+            <li class="qualiscope-print-detected">{{detectedlabel}} : {{detected}}</li>
+            <li class="qualiscope-print-verify">{{verifylabel}} : {{verify}}</li>
+            <li class="qualiscope-print-missing">{{missinglabel}} : {{missing}}</li>
+            <li class="qualiscope-print-na">{{nalabel}} : {{na}}</li>
+        </ul>
+    </div>
+
+    <h2 class="qualiscope-print-heading">{{coursestable.title}}</h2>
+    <table class="qualiscope-print-table">
+        <colgroup>
+            <col class="qualiscope-col-50">
+            <col class="qualiscope-col-15">
+            <col class="qualiscope-col-8" span="4">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>{{coursestable.courselabel}}</th>
+                <th class="qualiscope-print-center">{{coursestable.scorelabel}}</th>
+                <th class="qualiscope-print-center">&check;</th>
+                <th class="qualiscope-print-center">&#9888;</th>
+                <th class="qualiscope-print-center">&times;</th>
+                <th class="qualiscope-print-center">&mdash;</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#coursestable.rows}}
+            <tr>
+                <td><strong>{{coursename}}</strong></td>
+                <td class="qualiscope-print-center"><strong>{{percentage}} %</strong></td>
+                <td class="qualiscope-print-center qualiscope-print-detected">{{detected}}</td>
+                <td class="qualiscope-print-center qualiscope-print-verify">{{verify}}</td>
+                <td class="qualiscope-print-center qualiscope-print-missing">{{missing}}</td>
+                <td class="qualiscope-print-center qualiscope-print-na">{{na}}</td>
+            </tr>
+            {{/coursestable.rows}}
+        </tbody>
+    </table>
+
+    <h2 class="qualiscope-print-heading">{{macrotitle}}</h2>
+    {{#criteriatables}}
+    <h3 class="qualiscope-print-subheading">{{title}} ({{percentagelabel}})</h3>
+    <table class="qualiscope-print-table">
+        <colgroup>
+            <col class="qualiscope-col-10">
+            <col class="qualiscope-col-45">
+            <col class="qualiscope-col-15">
+            <col class="qualiscope-col-8" span="3">
+            <col class="qualiscope-col-7">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>{{indicatorlabel}}</th>
+                <th>{{descriptionlabel}}</th>
+                <th class="qualiscope-print-center">{{compliancelabel}}</th>
+                <th class="qualiscope-print-center">&check;</th>
+                <th class="qualiscope-print-center">&#9888;</th>
+                <th class="qualiscope-print-center">&times;</th>
+                <th class="qualiscope-print-center">&mdash;</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#rows}}
+            <tr>
+                <td class="qualiscope-print-center"><strong>I{{number}}</strong></td>
+                <td>{{title}}</td>
+                <td class="qualiscope-print-center"><strong>{{percentagelabel}}</strong></td>
+                <td class="qualiscope-print-center qualiscope-print-detected">{{detected}}</td>
+                <td class="qualiscope-print-center qualiscope-print-verify">{{verify}}</td>
+                <td class="qualiscope-print-center qualiscope-print-missing">{{missing}}</td>
+                <td class="qualiscope-print-center qualiscope-print-na">{{na}}</td>
+            </tr>
+            {{/rows}}
+        </tbody>
+    </table>
+    {{/criteriatables}}
+
+    {{#weakpointstable}}
+    <h2 class="qualiscope-print-heading">{{title}}</h2>
+    <table class="qualiscope-print-table">
+        <colgroup>
+            <col class="qualiscope-col-12">
+            <col class="qualiscope-col-48">
+            <col class="qualiscope-col-18">
+            <col class="qualiscope-col-22">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>{{indicatorlabel}}</th>
+                <th>{{descriptionlabel}}</th>
+                <th class="qualiscope-print-center">{{compliancelabel}}</th>
+                <th class="qualiscope-print-center">{{failingcourseslabel}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#rows}}
+            <tr>
+                <td class="qualiscope-print-center"><strong>{{label}}</strong></td>
+                <td>{{title}}</td>
+                <td class="qualiscope-print-center qualiscope-print-missing"><strong>{{percentage}} %</strong></td>
+                <td class="qualiscope-print-center qualiscope-print-missing">{{failingcourses}}</td>
+            </tr>
+            {{/rows}}
+        </tbody>
+    </table>
+    {{/weakpointstable}}
+</div>

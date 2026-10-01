@@ -62,8 +62,11 @@ $indicatorresults = array_filter($results, function ($r) use ($indicatorid) {
 $checkresults = [];
 foreach ($indicatorresults as $r) {
     $checkresults[] = [
-        'checkname' => \local_qualiscope\helper::localized($r['check'], 'name'),
-        'detail' => $r['detail'] ?? '',
+        'checkname' => \local_qualiscope\helper::plain(
+            \local_qualiscope\helper::localized($r['check'], 'name'),
+            $context
+        ),
+        'detail' => \local_qualiscope\helper::plain($r['detail'] ?? '', $context),
         'status' => $r['status'],
         'statuslabel' => \local_qualiscope\analyser\indicator_analyser::get_status_label($r['status']),
         'statusdetected' => $r['status'] === 'detected',
@@ -94,7 +97,8 @@ foreach ($externalevidences as &$ev) {
             'evidence',
             $ev->result_id,
             $ev->filepath,
-            $ev->filename
+            $ev->filename,
+            true
         );
     }
 }
@@ -106,14 +110,13 @@ echo $output->render_indicator_detail([
     'moodleevidences' => array_values($moodleevidences),
     'externalevidences' => array_values($externalevidences),
     'resultid' => $resultid,
-    'sesskey' => sesskey(),
     'backurl' => new moodle_url('/local/qualiscope/dashboard.php', ['courseid' => $courseid, 'referentialid' => $referentialid]),
     'helpurl' => (new moodle_url('/local/qualiscope/help.php', [
         'courseid' => $courseid,
         'referentialid' => $referentialid,
         'indicatorid' => $indicatorid,
     ]))->out(false) . '#indicator-' . $indicatorid,
-    'uploadurl' => new moodle_url('/local/qualiscope/upload_evidence.php'),
+    'uploadurl' => new moodle_url('/local/qualiscope/upload_evidence.php', ['resultid' => $resultid]),
     'actionurl' => new moodle_url('/local/qualiscope/actions.php', [
         'courseid' => $courseid,
         'campaignid' => $campaignid,

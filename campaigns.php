@@ -43,6 +43,9 @@ $campaigns = $DB->get_records('local_qualiscope_campaigns', [], 'timecreated DES
 $referentials = $DB->get_records('local_qualiscope_referentials', ['active' => 1]);
 $categories = $DB->get_records('course_categories', [], 'name ASC');
 $courses = $DB->get_records('course', ['visible' => 1], 'fullname ASC');
+foreach ($courses as $courserecord) {
+    $courserecord->fullname = \local_qualiscope\helper::plain($courserecord->fullname, $context);
+}
 
 $scopelabels = [
     'all' => get_string('campaign_scope_all', 'local_qualiscope'),
@@ -92,7 +95,7 @@ foreach ($campaigns as $c) {
 
     $campaignsdata[] = [
         'id' => $c->id,
-        'name' => $c->name,
+        'name' => \local_qualiscope\helper::plain($c->name, $context),
         'referential' => $ref ? \local_qualiscope\helper::localized($ref, 'name') . ' ' . $ref->version : '—',
         'scopelabel' => $scopelabels[$c->scope] ?? $c->scope,
         'dateformatted' => userdate($c->timecreated),

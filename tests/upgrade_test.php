@@ -125,4 +125,64 @@ final class upgrade_test extends \advanced_testcase {
         $criteria->close();
         $this->assertGreaterThan(0, $count);
     }
+
+    /**
+     * Tests the 2026093001 upgrade step deletes the unused managechecks
+     * capability, together with the role assignments it may have received.
+     *
+     * @covers \xmldb_local_qualiscope_upgrade
+     */
+    public function test_upgrade_2026093001_removes_managechecks(): void {
+        global $CFG, $DB;
+
+        $this->resetAfterTest();
+
+        $managerrole = $DB->get_record('role', ['shortname' => 'manager'], '*', MUST_EXIST);
+        $systemcontext = \context_system::instance();
+
+        // Simulate a site that still has the capability, granted to a role.
+        $DB->insert_record('capabilities', (object) [
+            'name' => 'local/qualiscope:managechecks',
+            'captype' => 'write',
+            'contextlevel' => CONTEXT_SYSTEM,
+            'component' => 'local_qualiscope',
+            'riskbitmask' => 0,
+        ]);
+        $DB->insert_record('role_capabilities', (object) [
+            'roleid' => $managerrole->id,
+            'contextid' => $systemcontext->id,
+            'capability' => 'local/qualiscope:managechecks',
+            'permission' => CAP_ALLOW,
+            'overridable' => 0,
+        ]);
+
+        $this->assertTrue($DB->record_exists('capabilities', ['name' => 'local/qualiscope:managechecks']));
+
+        // Simulate a site on the previous plugin version.
+        $DB->set_field('config_plugins', 'value', '2026093000', ['plugin' => 'local_qualiscope', 'name' => 'version']);
+
+        require_once($CFG->dirroot . '/lib/upgradelib.php');
+        require_once($CFG->dirroot . '/local/qualiscope/db/upgrade.php');
+
+        $this->assertTrue(xmldb_local_qualiscope_upgrade(2026093000));
+
+        $this->assertFalse($DB->record_exists('capabilities', ['name' => 'local/qualiscope:managechecks']));
+        $this->assertFalse($DB->record_exists('role_capabilities', [
+            'capability' => 'local/qualiscope:managechecks',
+        ]));
+    }
+
+    /**
+     * Tests the capability is no longer declared in db/access.php.
+     *
+     * @coversNothing
+     * @return void
+     */
+    public function test_managechecks_is_not_declared_anymore(): void {
+        global $CFG;
+
+        $definition = load_capability_def('local_qualiscope');
+
+        $this->assertArrayNotHasKey('local/qualiscope:managechecks', $definition);
+    }
 }

@@ -43,8 +43,8 @@ class create_action extends \external_api {
             'campaignid' => new \external_value(PARAM_INT, 'Campaign ID'),
             'courseid' => new \external_value(PARAM_INT, 'Course ID'),
             'title' => new \external_value(PARAM_TEXT, 'Action title'),
-            'responsible' => new \external_value(PARAM_RAW, 'Responsible person', VALUE_DEFAULT, ''),
-            'duedate' => new \external_value(PARAM_RAW, 'Due date (timestamp)', VALUE_DEFAULT, '0'),
+            'responsible' => new \external_value(PARAM_TEXT, 'Responsible person', VALUE_DEFAULT, ''),
+            'duedate' => new \external_value(PARAM_INT, 'Due date as a timestamp, 0 for none', VALUE_DEFAULT, 0),
             'priority' => new \external_value(PARAM_ALPHA, 'Priority', VALUE_DEFAULT, 'medium'),
         ]);
     }
@@ -64,27 +64,39 @@ class create_action extends \external_api {
     /**
      * Creates the corrective action record.
      *
+     * @param int $resultid Optional linked analysis result id.
      * @param int $campaignid The campaign id.
      * @param int $courseid The course id.
      * @param string $title Title of the action.
      * @param string $responsible Responsible person (free text).
-     * @param string $duedate Due date as timestamp string.
+     * @param int $duedate Due date as a timestamp, 0 for no due date.
      * @param string $priority Priority (low, medium, high).
-     * @param int $resultid Optional linked analysis result id.
      * @return array Success status and created action id.
      */
     public static function execute(
+        int $resultid,
         int $campaignid,
         int $courseid,
         string $title,
         string $responsible = '',
-        string $duedate = '0',
-        string $priority = 'medium',
-        int $resultid = 0
+        int $duedate = 0,
+        string $priority = 'medium'
     ): array {
         global $DB, $USER;
 
         $context = \context_course::instance($courseid);
+
+        self::validate_parameters(self::execute_parameters(), [
+            'resultid' => $resultid,
+            'campaignid' => $campaignid,
+            'courseid' => $courseid,
+            'title' => $title,
+            'responsible' => $responsible,
+            'duedate' => $duedate,
+            'priority' => $priority,
+        ]);
+        self::validate_context($context);
+
         require_capability('local/qualiscope:manageactions', $context);
 
         $action = new \stdClass();
@@ -93,7 +105,7 @@ class create_action extends \external_api {
         $action->courseid = $courseid;
         $action->title = $title;
         $action->responsible = $responsible;
-        $action->duedate = (int) $duedate;
+        $action->duedate = $duedate;
         $action->priority = $priority;
         $action->status = 'todo';
         $action->userid = $USER->id;
