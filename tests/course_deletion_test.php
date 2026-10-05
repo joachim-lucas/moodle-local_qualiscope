@@ -100,7 +100,7 @@ final class course_deletion_test extends \advanced_testcase {
             'contextid' => \context_course::instance($course->id)->id,
             'component' => 'local_qualiscope',
             'filearea' => 'evidence',
-            'itemid' => $resultid,
+            'itemid' => $evidenceid,
             'filepath' => '/',
             'filename' => 'proof.txt',
         ], 'proof content');
@@ -153,7 +153,7 @@ final class course_deletion_test extends \advanced_testcase {
         $context = \context_course::instance($courseid);
         $fs = get_file_storage();
         $this->assertNotFalse(
-            $fs->get_file($context->id, 'local_qualiscope', 'evidence', $ids['result'], '/', 'proof.txt')
+            $fs->get_file($context->id, 'local_qualiscope', 'evidence', $ids['evidence'], '/', 'proof.txt')
         );
 
         $this->setAdminUser();

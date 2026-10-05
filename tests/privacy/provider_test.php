@@ -102,7 +102,7 @@ final class provider_test extends \advanced_testcase {
                 'contextid' => \context_course::instance($course->id)->id,
                 'component' => 'local_qualiscope',
                 'filearea' => 'evidence',
-                'itemid' => $resultid,
+                'itemid' => $evidenceid,
                 'filepath' => '/',
                 'filename' => $filename,
             ], 'proof content');
@@ -282,7 +282,7 @@ final class provider_test extends \advanced_testcase {
 
         $fs = get_file_storage();
         $context = \context_course::instance($course->id);
-        $this->assertNotFalse($fs->get_file($context->id, 'local_qualiscope', 'evidence', $ids['result'], '/', 'proof.txt'));
+        $this->assertNotFalse($fs->get_file($context->id, 'local_qualiscope', 'evidence', $ids['evidence'], '/', 'proof.txt'));
 
         $approved = new \core_privacy\local\request\approved_contextlist(
             $user,
@@ -293,7 +293,7 @@ final class provider_test extends \advanced_testcase {
         provider::delete_data_for_user($approved);
 
         $this->assertFalse($DB->record_exists('local_qualiscope_evidences', ['id' => $ids['evidence']]));
-        $this->assertFalse($fs->get_file($context->id, 'local_qualiscope', 'evidence', $ids['result'], '/', 'proof.txt'));
+        $this->assertFalse($fs->get_file($context->id, 'local_qualiscope', 'evidence', $ids['evidence'], '/', 'proof.txt'));
     }
 
     /**
@@ -327,7 +327,10 @@ final class provider_test extends \advanced_testcase {
                 ['courseid' => $course1->id]
             )
         );
-        $this->assertEmpty($fs->get_area_files($context1->id, 'local_qualiscope', 'evidence', 0, 'filename'));
+        // itemid false is the wildcard: itemid 0 filters on a literal 0 and would match nothing.
+        $this->assertEmpty(
+            $fs->get_area_files($context1->id, 'local_qualiscope', 'evidence', false, 'filename', false)
+        );
 
         // The other course and the campaigns must survive.
         $this->assertEquals(1, $DB->count_records('local_qualiscope_results', ['courseid' => $course2->id]));
@@ -356,7 +359,10 @@ final class provider_test extends \advanced_testcase {
         $this->assertEquals(0, $DB->count_records('local_qualiscope_results'));
         $this->assertEquals(0, $DB->count_records('local_qualiscope_evidences'));
         $this->assertEquals(0, $DB->count_records('local_qualiscope_actions'));
-        $this->assertEmpty($fs->get_area_files($context->id, 'local_qualiscope', 'evidence', 0, 'filename'));
+        // itemid false is the wildcard: itemid 0 filters on a literal 0 and would match nothing.
+        $this->assertEmpty(
+            $fs->get_area_files($context->id, 'local_qualiscope', 'evidence', false, 'filename', false)
+        );
     }
 
     /**

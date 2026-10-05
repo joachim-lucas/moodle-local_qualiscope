@@ -122,7 +122,13 @@ class evidence_upload extends \moodleform {
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
-        if (empty($data['externalurl']) && empty($files['evidencefile'])) {
+        // A filemanager never fills the $files array: formslib builds it from $_FILES only.
+        // Its submitted value is a draft area id, which is not empty even when the user
+        // picked nothing, so the area itself has to be inspected to know whether a file
+        // is really attached.
+        $draftitemid = (int) ($data['evidencefile'] ?? 0);
+
+        if (empty($data['externalurl']) && \local_qualiscope\evidence::get_draft_file($draftitemid) === null) {
             $errors['evidencefile'] = get_string('upload_evidence_required', 'local_qualiscope');
         }
 

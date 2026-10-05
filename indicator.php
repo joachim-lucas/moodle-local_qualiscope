@@ -95,7 +95,7 @@ foreach ($externalevidences as &$ev) {
             $context->id,
             'local_qualiscope',
             'evidence',
-            $ev->result_id,
+            $ev->id,
             $ev->filepath,
             $ev->filename,
             true

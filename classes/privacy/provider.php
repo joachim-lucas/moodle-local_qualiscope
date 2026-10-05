@@ -514,20 +514,6 @@ class provider implements
      * @return \stored_file|null
      */
     private static function get_evidence_file($fs, $evidence) {
-        if (empty($evidence->filename) || (int) $evidence->courseid <= 0) {
-            return null;
-        }
-
-        $filepath = empty($evidence->filepath) ? '/' : $evidence->filepath;
-        $context = \context_course::instance((int) $evidence->courseid);
-
-        return $fs->get_file(
-            $context->id,
-            'local_qualiscope',
-            'evidence',
-            (int) $evidence->result_id,
-            $filepath,
-            $evidence->filename
-        );
+        return \local_qualiscope\evidence::get_file($fs, $evidence);
     }
 }
