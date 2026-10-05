@@ -33,10 +33,10 @@ require_login();
 $context = context_system::instance();
 require_capability('local/qualiscope:managecampaigns', $context);
 
+$PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/qualiscope/compare_campaigns.php', ['id_a' => $ida, 'id_b' => $idb]));
 $PAGE->set_title(get_string('campaign_compare_title', 'local_qualiscope'));
 $PAGE->set_heading(get_string('campaign_compare_title', 'local_qualiscope'));
-$PAGE->set_context($context);
 
 $output = $PAGE->get_renderer('local_qualiscope');
 

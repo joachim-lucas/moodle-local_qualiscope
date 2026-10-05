@@ -73,54 +73,13 @@ if ($form->is_cancelled()) {
 }
 
 if ($data = $form->get_data()) {
-    $fs = get_file_storage();
-    $file = null;
-
-    if (!empty($data->evidencefile)) {
-        $usercontext = context_user::instance($USER->id);
-        $draftfiles = array_filter(
-            $fs->get_area_files($usercontext->id, 'user', 'draft', $data->evidencefile, 'id', false),
-            function ($draftfile) {
-                return !$draftfile->is_directory();
-            }
-        );
-        $draftfile = empty($draftfiles) ? null : reset($draftfiles);
-
-        file_save_draft_area_files(
-            $data->evidencefile,
-            $context->id,
-            'local_qualiscope',
-            'evidence',
-            $resultid,
-            ['subdirs' => 0, 'maxbytes' => $course->maxbytes]
-        );
-
-        if ($draftfile) {
-            foreach ($fs->get_files($context->id, 'local_qualiscope', 'evidence', $resultid, 'id ASC', false) as $candidate) {
-                if ($candidate->get_filename() === $draftfile->get_filename()) {
-                    $file = $candidate;
-                    break;
-                }
-            }
-        }
-    }
-
-    $record = new stdClass();
-    $record->result_id = $resultid;
-    $record->type = 'external';
-    $record->title = $data->title;
-    $record->annotation = $data->annotation;
-    $record->externalurl = $data->externalurl;
-    $record->userid = $USER->id;
-    $record->timecreated = time();
-    $record->timemodified = time();
-
-    if ($file) {
-        $record->filepath = $file->get_filepath();
-        $record->filename = $file->get_filename();
-    }
-
-    $DB->insert_record('local_qualiscope_evidences', $record);
+    \local_qualiscope\evidence::create(
+        (int) $resultid,
+        $data,
+        (int) $USER->id,
+        $context,
+        (int) $course->maxbytes
+    );
 
     $result->evidence_count = $DB->count_records('local_qualiscope_evidences', ['result_id' => $resultid]);
     $result->timemodified = time();

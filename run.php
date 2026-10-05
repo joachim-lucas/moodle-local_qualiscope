@@ -40,6 +40,10 @@ if ($campaignid) {
     $referentialid = (int) $campaign->referential_id;
     $direct = optional_param('direct', 0, PARAM_INT);
 
+    // Re-running a campaign does not need a reset: save_result() upserts on
+    // (campaign, course, check), so the result ids and the corrective actions
+    // linked to them stay valid. Only the stale courses that left the scope
+    // keep their previous results.
     if ($direct) {
         $courseids = \local_qualiscope\analyser\course_analyser::get_campaign_course_ids($campaign);
         foreach ($courseids as $cid) {
@@ -77,10 +81,10 @@ if ($campaignid) {
 
     $campaignname = \local_qualiscope\helper::plain($campaign->name, $context);
 
+    $PAGE->set_context($context);
     $PAGE->set_url(new moodle_url('/local/qualiscope/run.php', ['campaignid' => $campaignid]));
     $PAGE->set_title(get_string('campaign_running_progress_title', 'local_qualiscope') . ' - ' . $campaignname);
     $PAGE->set_heading($campaignname);
-    $PAGE->set_context($context);
     $PAGE->requires->js_call_amd('local_qualiscope/campaign_run', 'init', [[
         'campaignid' => $campaignid,
         'courses' => $coursesinfo,
@@ -88,6 +92,13 @@ if ($campaignid) {
         'strings' => [
             'finished' => get_string('campaign_run_finished', 'local_qualiscope'),
             'redirecting' => get_string('campaign_run_redirecting', 'local_qualiscope'),
+            'partial' => get_string('campaign_run_partial', 'local_qualiscope'),
+            'partialdetail' => get_string('campaign_run_partial_detail', 'local_qualiscope', [
+                'failed' => '{$failed}',
+                'blocked' => '{$blocked}',
+            ]),
+            'coursefailed' => get_string('campaign_run_course_failed', 'local_qualiscope', ['name' => '{$name}']),
+            'courseblocked' => get_string('campaign_run_course_blocked', 'local_qualiscope', ['name' => '{$name}']),
             'courseprogress' => get_string('campaign_run_progress_course', 'local_qualiscope', [
                 'current' => '{$current}',
                 'total' => '{$total}',

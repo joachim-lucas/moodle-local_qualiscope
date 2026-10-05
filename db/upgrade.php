@@ -139,5 +139,50 @@ function xmldb_local_qualiscope_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2026093001, 'local', 'qualiscope');
     }
 
+    if ($oldversion < 2026100501) {
+        // Each evidence owns its file area, itemid being its own id. Earlier releases
+        // shared one area per result, which could only ever hold the file of the last
+        // upload, so the surviving files have to be moved to the area of the evidence
+        // that references them. Two evidence rows of a same result may name the same
+        // file, in which case the first one takes it and the others keep pointing at a
+        // file that was already missing before this upgrade.
+        $rows = $DB->get_records_sql(
+            "SELECT e.id, e.result_id, e.filepath, e.filename, r.courseid
+               FROM {local_qualiscope_evidences} e
+               JOIN {local_qualiscope_results} r ON r.id = e.result_id
+              WHERE e.filename IS NOT NULL AND e.filename <> ''"
+        );
+
+        $fs = get_file_storage();
+        $moved = [];
+
+        foreach ($rows as $row) {
+            $context = \context_course::instance((int) $row->courseid);
+            $filepath = empty($row->filepath) ? '/' : $row->filepath;
+            $legacy = (int) $row->result_id;
+
+            if (isset($moved[$legacy][$row->filename])) {
+                // Already moved for another evidence of the same result.
+                continue;
+            }
+
+            $file = $fs->get_file($context->id, 'local_qualiscope', 'evidence', $legacy, $filepath, $row->filename);
+            if (!$file) {
+                continue;
+            }
+
+            if ($fs->file_exists($context->id, 'local_qualiscope', 'evidence', (int) $row->id, $filepath, $row->filename)) {
+                $file->delete();
+            } else {
+                $fs->create_file_from_storedfile(['itemid' => (int) $row->id], $file);
+                $file->delete();
+            }
+
+            $moved[$legacy][$row->filename] = true;
+        }
+
+        upgrade_plugin_savepoint(true, 2026100501, 'local', 'qualiscope');
+    }
+
     return true;
 }

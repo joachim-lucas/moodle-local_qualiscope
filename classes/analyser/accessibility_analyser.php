@@ -84,25 +84,33 @@ class accessibility_analyser {
         $contents = [];
 
         // 1. Course summary
+        // A summary is nullable, and strip_tags() and trim() deprecate on null since PHP 8.1.
         $course = $DB->get_record('course', ['id' => $courseid]);
-        if ($course && !empty(trim(strip_tags($course->summary)))) {
+        $coursesummary = $course ? (string) $course->summary : '';
+        if (trim(strip_tags($coursesummary)) !== '') {
             $contents[] = [
                 'source' => 'course_summary',
-                'title' => get_string('course') . ' (' .
-                    \local_qualiscope\helper::plain($course->fullname) . ')',
-                'html' => $course->summary,
+                'title' => get_string(
+                    'evidence_course',
+                    'local_qualiscope',
+                    \local_qualiscope\helper::plain($course->fullname)
+                ),
+                'html' => $coursesummary,
             ];
         }
 
         // 2. Section summaries
         $sections = $DB->get_records('course_sections', ['course' => $courseid], 'section ASC');
         foreach ($sections as $section) {
-            if (!empty(trim(strip_tags($section->summary)))) {
-                $secname = !empty($section->name) ? $section->name : ('Section ' . $section->section);
+            $sectionsummary = (string) $section->summary;
+            if (trim(strip_tags($sectionsummary)) !== '') {
+                $secname = !empty($section->name)
+                    ? $section->name
+                    : get_string('evidence_section', 'local_qualiscope', $section->section);
                 $contents[] = [
                     'source' => 'section_summary',
                     'title' => $secname,
-                    'html' => $section->summary,
+                    'html' => $sectionsummary,
                 ];
             }
         }
@@ -115,14 +123,14 @@ class accessibility_analyser {
                 if (!empty($p->content)) {
                     $contents[] = [
                         'source' => 'page',
-                        'title' => 'Page : ' . $p->name,
+                        'title' => get_string('evidence_page', 'local_qualiscope', $p->name),
                         'html' => $p->content,
                     ];
                 }
                 if (!empty($p->intro) && trim(strip_tags($p->intro)) !== '') {
                     $contents[] = [
                         'source' => 'page_intro',
-                        'title' => 'Page intro : ' . $p->name,
+                        'title' => get_string('evidence_page_intro', 'local_qualiscope', $p->name),
                         'html' => $p->intro,
                     ];
                 }
@@ -173,7 +181,11 @@ class accessibility_analyser {
                     if (!empty($r->intro) && trim(strip_tags($r->intro)) !== '') {
                         $contents[] = [
                             'source' => $modname,
-                            'title' => ucfirst($modname) . ' : ' . ($r->name ?? ''),
+                            'title' => get_string('evidence_activity_intro', 'local_qualiscope', [
+                                // The module name is the one of the module, not the raw table name.
+                                'type' => get_string('modulename', $modname),
+                                'name' => $r->name ?? '',
+                            ]),
                             'html' => $r->intro,
                         ];
                     }

@@ -311,7 +311,7 @@ class provider implements
         $scopes = self::split_contexts($contextlist->get_contexts());
 
         if ($scopes['system']) {
-            self::delete_campaigns_of_users([$userid]);
+            self::anonymise_campaigns_of_users([$userid]);
         }
 
         self::delete_course_data_of_users([$userid], $scopes['courses']);
@@ -328,9 +328,10 @@ class provider implements
         $context = $userlist->get_context();
 
         if ($context->contextlevel == CONTEXT_SYSTEM) {
+            // A campaign whose creator was anonymised holds 0, which is not a user.
             $userlist->add_from_sql(
                 'userid',
-                'SELECT DISTINCT userid FROM {local_qualiscope_campaigns}',
+                'SELECT DISTINCT userid FROM {local_qualiscope_campaigns} WHERE userid <> 0',
                 []
             );
             return;
@@ -374,18 +375,25 @@ class provider implements
         $scopes = self::split_contexts([$userlist->get_context()]);
 
         if ($scopes['system']) {
-            self::delete_campaigns_of_users($userids);
+            self::anonymise_campaigns_of_users($userids);
         }
 
         self::delete_course_data_of_users($userids, $scopes['courses']);
     }
 
     /**
-     * Deletes the campaigns of the given users with every result attached to them.
+     * Anonymises the campaigns the given users created.
+     *
+     * The creator id is the only personal data a campaign holds. Its results,
+     * corrective actions and evidences belong to the whole site and to their own
+     * authors, so a deletion request covering the creator must not remove them:
+     * dropping the campaign would erase the audit history of every course it
+     * covers, including the evidences and the actions other users authored.
+     * Those are handled by the requests made for the courses themselves.
      *
      * @param array $userids The user ids.
      */
-    private static function delete_campaigns_of_users(array $userids) {
+    private static function anonymise_campaigns_of_users(array $userids) {
         global $DB;
 
         $userids = array_values(array_unique(array_map('intval', $userids)));
@@ -394,19 +402,9 @@ class provider implements
         }
 
         [$usql, $params] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
-        $campaignids = $DB->get_fieldset_select('local_qualiscope_campaigns', 'id', "userid $usql", $params);
 
-        if (!empty($campaignids)) {
-            [$csql, $cparams] = $DB->get_in_or_equal($campaignids, SQL_PARAMS_NAMED, 'campaign');
-            self::delete_results($DB->get_fieldset_select(
-                'local_qualiscope_results',
-                'id',
-                "campaign_id $csql",
-                $cparams
-            ));
-            $DB->delete_records_select('local_qualiscope_actions', "campaign_id $csql", $cparams);
-            $DB->delete_records_select('local_qualiscope_campaigns', "id $csql", $cparams);
-        }
+        // Zero is the "no user" value the column defaults to.
+        $DB->set_field_select('local_qualiscope_campaigns', 'userid', 0, "userid $usql", $params);
     }
 
     /**
@@ -514,20 +512,6 @@ class provider implements
      * @return \stored_file|null
      */
     private static function get_evidence_file($fs, $evidence) {
-        if (empty($evidence->filename) || (int) $evidence->courseid <= 0) {
-            return null;
-        }
-
-        $filepath = empty($evidence->filepath) ? '/' : $evidence->filepath;
-        $context = \context_course::instance((int) $evidence->courseid);
-
-        return $fs->get_file(
-            $context->id,
-            'local_qualiscope',
-            'evidence',
-            (int) $evidence->result_id,
-            $filepath,
-            $evidence->filename
-        );
+        return \local_qualiscope\evidence::get_file($fs, $evidence);
     }
 }

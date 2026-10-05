@@ -120,4 +120,104 @@ final class evidence_upload_form_test extends \advanced_testcase {
             clean_param('<b>bold</b> &amp; <script>plain</script>', PARAM_TEXT)
         );
     }
+
+    /**
+     * Test a file only evidence is accepted without an external URL.
+     *
+     * A filemanager never fills the $files array of moodleform, so checking it rejected
+     * every evidence carrying only a document.
+     *
+     * @covers \local_qualiscope\form\evidence_upload
+     * @return void
+     */
+    public function test_file_only_evidence_is_valid(): void {
+        $this->resetAfterTest(true);
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $draftitemid = file_get_unused_draft_itemid();
+        get_file_storage()->create_file_from_string([
+            'contextid' => \context_user::instance($user->id)->id,
+            'component' => 'user',
+            'filearea' => 'draft',
+            'itemid' => $draftitemid,
+            'filepath' => '/',
+            'filename' => 'proof.pdf',
+        ], '%PDF-1.4');
+
+        $errors = $this->validate($draftitemid, '');
+
+        $this->assertArrayNotHasKey('evidencefile', $errors);
+    }
+
+    /**
+     * Test an external URL alone is enough, even without a document.
+     *
+     * @covers \local_qualiscope\form\evidence_upload
+     * @return void
+     */
+    public function test_external_url_only_evidence_is_valid(): void {
+        $this->resetAfterTest(true);
+
+        $this->setUser($this->getDataGenerator()->create_user());
+
+        $errors = $this->validate(file_get_unused_draft_itemid(), 'https://example.com/proof');
+
+        $this->assertArrayNotHasKey('evidencefile', $errors);
+    }
+
+    /**
+     * Test an evidence with neither a document nor an external URL is rejected.
+     *
+     * @covers \local_qualiscope\form\evidence_upload
+     * @return void
+     */
+    public function test_empty_evidence_is_rejected(): void {
+        $this->resetAfterTest(true);
+
+        $this->setUser($this->getDataGenerator()->create_user());
+
+        // The draft area id is never empty, so an empty area has to be refused.
+        $errors = $this->validate(file_get_unused_draft_itemid(), '');
+
+        $this->assertArrayHasKey('evidencefile', $errors);
+        $this->assertSame(
+            get_string('upload_evidence_required', 'local_qualiscope'),
+            $errors['evidencefile']
+        );
+    }
+
+    /**
+     * Runs the form validation on a submission of the evidencefile and externalurl fields.
+     *
+     * @param int $draftitemid Submitted draft area id.
+     * @param string $externalurl Submitted external URL.
+     * @return array The validation errors.
+     */
+    private function validate(int $draftitemid, string $externalurl): array {
+        $form = new class ('/local/qualiscope/upload_evidence.php', [
+            'resultid' => 1,
+            'maxbytes' => 1024,
+        ]) extends evidence_upload {
+            /**
+             * Runs the validation on a submission built by the caller.
+             *
+             * @param array $data Submitted data.
+             * @param array $files Submitted files.
+             * @return array The validation errors.
+             */
+            public function check(array $data, array $files): array {
+                return $this->validation($data, $files);
+            }
+        };
+
+        return $form->check([
+            'resultid' => 1,
+            'title' => 'Proof',
+            'evidencefile' => $draftitemid,
+            'externalurl' => $externalurl,
+            'annotation' => '',
+        ], []);
+    }
 }

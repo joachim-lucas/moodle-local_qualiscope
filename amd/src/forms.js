@@ -74,18 +74,32 @@ define(['theme_boost/bootstrap/collapse', 'theme_boost/bootstrap/dropdown', 'the
                 });
             });
 
-            var scopeSelect = document.getElementById('scope-select');
+            // The scope pickers live in a moodleform: their blocks carry the classes below.
+            var scopeSelect = document.getElementById('id_scope');
             if (scopeSelect) {
-                scopeSelect.addEventListener('change', function() {
-                    var cats = document.getElementById('scope-categories');
-                    var courses = document.getElementById('scope-courses');
-                    if (cats) {
-                        cats.style.display = this.value === 'category' ? 'block' : 'none';
-                    }
-                    if (courses) {
-                        courses.style.display = this.value === 'selected' ? 'block' : 'none';
-                    }
-                });
+                var scopeBlocks = document.querySelectorAll(
+                    '.qualiscope-scope-categories, .qualiscope-scope-courses'
+                );
+
+                /**
+                 * Shows only the picker matching the selected scope.
+                 *
+                 * Also applied once on load: the moodleform groups carry no inline
+                 * display, so without this both pickers would show at once even
+                 * though the scope is "all" and neither of them applies.
+                 *
+                 * @return {void}
+                 */
+                var applyScope = function() {
+                    scopeBlocks.forEach(function(block) {
+                        var iscourses = block.classList.contains('qualiscope-scope-courses');
+                        block.style.display =
+                            (iscourses ? 'selected' : 'category') === this.value ? 'block' : 'none';
+                    }, this);
+                };
+
+                applyScope.call(scopeSelect);
+                scopeSelect.addEventListener('change', applyScope);
             }
 
             // Campaign course filtering and instant search.

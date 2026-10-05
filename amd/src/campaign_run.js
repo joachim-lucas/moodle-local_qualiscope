@@ -39,12 +39,15 @@ define(['local_qualiscope/api'], function(Api) {
             var strings = config.strings || {};
             var total = courses.length;
             var currentIndex = 0;
+            var failed = 0;
+            var blocked = 0;
 
             var progressBar = document.getElementById('runProgressBar');
             var progressText = document.getElementById('runProgressText');
             var currentCourseEl = document.getElementById('runCurrentCourse');
             var spinner = document.getElementById('runSpinner');
             var titleEl = document.getElementById('runTitle');
+            var currentCourseClasses = currentCourseEl ? currentCourseEl.className : '';
 
             if (total === 0) {
                 window.location.href = config.targeturl;
@@ -52,25 +55,68 @@ define(['local_qualiscope/api'], function(Api) {
             }
 
             /**
-             * Render the completion state and move on to the campaign results.
+             * Render the outcome of the run and move on to the campaign results.
+             *
+             * A run with refused or failed courses must not be announced as a success,
+             * otherwise the empty result page looks like a bug instead of a failure.
              *
              * @return {void}
              */
             var finish = function() {
+                var incomplete = (failed > 0 || blocked > 0);
+
                 progressBar.style.width = '100%';
                 progressBar.textContent = '100%';
                 progressBar.classList.remove('progress-bar-animated');
-                progressBar.classList.add('bg-success');
+                progressBar.classList.remove('bg-primary');
+                progressBar.classList.add(incomplete ? 'bg-danger' : 'bg-success');
+
                 if (spinner) {
                     spinner.style.display = 'none';
                 }
                 if (titleEl) {
-                    titleEl.textContent = strings.finished;
+                    titleEl.textContent = incomplete ? strings.partial : strings.finished;
                 }
-                currentCourseEl.textContent = strings.redirecting;
+                currentCourseEl.textContent = incomplete
+                    ? strings.partialdetail
+                        .replace('{$failed}', failed)
+                        .replace('{$blocked}', blocked)
+                    : strings.redirecting;
+
                 setTimeout(function() {
                     window.location.href = config.targeturl;
                 }, 600);
+            };
+
+            /**
+             * Report a course the service refused to analyse because of the quota.
+             *
+             * @param {Object} course The course being processed.
+             * @return {void}
+             */
+            var reportBlocked = function(course) {
+                blocked++;
+                currentCourseEl.className = currentCourseClasses + ' alert-warning';
+                currentCourseEl.textContent = strings.courseblocked
+                    .replace('{$name}', course.fullname);
+            };
+
+            /**
+             * Report a course whose analysis did not happen, keeping the cause visible
+             * in the browser console and in the panel.
+             *
+             * @param {Object} course The course being processed.
+             * @param {*} cause The rejection reason or unexpected response.
+             * @return {void}
+             */
+            var reportFailure = function(course, cause) {
+                failed++;
+                if (window.console && window.console.error) {
+                    window.console.error('QualiScope: analysis failed for course ' + course.id, cause);
+                }
+                currentCourseEl.className = currentCourseClasses + ' alert-danger';
+                currentCourseEl.textContent = strings.coursefailed
+                    .replace('{$name}', course.fullname);
             };
 
             /**
@@ -94,6 +140,7 @@ define(['local_qualiscope/api'], function(Api) {
                     .replace('{$current}', currentIndex + 1)
                     .replace('{$total}', total)
                     .replace('{$percentage}', pct);
+                currentCourseEl.className = currentCourseClasses;
                 currentCourseEl.textContent = course.fullname;
 
                 /**
@@ -109,12 +156,19 @@ define(['local_qualiscope/api'], function(Api) {
                     processNext();
                 };
 
-                // A failing course must not abort the whole campaign.
+                // A failing course must not abort the whole campaign, but it must be counted:
+                // the final state tells whether the results page is complete or partial.
                 Api.runCampaignCourse(config.campaignid, course.id, isFinish)
-                    .then(function() {
+                    .then(function(response) {
+                        if (response && response.status === 'licence_required') {
+                            reportBlocked(course);
+                        } else if (!response || response.success !== true) {
+                            reportFailure(course, response);
+                        }
                         return advance();
                     })
-                    .catch(function() {
+                    .catch(function(error) {
+                        reportFailure(course, error);
                         return advance();
                     });
             };

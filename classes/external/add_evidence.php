@@ -31,30 +31,30 @@ namespace local_qualiscope\external;
  *
  * @package local_qualiscope
  */
-class add_evidence extends \external_api {
+class add_evidence extends \core_external\external_api {
     /**
      * Declares the function parameters.
      *
-     * @return \external_function_parameters
+     * @return \core_external\external_function_parameters
      */
     public static function execute_parameters() {
-        return new \external_function_parameters([
-            'resultid' => new \external_value(PARAM_INT, 'Result ID'),
-            'title' => new \external_value(PARAM_TEXT, 'Evidence title'),
-            'annotation' => new \external_value(PARAM_TEXT, 'Annotation', VALUE_DEFAULT, ''),
-            'externalurl' => new \external_value(PARAM_URL, 'External URL', VALUE_DEFAULT, ''),
+        return new \core_external\external_function_parameters([
+            'resultid' => new \core_external\external_value(PARAM_INT, 'Result ID'),
+            'title' => new \core_external\external_value(PARAM_TEXT, 'Evidence title'),
+            'annotation' => new \core_external\external_value(PARAM_TEXT, 'Annotation', VALUE_DEFAULT, ''),
+            'externalurl' => new \core_external\external_value(PARAM_URL, 'External URL', VALUE_DEFAULT, ''),
         ]);
     }
 
     /**
      * Declares the function return values.
      *
-     * @return \external_single_structure
+     * @return \core_external\external_single_structure
      */
     public static function execute_returns() {
-        return new \external_single_structure([
-            'success' => new \external_value(PARAM_BOOL, 'Success status'),
-            'evidenceid' => new \external_value(PARAM_INT, 'Evidence ID'),
+        return new \core_external\external_single_structure([
+            'success' => new \core_external\external_value(PARAM_BOOL, 'Success status'),
+            'evidenceid' => new \core_external\external_value(PARAM_INT, 'Evidence ID'),
         ]);
     }
 

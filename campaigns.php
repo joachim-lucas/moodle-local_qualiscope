@@ -26,26 +26,33 @@
 require_once('../../config.php');
 require_once($CFG->dirroot . '/local/qualiscope/lib.php');
 
+$context = context_system::instance();
+
+$PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/qualiscope/campaigns.php'));
 
 require_login();
-$context = context_system::instance();
 require_capability('local/qualiscope:managecampaigns', $context);
 
 $PAGE->set_title(get_string('campaign_title', 'local_qualiscope'));
 $PAGE->set_heading(get_string('campaign_title', 'local_qualiscope'));
-$PAGE->set_context($context);
 $PAGE->requires->js_call_amd('local_qualiscope/forms', 'init');
 
 $output = $PAGE->get_renderer('local_qualiscope');
 
 $campaigns = $DB->get_records('local_qualiscope_campaigns', [], 'timecreated DESC');
-$referentials = $DB->get_records('local_qualiscope_referentials', ['active' => 1]);
-$categories = $DB->get_records('course_categories', [], 'name ASC');
-$courses = $DB->get_records('course', ['visible' => 1], 'fullname ASC');
-foreach ($courses as $courserecord) {
-    $courserecord->fullname = \local_qualiscope\helper::plain($courserecord->fullname, $context);
+$referentials = $DB->get_records('local_qualiscope_referentials', ['active' => 1], 'name ASC');
+
+// The category picker needs an id => label map, not the records themselves.
+$categoryoptions = [];
+foreach ($DB->get_records('course_categories', [], 'name ASC') as $category) {
+    $categoryoptions[$category->id] = $category->name;
 }
+
+// Average coverage per campaign, computed by the database: a campaign stores one
+// row per course and check, so reading its results to group them here would cost
+// campaigns * courses * checks rows on every visit.
+$coverages = \local_qualiscope\campaign_coverage::for_all_campaigns();
 
 $scopelabels = [
     'all' => get_string('campaign_scope_all', 'local_qualiscope'),
@@ -56,41 +63,12 @@ $scopelabels = [
 $campaignsdata = [];
 foreach ($campaigns as $c) {
     $ref = $DB->get_record('local_qualiscope_referentials', ['id' => $c->referential_id]);
-
-    // Calculate average coverage percentage across all audited courses in this campaign.
-    $results = $DB->get_records('local_qualiscope_results', ['campaign_id' => $c->id]);
-    $coursecount = 0;
-    $avgcoverage = null;
+    $coverage = $coverages[(int) $c->id] ?? null;
+    $avgcoverage = $coverage ? $coverage['avgcoverage'] : null;
     $coverageclass = 'bg-secondary';
 
-    if (!empty($results)) {
-        $coursesresults = [];
-        foreach ($results as $r) {
-            $coursesresults[$r->courseid][] = $r;
-        }
-        $coursecount = count($coursesresults);
-
-        $coursepercentages = [];
-        foreach ($coursesresults as $cid => $cresults) {
-            $applicable = 0;
-            $weighted = 0.0;
-            foreach ($cresults as $r) {
-                if ($r->status !== 'na') {
-                    $applicable++;
-                    $weighted += (float) $r->ratio > 0
-                        ? (float) $r->ratio
-                        : ($r->status === 'detected' ? 1.0 : 0.0);
-                }
-            }
-            if ($applicable > 0) {
-                $coursepercentages[] = ($weighted * 100) / $applicable;
-            }
-        }
-
-        if (!empty($coursepercentages)) {
-            $avgcoverage = (int) round(array_sum($coursepercentages) / count($coursepercentages));
-            $coverageclass = $avgcoverage >= 75 ? 'bg-success' : ($avgcoverage >= 50 ? 'bg-warning' : 'bg-danger');
-        }
+    if ($avgcoverage !== null) {
+        $coverageclass = $avgcoverage >= 75 ? 'bg-success' : ($avgcoverage >= 50 ? 'bg-warning' : 'bg-danger');
     }
 
     $campaignsdata[] = [
@@ -100,7 +78,7 @@ foreach ($campaigns as $c) {
         'scopelabel' => $scopelabels[$c->scope] ?? $c->scope,
         'dateformatted' => userdate($c->timecreated),
         'timecompleted' => (int) $c->timecompleted,
-        'course_count' => $coursecount,
+        'course_count' => $coverage ? $coverage['courses'] : 0,
         'has_coverage' => $avgcoverage !== null,
         'avg_coverage' => $avgcoverage !== null ? $avgcoverage . '%' : '—',
         'coverage_class' => $coverageclass,
@@ -110,17 +88,41 @@ foreach ($campaigns as $c) {
     ];
 }
 
+$form = new \local_qualiscope\form\campaign_create($PAGE->url, [
+    'referentials' => array_map(
+        function ($ref) {
+            return \local_qualiscope\helper::localize_record($ref);
+        },
+        array_values($referentials)
+    ),
+    'categories' => $categoryoptions,
+]);
+
+if ($data = $form->get_data()) {
+    $scopeids = ($data->scope === 'category')
+        ? array_values(array_map('intval', (array) $data->categoryids))
+        : \local_qualiscope\form\campaign_create::selected_course_ids($data);
+
+    $campaign = new stdClass();
+    $campaign->name = $data->name;
+    $campaign->referential_id = $data->referential_id;
+    $campaign->scope = $data->scope;
+    $campaign->scopeids = json_encode($scopeids);
+    $campaign->userid = $USER->id;
+    $campaign->timecreated = time();
+    $campaign->timemodified = time();
+    $campaign->timecompleted = 0;
+
+    $DB->insert_record('local_qualiscope_campaigns', $campaign);
+
+    redirect($PAGE->url);
+}
+
 echo $output->header();
 echo \local_qualiscope\quota::banner($output);
 echo $output->render_campaign_list([
     'campaigns' => $campaignsdata,
-    'referentials' => array_map(function ($ref) {
-        return \local_qualiscope\helper::localize_record($ref);
-    }, array_values($referentials)),
-    'categories' => array_values($categories),
-    'courses' => array_values($courses),
-    'sesskey' => sesskey(),
-    'savecampaignurl' => new moodle_url('/local/qualiscope/save_campaign.php'),
+    'campaignform' => $form->render(),
     'compareurl' => new moodle_url('/local/qualiscope/compare_campaigns.php'),
 ]);
-echo $output->footer();
+echo $OUTPUT->footer();

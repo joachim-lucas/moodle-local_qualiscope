@@ -35,10 +35,10 @@ require_login($action->courseid);
 $context = context_course::instance($action->courseid);
 require_capability('local/qualiscope:manageactions', $context);
 
+$PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/qualiscope/edit_action.php', ['id' => $id, 'return' => $return]));
 $PAGE->set_title(get_string('action_title', 'local_qualiscope'));
 $PAGE->set_heading(get_string('action_title', 'local_qualiscope'));
-$PAGE->set_context($context);
 
 $output = $PAGE->get_renderer('local_qualiscope');
 
@@ -106,7 +106,7 @@ echo $output->render_action_edit_form([
     'return' => $return,
     'title' => $action->title,
     'responsible' => $action->responsible,
-    'duedate' => $action->duedate ? date('Y-m-d', $action->duedate) : '',
+    'duedate' => \local_qualiscope\action_duedate::to_input((int) $action->duedate),
     'priorities' => $priorities,
     'statuses' => $statuses,
     'title_label' => get_string('action_name', 'local_qualiscope'),
