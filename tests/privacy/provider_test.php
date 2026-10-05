@@ -238,7 +238,10 @@ final class provider_test extends \advanced_testcase {
     }
 
     /**
-     * Test delete_data_for_user only removes the data of the given user.
+     * Test delete_data_for_user leaves the campaign but anonymises its creator.
+     *
+     * The campaign is site wide: its results, actions and evidences belong to
+     * everybody, so only the creator id can go.
      *
      * @return void
      */
@@ -248,8 +251,8 @@ final class provider_test extends \advanced_testcase {
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
-        $this->insertdata($user1, $course);
-        $this->insertdata($user2, $course);
+        $ids1 = $this->insertdata($user1, $course);
+        $ids2 = $this->insertdata($user2, $course);
 
         $approved = new \core_privacy\local\request\approved_contextlist(
             $user1,
@@ -259,13 +262,21 @@ final class provider_test extends \advanced_testcase {
 
         provider::delete_data_for_user($approved);
 
+        // The campaign survives, without its creator.
+        $this->assertTrue($DB->record_exists('local_qualiscope_campaigns', ['id' => $ids1['campaign']]));
         $this->assertFalse($DB->record_exists('local_qualiscope_campaigns', ['userid' => $user1->id]));
+        $this->assertEquals(
+            0,
+            (int) $DB->get_field('local_qualiscope_campaigns', 'userid', ['id' => $ids1['campaign']])
+        );
+
+        // The own course data of the user is gone, the campaign of the other user is intact.
         $this->assertFalse($DB->record_exists('local_qualiscope_evidences', ['userid' => $user1->id]));
         $this->assertFalse($DB->record_exists('local_qualiscope_actions', ['userid' => $user1->id]));
-
         $this->assertTrue($DB->record_exists('local_qualiscope_campaigns', ['userid' => $user2->id]));
         $this->assertTrue($DB->record_exists('local_qualiscope_evidences', ['userid' => $user2->id]));
         $this->assertTrue($DB->record_exists('local_qualiscope_actions', ['userid' => $user2->id]));
+        $this->assertTrue($DB->record_exists('local_qualiscope_evidences', ['id' => $ids2['evidence']]));
     }
 
     /**
@@ -435,7 +446,7 @@ final class provider_test extends \advanced_testcase {
     }
 
     /**
-     * Test delete_data_for_users in the system context.
+     * Test delete_data_for_users in the system context only anonymises the creators.
      *
      * @return void
      */
@@ -445,7 +456,7 @@ final class provider_test extends \advanced_testcase {
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
         $course = $this->getDataGenerator()->create_course();
-        $this->insertdata($user1, $course);
+        $ids1 = $this->insertdata($user1, $course);
         $this->insertdata($user2, $course);
 
         $userlist = new \core_privacy\local\request\approved_userlist(
@@ -455,10 +466,98 @@ final class provider_test extends \advanced_testcase {
         );
         provider::delete_data_for_users($userlist);
 
-        $this->assertFalse($DB->record_exists('local_qualiscope_campaigns', ['userid' => $user1->id]));
+        // Nothing is removed from the system context: only the creator id goes.
+        $this->assertEquals(2, $DB->count_records('local_qualiscope_campaigns'));
+        $this->assertEquals(2, $DB->count_records('local_qualiscope_results'));
+        $this->assertEquals(2, $DB->count_records('local_qualiscope_evidences'));
+        $this->assertEquals(2, $DB->count_records('local_qualiscope_actions'));
+        $this->assertEquals(
+            0,
+            (int) $DB->get_field('local_qualiscope_campaigns', 'userid', ['id' => $ids1['campaign']])
+        );
         $this->assertTrue($DB->record_exists('local_qualiscope_campaigns', ['userid' => $user2->id]));
-        $this->assertEquals(1, $DB->count_records('local_qualiscope_results'));
-        $this->assertEquals(1, $DB->count_records('local_qualiscope_evidences'));
-        $this->assertEquals(1, $DB->count_records('local_qualiscope_actions'));
+    }
+
+    /**
+     * Test a deletion request from a campaign creator keeps everybody else's audit data.
+     *
+     * This is the regression: a manager asking for their own data to be removed used to
+     * wipe every result, corrective action and uploaded evidence of the campaigns they
+     * had created, across all courses and owned by other users.
+     *
+     * @return void
+     */
+    public function test_creator_deletion_keeps_other_users_audit_data(): void {
+        global $DB;
+
+        $creator = $this->getDataGenerator()->create_user();
+        $author = $this->getDataGenerator()->create_user();
+        $course = $this->getDataGenerator()->create_course();
+
+        // The campaign belongs to the creator, everything attached to it to the author.
+        $ids = $this->insertdata($author, $course);
+        $DB->set_field('local_qualiscope_campaigns', 'userid', $creator->id, ['id' => $ids['campaign']]);
+
+        $approved = new \core_privacy\local\request\approved_contextlist(
+            $creator,
+            'local_qualiscope',
+            [\context_system::instance()->id]
+        );
+        provider::delete_data_for_user($approved);
+
+        // The creator is gone from the campaign.
+        $this->assertFalse($DB->record_exists('local_qualiscope_campaigns', ['userid' => $creator->id]));
+        $this->assertEquals(
+            0,
+            (int) $DB->get_field('local_qualiscope_campaigns', 'userid', ['id' => $ids['campaign']])
+        );
+
+        // The whole audit trail of the campaign is still there, including the file.
+        $this->assertTrue($DB->record_exists('local_qualiscope_campaigns', ['id' => $ids['campaign']]));
+        $this->assertTrue($DB->record_exists('local_qualiscope_results', ['id' => $ids['result']]));
+        $this->assertTrue($DB->record_exists('local_qualiscope_evidences', ['id' => $ids['evidence']]));
+        $this->assertTrue($DB->record_exists('local_qualiscope_actions', ['id' => $ids['action']]));
+
+        $fs = get_file_storage();
+        $context = \context_course::instance($course->id);
+        $this->assertNotFalse(
+            $fs->get_file($context->id, 'local_qualiscope', 'evidence', $ids['evidence'], '/', 'proof.txt')
+        );
+    }
+
+    /**
+     * Test an anonymised campaign is not reported as belonging to a user.
+     *
+     * @return void
+     */
+    public function test_anonymised_campaign_is_not_reported_in_the_userlist(): void {
+        global $DB;
+
+        $creator = $this->getDataGenerator()->create_user();
+        $author = $this->getDataGenerator()->create_user();
+        $course = $this->getDataGenerator()->create_course();
+        $ids = $this->insertdata($author, $course);
+        $DB->set_field('local_qualiscope_campaigns', 'userid', $creator->id, ['id' => $ids['campaign']]);
+
+        $userlist = new \core_privacy\local\request\userlist(
+            \context_system::instance(),
+            'local_qualiscope'
+        );
+        provider::get_users_in_context($userlist);
+        $this->assertEqualsCanonicalizing([$creator->id], $userlist->get_userids());
+
+        $approved = new \core_privacy\local\request\approved_contextlist(
+            $creator,
+            'local_qualiscope',
+            [\context_system::instance()->id]
+        );
+        provider::delete_data_for_user($approved);
+
+        $userlist = new \core_privacy\local\request\userlist(
+            \context_system::instance(),
+            'local_qualiscope'
+        );
+        provider::get_users_in_context($userlist);
+        $this->assertEmpty($userlist->get_userids(), 'The anonymised campaign still reports a user.');
     }
 }
