@@ -153,7 +153,7 @@ class evidence {
         $context = \context_course::instance((int) $record->courseid);
         $filepath = empty($record->filepath) ? '/' : $record->filepath;
 
-        // file_storage::get_file() reports a miss with false, not with null.
+        // The file storage reports a miss with false, not with null.
         $file = $fs->get_file(
             $context->id,
             'local_qualiscope',

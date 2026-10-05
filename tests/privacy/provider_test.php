@@ -327,7 +327,7 @@ final class provider_test extends \advanced_testcase {
                 ['courseid' => $course1->id]
             )
         );
-        // itemid false is the wildcard: itemid 0 filters on a literal 0 and would match nothing.
+        // The wildcard is itemid false; itemid 0 filters on a literal 0 and matches nothing.
         $this->assertEmpty(
             $fs->get_area_files($context1->id, 'local_qualiscope', 'evidence', false, 'filename', false)
         );
@@ -359,7 +359,7 @@ final class provider_test extends \advanced_testcase {
         $this->assertEquals(0, $DB->count_records('local_qualiscope_results'));
         $this->assertEquals(0, $DB->count_records('local_qualiscope_evidences'));
         $this->assertEquals(0, $DB->count_records('local_qualiscope_actions'));
-        // itemid false is the wildcard: itemid 0 filters on a literal 0 and would match nothing.
+        // The wildcard is itemid false; itemid 0 filters on a literal 0 and matches nothing.
         $this->assertEmpty(
             $fs->get_area_files($context->id, 'local_qualiscope', 'evidence', false, 'filename', false)
         );

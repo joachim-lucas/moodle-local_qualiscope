@@ -53,6 +53,8 @@ final class evidence_test extends \advanced_testcase {
         $this->resetAfterTest(true);
 
         $this->user = $this->getDataGenerator()->create_user();
+        // The draft areas belong to a user, and a guest cannot own one.
+        $this->setUser($this->user);
         $this->course = $this->getDataGenerator()->create_course();
 
         global $DB;
@@ -141,8 +143,6 @@ final class evidence_test extends \advanced_testcase {
      * @return int The created evidence id.
      */
     private function attach(string $title, int $draftitemid, string $externalurl = ''): int {
-        \core\session\manager::set_user($this->user);
-
         return evidence::create(
             $this->resultid,
             $this->submitted($title, $draftitemid, $externalurl),
@@ -204,7 +204,7 @@ final class evidence_test extends \advanced_testcase {
 
         $fs = get_file_storage();
         $context = \context_course::instance($this->course->id);
-        // itemid false is the wildcard; itemid 0 would filter on a literal 0 and match nothing.
+        // The wildcard is itemid false; itemid 0 filters on a literal 0 and matches nothing.
         $this->assertCount(
             1,
             $fs->get_area_files($context->id, 'local_qualiscope', 'evidence', false, 'filename', false)
