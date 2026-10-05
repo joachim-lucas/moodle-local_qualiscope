@@ -31,33 +31,33 @@ namespace local_qualiscope\external;
  *
  * @package local_qualiscope
  */
-class create_action extends \external_api {
+class create_action extends \core_external\external_api {
     /**
      * Declares the function parameters.
      *
-     * @return \external_function_parameters
+     * @return \core_external\external_function_parameters
      */
     public static function execute_parameters() {
-        return new \external_function_parameters([
-            'resultid' => new \external_value(PARAM_INT, 'Result ID', VALUE_DEFAULT, 0),
-            'campaignid' => new \external_value(PARAM_INT, 'Campaign ID'),
-            'courseid' => new \external_value(PARAM_INT, 'Course ID'),
-            'title' => new \external_value(PARAM_TEXT, 'Action title'),
-            'responsible' => new \external_value(PARAM_TEXT, 'Responsible person', VALUE_DEFAULT, ''),
-            'duedate' => new \external_value(PARAM_INT, 'Due date as a timestamp, 0 for none', VALUE_DEFAULT, 0),
-            'priority' => new \external_value(PARAM_ALPHA, 'Priority', VALUE_DEFAULT, 'medium'),
+        return new \core_external\external_function_parameters([
+            'resultid' => new \core_external\external_value(PARAM_INT, 'Result ID', VALUE_DEFAULT, 0),
+            'campaignid' => new \core_external\external_value(PARAM_INT, 'Campaign ID'),
+            'courseid' => new \core_external\external_value(PARAM_INT, 'Course ID'),
+            'title' => new \core_external\external_value(PARAM_TEXT, 'Action title'),
+            'responsible' => new \core_external\external_value(PARAM_TEXT, 'Responsible person', VALUE_DEFAULT, ''),
+            'duedate' => new \core_external\external_value(PARAM_INT, 'Due date as a timestamp, 0 for none', VALUE_DEFAULT, 0),
+            'priority' => new \core_external\external_value(PARAM_ALPHA, 'Priority', VALUE_DEFAULT, 'medium'),
         ]);
     }
 
     /**
      * Declares the function return values.
      *
-     * @return \external_single_structure
+     * @return \core_external\external_single_structure
      */
     public static function execute_returns() {
-        return new \external_single_structure([
-            'success' => new \external_value(PARAM_BOOL, 'Success status'),
-            'actionid' => new \external_value(PARAM_INT, 'Action ID'),
+        return new \core_external\external_single_structure([
+            'success' => new \core_external\external_value(PARAM_BOOL, 'Success status'),
+            'actionid' => new \core_external\external_value(PARAM_INT, 'Action ID'),
         ]);
     }
 

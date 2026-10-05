@@ -119,7 +119,12 @@ $string['campaign_referential'] = 'Référentiel';
 $string['campaign_report_subtitle'] = 'Rapport de synthèse d\'audit de campagne QualiScope';
 $string['campaign_rerun'] = 'Relancer l\'analyse';
 $string['campaign_run'] = 'Lancer l\'analyse';
+$string['campaign_run_course_blocked'] = '{$a->name} : ignoré, une licence est requise pour auditer ce cours.';
+$string['campaign_run_course_failed'] = '{$a->name} : analyse impossible.';
 $string['campaign_run_finished'] = 'Analyse terminée avec succès !';
+$string['campaign_run_partial'] = 'Analyse terminée avec des erreurs';
+$string['campaign_run_partial_detail'] =
+    '{$a->failed} cours n\'ont pas pu être analysés et {$a->blocked} ont été ignorés. Les résultats ci-dessous sont incomplets.';
 $string['campaign_run_progress_course'] = 'Traitement du cours {$a->current} sur {$a->total} ({$a->percentage} %)';
 $string['campaign_run_redirecting'] = 'Redirection vers les résultats...';
 $string['campaign_running_course_progress'] = 'Traitement : {$a->current} / {$a->total} cours ({$a->percentage} %)';

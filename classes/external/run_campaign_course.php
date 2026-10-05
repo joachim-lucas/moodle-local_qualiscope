@@ -33,31 +33,36 @@ namespace local_qualiscope\external;
  *
  * @package local_qualiscope
  */
-class run_campaign_course extends \external_api {
+class run_campaign_course extends \core_external\external_api {
     /**
      * Declares the function parameters.
      *
-     * @return \external_function_parameters
+     * @return \core_external\external_function_parameters
      */
     public static function execute_parameters() {
-        return new \external_function_parameters([
-            'campaignid' => new \external_value(PARAM_INT, 'Campaign ID'),
-            'courseid' => new \external_value(PARAM_INT, 'Course ID'),
-            'finish' => new \external_value(PARAM_INT, 'Whether this is the last course of the campaign', VALUE_DEFAULT, 0),
+        return new \core_external\external_function_parameters([
+            'campaignid' => new \core_external\external_value(PARAM_INT, 'Campaign ID'),
+            'courseid' => new \core_external\external_value(PARAM_INT, 'Course ID'),
+            'finish' => new \core_external\external_value(
+                PARAM_INT,
+                'Whether this is the last course of the campaign',
+                VALUE_DEFAULT,
+                0
+            ),
         ]);
     }
 
     /**
      * Declares the function return values.
      *
-     * @return \external_single_structure
+     * @return \core_external\external_single_structure
      */
     public static function execute_returns() {
-        return new \external_single_structure([
-            'success' => new \external_value(PARAM_BOOL, 'Whether the course was analysed'),
-            'status' => new \external_value(PARAM_ALPHA, 'Outcome: ok or licence_required'),
-            'courseid' => new \external_value(PARAM_INT, 'Analysed course id'),
-            'finished' => new \external_value(PARAM_BOOL, 'Whether the campaign was closed'),
+        return new \core_external\external_single_structure([
+            'success' => new \core_external\external_value(PARAM_BOOL, 'Whether the course was analysed'),
+            'status' => new \core_external\external_value(PARAM_ALPHA, 'Outcome: ok or licence_required'),
+            'courseid' => new \core_external\external_value(PARAM_INT, 'Analysed course id'),
+            'finished' => new \core_external\external_value(PARAM_BOOL, 'Whether the campaign was closed'),
         ]);
     }
 

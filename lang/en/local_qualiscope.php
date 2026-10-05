@@ -119,7 +119,12 @@ $string['campaign_referential'] = 'Referential';
 $string['campaign_report_subtitle'] = 'QualiScope campaign audit summary report';
 $string['campaign_rerun'] = 'Re-run analysis';
 $string['campaign_run'] = 'Run analysis';
+$string['campaign_run_course_blocked'] = '{$a->name}: skipped, a licence is required to audit this course.';
+$string['campaign_run_course_failed'] = '{$a->name}: analysis failed.';
 $string['campaign_run_finished'] = 'Analysis completed successfully!';
+$string['campaign_run_partial'] = 'Analysis finished with errors';
+$string['campaign_run_partial_detail'] =
+    '{$a->failed} course(s) could not be analysed and {$a->blocked} were skipped. The results below are incomplete.';
 $string['campaign_run_progress_course'] = 'Processing course {$a->current} of {$a->total} ({$a->percentage}%)';
 $string['campaign_run_redirecting'] = 'Redirecting to the results...';
 $string['campaign_running_course_progress'] = 'Processing: {$a->current} / {$a->total} courses ({$a->percentage}%)';
