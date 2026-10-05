@@ -27,7 +27,7 @@ require_once('../../config.php');
 
 require_login();
 
-// require_login() without a course leaves the page context unset, and set_title()
+// A login without a course leaves the page context unset, and set_title()
 // formats its argument through $PAGE->context.
 $context = context_system::instance();
 
