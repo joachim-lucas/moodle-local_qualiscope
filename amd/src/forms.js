@@ -80,13 +80,26 @@ define(['theme_boost/bootstrap/collapse', 'theme_boost/bootstrap/dropdown', 'the
                 var scopeBlocks = document.querySelectorAll(
                     '.qualiscope-scope-categories, .qualiscope-scope-courses'
                 );
-                scopeSelect.addEventListener('change', function() {
+
+                /**
+                 * Shows only the picker matching the selected scope.
+                 *
+                 * Also applied once on load: the moodleform groups carry no inline
+                 * display, so without this both pickers would show at once even
+                 * though the scope is "all" and neither of them applies.
+                 *
+                 * @return {void}
+                 */
+                var applyScope = function() {
                     scopeBlocks.forEach(function(block) {
                         var iscourses = block.classList.contains('qualiscope-scope-courses');
                         block.style.display =
                             (iscourses ? 'selected' : 'category') === this.value ? 'block' : 'none';
-                    });
-                });
+                    }, this);
+                };
+
+                applyScope.call(scopeSelect);
+                scopeSelect.addEventListener('change', applyScope);
             }
 
             // Campaign course filtering and instant search.
