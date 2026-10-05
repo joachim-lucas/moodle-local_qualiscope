@@ -21,8 +21,8 @@ corrective **actions**, collects **evidence**, and exports audit dossiers.
 
 ## Requirements
 
-- Moodle 5.2 or later (see [version.php](version.php)).
-- PHP 8.2+.
+- Moodle 4.5 or later (see [version.php](version.php)), tested on Moodle 4.5 and 5.2.
+- PHP 8.1+, which is the minimum of Moodle 4.5. The plugin adds no requirement of its own.
 - No third-party library required.
 
 ## Installation
