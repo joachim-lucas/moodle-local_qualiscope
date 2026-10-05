@@ -93,23 +93,41 @@ class zip_generator {
         $context = \context_course::instance($this->course->id);
 
         // 2. Generate a main README / Index for the auditor
-        $readme = "# DOSSIER DE PREUVES QUALIOPI - QUALISCOPE\n\n";
-        $readme .= "Formation / Cours : " . \local_qualiscope\helper::plain($this->course->fullname, $context) .
-            " (" . \local_qualiscope\helper::plain($this->course->shortname, $context) . ")\n";
-        $readme .= "Référentiel : " . \local_qualiscope\helper::localized($this->referential, 'name') . " " .
-            $this->referential->version . "\n";
-        $readme .= "Date d'audit : " . userdate(time(), get_string('strftimedatetime', 'langconfig')) . "\n";
-        $readme .= "Niveau de conformité global Moodle : " . $this->summary['percentage'] . " %\n\n";
-        $readme .= "## SYNTHÈSE DES CRITÈRES\n";
+        $referentialname = \local_qualiscope\helper::localized($this->referential, 'name');
+
+        $readme = get_string('export_zip_readme_title', 'local_qualiscope', $referentialname) . "\n\n";
+        $readme .= get_string('export_zip_readme_course', 'local_qualiscope', [
+            'fullname' => \local_qualiscope\helper::plain($this->course->fullname, $context),
+            'shortname' => \local_qualiscope\helper::plain($this->course->shortname, $context),
+        ]) . "\n";
+        $readme .= get_string('export_zip_readme_referential', 'local_qualiscope', [
+            'name' => $referentialname,
+            'version' => $this->referential->version,
+        ]) . "\n";
+        $readme .= get_string(
+            'export_zip_readme_date',
+            'local_qualiscope',
+            userdate(time(), get_string('strftimedatetime', 'langconfig'))
+        ) . "\n";
+        $readme .= get_string(
+            'export_zip_readme_coverage',
+            'local_qualiscope',
+            (int) $this->summary['percentage']
+        ) . "\n\n";
+        $readme .= get_string('export_zip_readme_criteria_title', 'local_qualiscope') . "\n";
 
         foreach ($this->criteriasummary as $c) {
             $critobj = $c['criteria'];
-            $pctstr = $c['percentage'] !== null ? $c['percentage'] . ' %' : 'Preuves manuelles / Externes uniquement';
-            $readme .= "- Critère " . (int) $critobj->number . " : " .
-                \local_qualiscope\helper::localized($critobj, 'title') . " => " . $pctstr . "\n";
+            $pctstr = $c['percentage'] !== null
+                ? $c['percentage'] . ' %'
+                : get_string('export_zip_manual_only', 'local_qualiscope');
+            $readme .= get_string('export_zip_criterion_line', 'local_qualiscope', [
+                'number' => (int) $critobj->number,
+                'title' => \local_qualiscope\helper::localized($critobj, 'title'),
+                'percentage' => $pctstr,
+            ]) . "\n";
         }
-        $readme .= "\nCe dossier classe les indicateurs par sous-dossiers Critere_XX / " .
-            "Indicateur_YY avec les fiches de preuves et données Moodle.\n";
+        $readme .= "\n" . get_string('export_zip_readme_footer', 'local_qualiscope') . "\n";
         $files['00_INDEX_AUDITEUR.txt'] = $readme;
 
         // Map results by check ID.
@@ -149,26 +167,41 @@ class zip_generator {
                 $indfolder = sprintf("%s/Indicateur_%02d", $critfolder, (int) $indicator->number);
                 $indchecks = $checksbyindicator[$indicator->id] ?? [];
 
-                $inddoc = "# FICHE DE PREUVE - INDICATEUR " . (int) $indicator->number . "\n";
-                $inddoc .= "Titre : " . \local_qualiscope\helper::localized($indicator, 'title') . "\n";
-                $inddoc .= "Exigence : " . \local_qualiscope\helper::localized($indicator, 'description') . "\n";
-                $inddoc .= "Scope : " . $indicator->scope . "\n\n";
-                $inddoc .= "## CONTRÔLES QUALISCOPE MOODLE\n\n";
+                $inddoc = get_string(
+                    'export_zip_sheet_title',
+                    'local_qualiscope',
+                    (int) $indicator->number
+                ) . "\n";
+                $inddoc .= get_string('export_zip_sheet_title_label', 'local_qualiscope',
+                    \local_qualiscope\helper::localized($indicator, 'title')) . "\n";
+                $inddoc .= get_string('export_zip_sheet_requirement', 'local_qualiscope',
+                    \local_qualiscope\helper::localized($indicator, 'description')) . "\n";
+                $inddoc .= get_string('export_zip_sheet_scope', 'local_qualiscope', $indicator->scope) . "\n\n";
+                $inddoc .= get_string('export_zip_sheet_checks_title', 'local_qualiscope') . "\n\n";
 
                 if (empty($indchecks)) {
-                    $inddoc .= "- Aucun contrôle automatique. Preuve documentaire / externe attendue.\n";
+                    $inddoc .= get_string('export_zip_no_automatic_check', 'local_qualiscope') . "\n";
                 } else {
                     foreach ($indchecks as $check) {
                         $res = $resultmap[$check->id] ?? null;
-                        $inddoc .= "### " . \local_qualiscope\helper::localized($check, 'name') . "\n";
-                        $inddoc .= "- Description : " . \local_qualiscope\helper::localized($check, 'description') . "\n";
+                        $inddoc .= get_string('export_zip_check_heading', 'local_qualiscope',
+                            \local_qualiscope\helper::localized($check, 'name')) . "\n";
+                        $inddoc .= get_string('export_zip_check_description', 'local_qualiscope',
+                            \local_qualiscope\helper::localized($check, 'description')) . "\n";
                         if ($check->automatic && $res) {
-                            $inddoc .= "- Statut Moodle : " . get_string('status_' . $res['status'], 'local_qualiscope') . "\n";
+                            $inddoc .= get_string('export_zip_check_status', 'local_qualiscope',
+                                get_string('status_' . $res['status'], 'local_qualiscope')) . "\n";
                             $ratio = $res['ratio'] ?? ($res['status'] === 'detected' ? 1.0 : 0.0);
-                            $inddoc .= "- Conformité calculée : " . round($ratio * 100) . " %\n";
-                            $inddoc .= "- Traces & Détails : " . ($res['detail'] ?? 'N/A') . "\n\n";
+                            $inddoc .= get_string(
+                                'export_zip_check_ratio',
+                                'local_qualiscope',
+                                round($ratio * 100)
+                            ) . "\n";
+                            $inddoc .= get_string('export_zip_check_detail', 'local_qualiscope',
+                                $res['detail'] ?? get_string('export_zip_not_available', 'local_qualiscope')
+                            ) . "\n\n";
                         } else {
-                            $inddoc .= "- Statut : Preuve manuelle / externe à joindre.\n\n";
+                            $inddoc .= get_string('export_zip_check_manual', 'local_qualiscope') . "\n\n";
                         }
                     }
                 }
