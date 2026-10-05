@@ -1,5 +1,18 @@
 ## QualiScope — ChangeLog
 
+### v1.0.5 (2026100502)
+
+- Evidence: uploading several files at once keeps every file instead of one, and a check result can be evidenced by a link alone. A file uploaded today is attached to its evidence record rather than to the result row, and an upgrade step moves the files attached by earlier versions.
+- Evidence: the privacy export and the indicator report read the file from the same place, so an uploaded file is no longer listed as missing.
+- Actions: the due date is shown in the timezone of the user. The edit form prefilled the date input with `date()`, which formats in the timezone of the server, while the value was stored at midnight in the timezone of the user: a user east of the server opened the form on the day before, and saving it again moved the due date one day earlier on every save.
+- Campaigns: the coverage of each campaign is aggregated in SQL instead of loading every result row into memory. The course picker is now the standard Moodle course element, so it searches instead of listing every course, and the front page is left out.
+- Campaigns: a campaign whose scope is a list of categories or of courses is no longer accepted empty. The two pickers also write into separate parameters, they used to share one `scopeids[]`, where a category id and a course id could not be told apart.
+- Campaigns: the scope switch reveals the picker of the chosen scope. It bound only the `change` event and its `forEach` callback had no `this`, so the two pickers were never revealed and the form could not be filled.
+- Privacy: deleting a campaign creator anonymises their campaigns (`userid = 0`) instead of deleting them, which destroyed the audit trail of everyone else involved. The results, actions and evidence of the other users are kept.
+- Pages: the page context is set before the page title on every page of the plugin, and a course or section summary left empty is no longer passed to `strlen()`.
+- Translations: the hardcoded labels of the analysis reports, the archive and the accessibility checks are now language strings (437 in English and in French). The names of the entries inside the generated archives are left untranslated on purpose.
+- Documentation: the Requirements section states the Moodle and PHP versions `version.php` actually asks for. It asked for Moodle 5.2 while the plugin supports 4.5, and for PHP 8.2 while Moodle 4.5 runs on 8.1. A test now compares the section with `$plugin->requires`.
+
 ### v1.0.4 (2026100500)
 
 - Web services: all four functions extend `\core_external\external_api`. The global `\external_api` alias, removed from core, made every AJAX call of the campaign analysis fail fatally, so the campaign was closed empty, with no result recorded.
