@@ -90,8 +90,11 @@ class accessibility_analyser {
         if (trim(strip_tags($coursesummary)) !== '') {
             $contents[] = [
                 'source' => 'course_summary',
-                'title' => get_string('evidence_course', 'local_qualiscope',
-                    \local_qualiscope\helper::plain($course->fullname)),
+                'title' => get_string(
+                    'evidence_course',
+                    'local_qualiscope',
+                    \local_qualiscope\helper::plain($course->fullname)
+                ),
                 'html' => $coursesummary,
             ];
         }

@@ -93,12 +93,21 @@ final class lang_strings_test extends \advanced_testcase {
         foreach (['en', 'fr'] as $lang) {
             $string = get_string($key, 'local_qualiscope', $a);
 
-            $this->assertStringNotContainsString('[[' . $key . ']]', (string) $string,
-                "The string {$key} is missing from the {$lang} language pack.");
-            $this->assertStringNotContainsString('{$a', (string) $string,
-                "The string {$key} still shows a placeholder in {$lang}.");
-            $this->assertNotSame('', trim((string) $string),
-                "The string {$key} is empty in {$lang}.");
+            $this->assertStringNotContainsString(
+                '[[' . $key . ']]',
+                (string) $string,
+                "The string {$key} is missing from the {$lang} language pack."
+            );
+            $this->assertStringNotContainsString(
+                '{$a',
+                (string) $string,
+                "The string {$key} still shows a placeholder in {$lang}."
+            );
+            $this->assertNotSame(
+                '',
+                trim((string) $string),
+                "The string {$key} is empty in {$lang}."
+            );
         }
     }
 
@@ -111,9 +120,12 @@ final class lang_strings_test extends \advanced_testcase {
      * @var string[]
      */
     private const IDENTICAL_IN_BOTH = [
-        'export_zip_check_heading',   // '### {$a}', a Markdown heading marker.
-        'export_pdf_indicator_short', // 'Ind. {$a}', the same abbreviation.
-        'evidence_section',           // 'Section {$a}', the same word.
+        // A Markdown heading marker, with no word to translate.
+        'export_zip_check_heading',
+        // The same abbreviation in both languages.
+        'export_pdf_indicator_short',
+        // The same word in both languages.
+        'evidence_section',
     ];
 
     /**
@@ -130,8 +142,11 @@ final class lang_strings_test extends \advanced_testcase {
             $this->markTestSkipped('The string is deliberately the same in both packs.');
         }
 
-        $this->assertNotSame($this->pack_string('en', $key), $this->pack_string('fr', $key),
-            "The string {$key} is identical in both packs.");
+        $this->assertNotSame(
+            $this->pack_string('en', $key),
+            $this->pack_string('fr', $key),
+            "The string {$key} is identical in both packs."
+        );
     }
 
     /**

@@ -272,14 +272,14 @@ class pdf_generator {
                     $html .= '
                     <tr>
                         <td><strong>' . s(get_string(
-                            'export_pdf_indicator_short',
-                            'local_qualiscope',
-                            (int) $indicator->number
-                        )) . '</strong></td>
+                        'export_pdf_indicator_short',
+                        'local_qualiscope',
+                        (int) $indicator->number
+                    )) . '</strong></td>
                         <td colspan="4"><span class="status-manual">' . s(get_string(
-                            'criteria_manual_only',
-                            'local_qualiscope'
-                        )) . '</span> — ' . s(\local_qualiscope\helper::localized($indicator, 'description')) . '</td>
+                        'criteria_manual_only',
+                        'local_qualiscope'
+                    )) . '</span> — ' . s(\local_qualiscope\helper::localized($indicator, 'description')) . '</td>
                     </tr>';
                     continue;
                 }
@@ -317,10 +317,10 @@ class pdf_generator {
                     $html .= '
                     <tr>
                         <td><strong>' . s(get_string(
-                            'export_pdf_indicator_short',
-                            'local_qualiscope',
-                            (int) $indicator->number
-                        )) . '</strong><br/><span style="font-size: 7.5pt;
+                        'export_pdf_indicator_short',
+                        'local_qualiscope',
+                        (int) $indicator->number
+                    )) . '</strong><br/><span style="font-size: 7.5pt;
                                 color: #64748b;">' . s(\local_qualiscope\helper::localized($indicator, 'title')) . '</span></td>
                         <td><strong>' . s(\local_qualiscope\helper::localized($check, 'name')) . '</strong></td>
                         <td><span class="' . $stclass . '">' . s($stlabel) . '</span></td>

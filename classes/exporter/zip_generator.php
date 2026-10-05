@@ -172,10 +172,16 @@ class zip_generator {
                     'local_qualiscope',
                     (int) $indicator->number
                 ) . "\n";
-                $inddoc .= get_string('export_zip_sheet_title_label', 'local_qualiscope',
-                    \local_qualiscope\helper::localized($indicator, 'title')) . "\n";
-                $inddoc .= get_string('export_zip_sheet_requirement', 'local_qualiscope',
-                    \local_qualiscope\helper::localized($indicator, 'description')) . "\n";
+                $inddoc .= get_string(
+                    'export_zip_sheet_title_label',
+                    'local_qualiscope',
+                    \local_qualiscope\helper::localized($indicator, 'title')
+                ) . "\n";
+                $inddoc .= get_string(
+                    'export_zip_sheet_requirement',
+                    'local_qualiscope',
+                    \local_qualiscope\helper::localized($indicator, 'description')
+                ) . "\n";
                 $inddoc .= get_string('export_zip_sheet_scope', 'local_qualiscope', $indicator->scope) . "\n\n";
                 $inddoc .= get_string('export_zip_sheet_checks_title', 'local_qualiscope') . "\n\n";
 
@@ -184,20 +190,31 @@ class zip_generator {
                 } else {
                     foreach ($indchecks as $check) {
                         $res = $resultmap[$check->id] ?? null;
-                        $inddoc .= get_string('export_zip_check_heading', 'local_qualiscope',
-                            \local_qualiscope\helper::localized($check, 'name')) . "\n";
-                        $inddoc .= get_string('export_zip_check_description', 'local_qualiscope',
-                            \local_qualiscope\helper::localized($check, 'description')) . "\n";
+                        $inddoc .= get_string(
+                            'export_zip_check_heading',
+                            'local_qualiscope',
+                            \local_qualiscope\helper::localized($check, 'name')
+                        ) . "\n";
+                        $inddoc .= get_string(
+                            'export_zip_check_description',
+                            'local_qualiscope',
+                            \local_qualiscope\helper::localized($check, 'description')
+                        ) . "\n";
                         if ($check->automatic && $res) {
-                            $inddoc .= get_string('export_zip_check_status', 'local_qualiscope',
-                                get_string('status_' . $res['status'], 'local_qualiscope')) . "\n";
+                            $inddoc .= get_string(
+                                'export_zip_check_status',
+                                'local_qualiscope',
+                                get_string('status_' . $res['status'], 'local_qualiscope')
+                            ) . "\n";
                             $ratio = $res['ratio'] ?? ($res['status'] === 'detected' ? 1.0 : 0.0);
                             $inddoc .= get_string(
                                 'export_zip_check_ratio',
                                 'local_qualiscope',
                                 round($ratio * 100)
                             ) . "\n";
-                            $inddoc .= get_string('export_zip_check_detail', 'local_qualiscope',
+                            $inddoc .= get_string(
+                                'export_zip_check_detail',
+                                'local_qualiscope',
                                 $res['detail'] ?? get_string('export_zip_not_available', 'local_qualiscope')
                             ) . "\n\n";
                         } else {
