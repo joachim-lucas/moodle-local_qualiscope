@@ -66,4 +66,27 @@ class action_duedate {
         // Midnight of that day, in the timezone of the user filling the form.
         return make_timestamp($year, $month, $day);
     }
+
+    /**
+     * Formats a stored due date for the date input of the action forms.
+     *
+     * The inverse of from_input(), in the timezone from_input() used. date() would
+     * format it in the timezone of the server, which is not necessarily the one of
+     * the user: for a user east of the server the input then showed the day before,
+     * and saving that back moved the due date one day earlier on every save.
+     *
+     * userdate() drops the leading zero of the day unless $fixday is false, and a
+     * date input needs the zero padded value, which is also the only one from_input()
+     * accepts.
+     *
+     * @param int $timestamp The stored due date, 0 when there is none.
+     * @return string The Y-m-d value to prefill the input with, empty when no due date.
+     */
+    public static function to_input(int $timestamp): string {
+        if ($timestamp <= 0) {
+            return '';
+        }
+
+        return userdate($timestamp, '%Y-%m-%d', 99, false);
+    }
 }

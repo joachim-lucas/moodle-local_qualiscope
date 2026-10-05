@@ -106,7 +106,7 @@ echo $output->render_action_edit_form([
     'return' => $return,
     'title' => $action->title,
     'responsible' => $action->responsible,
-    'duedate' => $action->duedate ? date('Y-m-d', $action->duedate) : '',
+    'duedate' => \local_qualiscope\action_duedate::to_input((int) $action->duedate),
     'priorities' => $priorities,
     'statuses' => $statuses,
     'title_label' => get_string('action_name', 'local_qualiscope'),
