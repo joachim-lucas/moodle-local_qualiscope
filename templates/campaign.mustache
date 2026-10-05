@@ -19,20 +19,13 @@
 
     Campaigns list and creation form.
 
+    The creation form is a moodleform rendered by campaigns.php, so the scope
+    pickers, their classes and the course autocomplete come from that form.
+
     Example context (json):
     {
         "compareurl": "compare.php",
-        "savecampaignurl": "campaign_save.php",
-        "sesskey": "abc123",
-        "referentials": [
-            {"id": 1, "name": "Qualiopi", "version": "1.0"}
-        ],
-        "categories": [
-            {"id": 2, "name": "Category name"}
-        ],
-        "courses": [
-            {"id": 4, "fullname": "Course full name"}
-        ],
+        "campaignform": "<form>...</form>",
         "campaigns": [
             {
                 "viewurl": "campaign_view.php?id=1",
@@ -79,52 +72,7 @@
     <div class="card mb-4" id="campaign-form" style="display:none;">
         <div class="card-header"><h5 class="mb-0">{{#str}} campaign_create, local_qualiscope {{/str}}</h5></div>
         <div class="card-body">
-            <form method="post" action="{{savecampaignurl}}">
-                <input type="hidden" name="sesskey" value="{{sesskey}}">
-
-                <div class="mb-3">
-                    <label class="form-label">{{#str}} campaign_name, local_qualiscope {{/str}}</label>
-                    <input type="text" class="form-control" name="name" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">{{#str}} campaign_referential, local_qualiscope {{/str}}</label>
-                    <select class="form-select" name="referential_id">
-                        {{#referentials}}
-                        <option value="{{id}}">{{name}} {{version}}</option>
-                        {{/referentials}}
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">{{#str}} campaign_scope, local_qualiscope {{/str}}</label>
-                    <select class="form-select" name="scope" id="scope-select">
-                        <option value="all">{{#str}} campaign_scope_all, local_qualiscope {{/str}}</option>
-                        <option value="category">{{#str}} campaign_scope_category, local_qualiscope {{/str}}</option>
-                        <option value="selected">{{#str}} campaign_scope_selected, local_qualiscope {{/str}}</option>
-                    </select>
-                </div>
-
-                <div class="mb-3" id="scope-categories" style="display:none;">
-                    <label class="form-label">{{#str}} campaign_scope_category, local_qualiscope {{/str}}</label>
-                    <select class="form-select" name="scopeids[]" multiple size="5">
-                        {{#categories}}
-                        <option value="{{id}}">{{name}}</option>
-                        {{/categories}}
-                    </select>
-                </div>
-
-                <div class="mb-3" id="scope-courses" style="display:none;">
-                    <label class="form-label">{{#str}} campaign_scope_selected, local_qualiscope {{/str}}</label>
-                    <select class="form-select" name="scopeids[]" multiple size="5">
-                        {{#courses}}
-                        <option value="{{id}}">{{fullname}}</option>
-                        {{/courses}}
-                    </select>
-                </div>
-
-                <button type="submit" class="btn btn-primary">{{#str}} campaign_submit, local_qualiscope {{/str}}</button>
-            </form>
+            {{{campaignform}}}
         </div>
     </div>
 
