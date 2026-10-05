@@ -81,10 +81,10 @@ if ($campaignid) {
 
     $campaignname = \local_qualiscope\helper::plain($campaign->name, $context);
 
+    $PAGE->set_context($context);
     $PAGE->set_url(new moodle_url('/local/qualiscope/run.php', ['campaignid' => $campaignid]));
     $PAGE->set_title(get_string('campaign_running_progress_title', 'local_qualiscope') . ' - ' . $campaignname);
     $PAGE->set_heading($campaignname);
-    $PAGE->set_context($context);
     $PAGE->requires->js_call_amd('local_qualiscope/campaign_run', 'init', [[
         'campaignid' => $campaignid,
         'courses' => $coursesinfo,

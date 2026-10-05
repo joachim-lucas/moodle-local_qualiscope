@@ -26,15 +26,16 @@
 require_once('../../config.php');
 require_once($CFG->dirroot . '/local/qualiscope/lib.php');
 
+$context = context_system::instance();
+
+$PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/qualiscope/campaigns.php'));
 
 require_login();
-$context = context_system::instance();
 require_capability('local/qualiscope:managecampaigns', $context);
 
 $PAGE->set_title(get_string('campaign_title', 'local_qualiscope'));
 $PAGE->set_heading(get_string('campaign_title', 'local_qualiscope'));
-$PAGE->set_context($context);
 $PAGE->requires->js_call_amd('local_qualiscope/forms', 'init');
 
 $output = $PAGE->get_renderer('local_qualiscope');

@@ -35,10 +35,10 @@ require_login($action->courseid);
 $context = context_course::instance($action->courseid);
 require_capability('local/qualiscope:manageactions', $context);
 
+$PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/qualiscope/edit_action.php', ['id' => $id, 'return' => $return]));
 $PAGE->set_title(get_string('action_title', 'local_qualiscope'));
 $PAGE->set_heading(get_string('action_title', 'local_qualiscope'));
-$PAGE->set_context($context);
 
 $output = $PAGE->get_renderer('local_qualiscope');
 

@@ -42,9 +42,9 @@ require_login($courseid);
 $context = context_course::instance($courseid);
 require_capability('local/qualiscope:viewaudit', $context);
 
+$PAGE->set_context($context);
 $PAGE->set_title(get_string('indicator_title', 'local_qualiscope'));
 $PAGE->set_heading(get_string('indicator_title', 'local_qualiscope'));
-$PAGE->set_context($context);
 $PAGE->requires->js_call_amd('local_qualiscope/forms', 'init');
 
 $output = $PAGE->get_renderer('local_qualiscope');

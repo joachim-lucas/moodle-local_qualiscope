@@ -36,10 +36,10 @@ require_capability('local/qualiscope:managecampaigns', $context);
 
 $campaignname = \local_qualiscope\helper::plain($campaign->name, $context);
 
+$PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/qualiscope/view_campaign.php', ['id' => $campaignid]));
 $PAGE->set_title($campaignname);
 $PAGE->set_heading($campaignname);
-$PAGE->set_context($context);
 $PAGE->requires->js_call_amd('local_qualiscope/forms', 'init');
 
 $output = $PAGE->get_renderer('local_qualiscope');

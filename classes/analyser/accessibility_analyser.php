@@ -84,25 +84,28 @@ class accessibility_analyser {
         $contents = [];
 
         // 1. Course summary
+        // A summary is nullable, and strip_tags() and trim() deprecate on null since PHP 8.1.
         $course = $DB->get_record('course', ['id' => $courseid]);
-        if ($course && !empty(trim(strip_tags($course->summary)))) {
+        $coursesummary = $course ? (string) $course->summary : '';
+        if (trim(strip_tags($coursesummary)) !== '') {
             $contents[] = [
                 'source' => 'course_summary',
                 'title' => get_string('course') . ' (' .
                     \local_qualiscope\helper::plain($course->fullname) . ')',
-                'html' => $course->summary,
+                'html' => $coursesummary,
             ];
         }
 
         // 2. Section summaries
         $sections = $DB->get_records('course_sections', ['course' => $courseid], 'section ASC');
         foreach ($sections as $section) {
-            if (!empty(trim(strip_tags($section->summary)))) {
+            $sectionsummary = (string) $section->summary;
+            if (trim(strip_tags($sectionsummary)) !== '') {
                 $secname = !empty($section->name) ? $section->name : ('Section ' . $section->section);
                 $contents[] = [
                     'source' => 'section_summary',
                     'title' => $secname,
-                    'html' => $section->summary,
+                    'html' => $sectionsummary,
                 ];
             }
         }

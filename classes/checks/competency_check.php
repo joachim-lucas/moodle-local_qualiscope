@@ -64,8 +64,11 @@ class competency_check extends base_check {
         }
 
         // Check if competencies exist in objectives/summary or outcomes.
+        // A course summary is nullable and passing null to stripos() is deprecated since PHP 8.1.
         $course = $DB->get_record('course', ['id' => $courseid]);
-        if ($course && (stripos($course->summary, 'compétence') !== false || stripos($course->summary, 'objectif') !== false)) {
+        $summary = $course ? (string) $course->summary : '';
+
+        if (stripos($summary, 'compétence') !== false || stripos($summary, 'objectif') !== false) {
             return $this->build_result('verify', get_string('check_competency_in_summary', 'local_qualiscope'), 0.5);
         }
 

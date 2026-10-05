@@ -49,17 +49,13 @@ class alignment_check extends base_check {
         // 1. Objectives / Competencies definition (25 pts)
         $coursecompcount = (int) $DB->count_records('competency_coursecomp', ['courseid' => $courseid]);
         $course = $DB->get_record('course', ['id' => $courseid]);
-        $hassummaryobjectives = false;
-
-        if (
-            $course && (
-            stripos($course->summary, 'objectif') !== false ||
-            stripos($course->summary, 'compétence') !== false ||
-            stripos($course->summary, 'programme') !== false
-            )
-        ) {
-            $hassummaryobjectives = true;
-        }
+        // A course summary is nullable and passing null to stripos() is deprecated since PHP 8.1.
+        $summary = $course ? (string) $course->summary : '';
+        $hassummaryobjectives = (
+            stripos($summary, 'objectif') !== false ||
+            stripos($summary, 'compétence') !== false ||
+            stripos($summary, 'programme') !== false
+        );
 
         if ($coursecompcount >= 3) {
             $score += 25;
